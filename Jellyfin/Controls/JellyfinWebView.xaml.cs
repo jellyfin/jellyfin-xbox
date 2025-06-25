@@ -74,7 +74,9 @@ namespace Jellyfin.Controls
                 await md.ShowAsync();
             }
 
-            // Hacky way of forcing webview to set focus on web content.
+            // Refocus WebView after having BtnFocusStealer steal it.
+            // To work around WebView2 not focusing web content.
+            WView.Focus(FocusState.Programmatic);
             BtnFocusStealer.Visibility = Visibility.Collapsed;
         }
 
