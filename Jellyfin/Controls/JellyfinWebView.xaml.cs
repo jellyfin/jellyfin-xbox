@@ -32,21 +32,11 @@ namespace Jellyfin.Controls
             _gamepadManager = new GamepadManager();
         }
 
-        private async Task WView_NavigationStartingTask(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
+        private void WView_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
             // Workaround to fix focus issues with gamepad not focusing window
             BtnFocusStealer.Visibility = Visibility.Visible;
             BtnFocusStealer.Focus(FocusState.Programmatic);
-
-            // Force enabledGamepad on xbox only. 
-            if (AppUtils.IsXbox)
-            {
-                await WView.ExecuteScriptAsync("localStorage.setItem(\"enableGamepad\", \"true\")");
-            }
-        }
-        private async void WView_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
-        {
-            await WView_NavigationStartingTask(sender, args);
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
