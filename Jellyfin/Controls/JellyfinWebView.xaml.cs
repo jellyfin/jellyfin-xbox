@@ -30,7 +30,6 @@ namespace Jellyfin.Controls
 
             // Initialize GamepadManager
             _gamepadManager = new GamepadManager();
-            _gamepadManager.OnBackPressed += HandleGamepadBackPress;
         }
 
         private async Task WView_NavigationStartingTask(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
@@ -48,11 +47,6 @@ namespace Jellyfin.Controls
         private async void WView_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
             await WView_NavigationStartingTask(sender, args);
-        }
-
-        private void HandleGamepadBackPress()
-        {
-            // redundant as jellyfin handles back presses
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
