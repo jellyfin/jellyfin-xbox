@@ -26,7 +26,6 @@ namespace Jellyfin.Controls
 
             WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
-            SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
@@ -38,15 +37,6 @@ namespace Jellyfin.Controls
             // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
             WView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
             WView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
-        }
-
-        private void Back_BackRequested(object sender, BackRequestedEventArgs args)
-        {
-            if (WView.CanGoBack)
-            {
-                WView.GoBack();
-            }
-            args.Handled = true;
         }
 
         private async void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
