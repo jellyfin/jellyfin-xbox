@@ -14,7 +14,6 @@ namespace Jellyfin.Controls
 {
     public sealed partial class JellyfinWebView : UserControl, IDisposable
     {
-        private readonly GamepadManager _gamepadManager;
         private readonly WebView2 WView;
 
         public JellyfinWebView()
@@ -28,9 +27,6 @@ namespace Jellyfin.Controls
             WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
             WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
             SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
-
-            // Initialize GamepadManager
-            _gamepadManager = new GamepadManager();
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
@@ -81,7 +77,7 @@ namespace Jellyfin.Controls
 
         public void Dispose()
         {
-            _gamepadManager?.Dispose();
+
         }
     }
 }
