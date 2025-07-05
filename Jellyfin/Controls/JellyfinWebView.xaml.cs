@@ -14,31 +14,31 @@ namespace Jellyfin.Controls
 {
     public sealed partial class JellyfinWebView : UserControl, IDisposable
     {
-        private readonly WebView2 WView;
+        private readonly WebView2 _wView;
 
         public JellyfinWebView()
         {
             this.InitializeComponent();
 
-            WView = new WebView2();
+            _wView = new WebView2();
             // Set WebView source
-            WView.Source = new Uri(Central.Settings.JellyfinServer);
+            _wView.Source = new Uri(Central.Settings.JellyfinServer);
 
-            WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
-            WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
+            _wView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
+            _wView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
         }
 
         private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
-            this.Content = WView;
-            WView.Focus(FocusState.Programmatic);
+            this.Content = _wView;
+            _wView.Focus(FocusState.Programmatic);
 
             // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
-            WView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
+            _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
            
-            WView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
-            WView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+            _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
+            _wView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
         }
 
         private async void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
