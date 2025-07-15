@@ -92,25 +92,7 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1">
-            <StackPanel 
-    x:Name="pnlDiscoveryTitle" 
-    HorizontalAlignment="Center" 
-    VerticalAlignment="Top" 
-    Width="640">
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center"
->
-                    <TextBlock
-        x:Name="txtDiscoverTitle"
-        Text="Discover Server" 
-        Foreground="White" FontSize="{StaticResource FontL}"
-        Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
-                        Padding="0 40 0 0"
-        HorizontalAlignment="Center" />
-                </StackPanel>
-
-
-                <ListView x:Name="lstDiscovered" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
+            <ListView x:Name="lstDiscovered" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:DiscoveredServer">
                             <StackPanel>
@@ -119,14 +101,22 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                    <ListView.Footer>
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock
+                            x:Name="txtDiscoverTitle"
+                            Text="Discover Server" 
+                            Foreground="White" FontSize="{StaticResource FontL}"
+                            Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
+                                            Padding="0 40 0 0"
+                            HorizontalAlignment="Center" />
                         <TextBlock x:Name="txtDiscoverNoneFound" FontSize="{StaticResource FontM}" 
-                                   HorizontalAlignment="Center">
+                                   HorizontalAlignment="Center" TextWrapping="WrapWholeWords">
                             No servers found, searching.
                         </TextBlock>
-                    </ListView.Footer>
-                </ListView>
-            </StackPanel>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
         </Grid>
     </Grid>
 </Page>
