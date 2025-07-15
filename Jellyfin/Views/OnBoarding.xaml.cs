@@ -58,9 +58,7 @@ namespace Jellyfin.Views
 
         private async void BtnConnect_Click(object sender, RoutedEventArgs e)
         {
-            btnConnect.IsEnabled = false;
-            txtError.Visibility = Visibility.Collapsed;
-
+            ConnectionStatusChanged(true);
             string uriString = txtUrl.Text;
             try
             {
@@ -73,8 +71,6 @@ namespace Jellyfin.Views
             }
 
             await TryConnect(uriString);
-
-            btnConnect.IsEnabled = true;
         }
 
         private void OnBoarding_Loaded(object sender, RoutedEventArgs e)
@@ -108,6 +104,18 @@ namespace Jellyfin.Views
             {
                 Central.Settings.JellyfinServer = uriString;
                 (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+            }
+            ConnectionStatusChanged(false);
+        }
+
+        private void ConnectionStatusChanged(bool connecting)
+        {
+            spinnerConnecting.IsActive = connecting;
+            btnConnect.IsEnabled = !connecting;
+            lstDiscovered.IsEnabled = !connecting;
+            if (connecting)
+            {
+                txtError.Visibility = Visibility.Collapsed;
             }
         }
 

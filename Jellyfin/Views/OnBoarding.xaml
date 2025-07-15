@@ -8,14 +8,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     Unloaded="Page_Unloaded"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <converters:CollectionVisibilityConverter x:Name="CollectionVisibilityConverter"/>
-    </Page.Resources>
-
+    
     <Grid Background="{StaticResource Color0}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -51,6 +47,14 @@
                 HorizontalAlignment="Center" 
                 Height="80" />
         </Grid>
+
+        <muxc:ProgressRing
+            x:Name="spinnerConnecting"
+            Grid.RowSpan="2" 
+            Grid.ColumnSpan="2"
+            Height="100"
+            Width="100"
+            IsActive="False"/>
 
         <Grid Grid.Row="1" Padding="0 40 0 0">
             <StackPanel 
@@ -106,7 +110,7 @@
                 </StackPanel>
 
 
-                <ListView x:Name="DiscoveredList" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
+                <ListView x:Name="lstDiscovered" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:DiscoveredServer">
                             <StackPanel>
