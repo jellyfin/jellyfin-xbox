@@ -36,7 +36,6 @@ namespace Jellyfin.Views
     public sealed partial class OnBoarding : Page
     {
         private ObservableCollection<DiscoveredServer> _discoveredServers = new ObservableCollection<DiscoveredServer>();
-        private List<Socket> _sockets = new List<Socket>();
         private ServerDiscovery _serverDiscovery = new ServerDiscovery();
 
         public OnBoarding()
