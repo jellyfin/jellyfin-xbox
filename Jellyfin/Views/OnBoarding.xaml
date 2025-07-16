@@ -108,7 +108,7 @@
                             Text="Discover Server" 
                             Foreground="White" FontSize="{StaticResource FontL}"
                             Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
-                                            Padding="0 40 0 0"
+                            Padding="0 40 0 0"
                             HorizontalAlignment="Center" />
                         <TextBlock x:Name="txtDiscoverNoneFound" FontSize="{StaticResource FontM}" 
                                    HorizontalAlignment="Center" TextWrapping="WrapWholeWords">

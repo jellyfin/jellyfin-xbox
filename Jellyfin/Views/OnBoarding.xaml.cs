@@ -200,15 +200,12 @@ namespace Jellyfin.Views
             var discoveredServer = (DiscoveredServer) e.ClickedItem;
             var addressString = discoveredServer.Address.ToString();
             txtUrl.Text = addressString;
-            await TryConnect(addressString);
+            await TryConnect(addressString).ConfigureAwait(false);
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            foreach (var socket in _sockets)
-            {
-                socket.Dispose();
-            }
+            _serverDiscovery.Dispose();
         }
     }
 }
