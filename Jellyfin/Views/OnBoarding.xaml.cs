@@ -2,16 +2,15 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Jellyfin.Core;
+using Jellyfin.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Jellyfin.Views;
 
 /// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
+/// Represents the onboarding page for the application, allowing users to connect to a Jellyfin server.
 /// </summary>
 public sealed partial class OnBoarding : Page
 {
@@ -20,10 +19,49 @@ public sealed partial class OnBoarding : Page
     /// </summary>
     public OnBoarding()
     {
-        InitializeComponent();
-        Loaded += OnBoarding_Loaded;
-        btnConnect.Click += BtnConnect_Click;
+        this.InitializeComponent();
+        this.Loaded += OnBoarding_Loaded;
         txtUrl.KeyUp += TxtUrl_KeyUp;
+    }
+
+    private void OnBoarding_Loaded(object sender, RoutedEventArgs e)
+    {
+        txtUrl.Focus(FocusState.Programmatic);
+    }
+
+    private async void BtnConnect_Click(object sender, RoutedEventArgs e)
+    {
+        await BtnConnect_ClickAsync();
+    }
+
+    private async Task BtnConnect_ClickAsync()
+    {
+        btnConnect.IsEnabled = false;
+        txtError.Visibility = Visibility.Collapsed;
+
+        string inputUrl = txtUrl.Text;
+
+        // Parse the input URL to validate and normalize it.
+        var (isValid, normalizedUrl, errorMessage) = UrlValidator.ParseServerUri(inputUrl);
+        if (!isValid)
+        {
+            txtError.Text = errorMessage;
+            txtError.Visibility = Visibility.Visible;
+            btnConnect.IsEnabled = true;
+            return;
+        }
+
+        if (!await IsJellyfinServerUrlValidAsync(normalizedUrl))
+        {
+            txtError.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            Central.Settings.JellyfinServer = normalizedUrl.ToString();
+            (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+        }
+
+        btnConnect.IsEnabled = true;
     }
 
     private void TxtUrl_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -34,57 +72,20 @@ public sealed partial class OnBoarding : Page
         }
     }
 
-    private async void BtnConnect_Click(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Asynchronously validates whether the specified URL points to a valid Jellyfin server.
+    /// </summary>
+    /// <param name="serverUri">The URL to validate as a string.</param>
+    /// <returns><see langword="true"/> if the URL is valid and points to a Jellyfin server; otherwise, <see
+    /// langword="false"/>.</returns>
+    private async Task<bool> IsJellyfinServerUrlValidAsync(Uri serverUri)
     {
-        btnConnect.IsEnabled = false;
-        txtError.Visibility = Visibility.Collapsed;
-
-        string uriString = txtUrl.Text;
-        try
-        {
-            var ub = new UriBuilder(uriString);
-            uriString = ub.ToString();
-        }
-        catch
-        {
-            // If the UriBuilder fails the following functions will handle the error
-        }
-
-        if (!await CheckURLValidAsync(uriString))
-        {
-            txtError.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            Central.Settings.JellyfinServer = uriString;
-            (Window.Current.Content as Frame).Navigate(typeof(MainPage));
-        }
-
-        btnConnect.IsEnabled = true;
-    }
-
-    private void OnBoarding_Loaded(object sender, RoutedEventArgs e)
-    {
-        txtUrl.Focus(FocusState.Programmatic);
-    }
-
-    private async Task<bool> CheckURLValidAsync(string uriString)
-    {
-        // also do a check for valid url
-        if (!Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
-        {
-            return false;
-        }
-
-        // add scheme to uri if not included
-        Uri testUri = new UriBuilder(uriString).Uri;
-
         // check URL exists
         HttpWebRequest request;
         HttpWebResponse response;
         try
         {
-            request = (HttpWebRequest)WebRequest.Create(testUri);
+            request = (HttpWebRequest)WebRequest.Create(serverUri);
             response = (HttpWebResponse)(await request.GetResponseAsync());
         }
         catch (WebException ex)
@@ -99,8 +100,18 @@ public sealed partial class OnBoarding : Page
                     string newLocation = errorResponse.Headers["Location"];
                     if (!string.IsNullOrEmpty(newLocation))
                     {
-                        uriString = newLocation;
-                        return await CheckURLValidAsync(uriString); // Recursively check the new location
+                        Uri newUri;
+                        try
+                        {
+                            newUri = new Uri(serverUri, newLocation);
+                        }
+                        catch (UriFormatException)
+                        {
+                            txtError.Visibility = Visibility.Visible;
+                            txtError.Text = "Invalid redirect URL received from server in Location header.";
+                            btnConnect.IsEnabled = true;
+                            return false;
+                        }
                     }
                 }
                 else
@@ -133,8 +144,7 @@ public sealed partial class OnBoarding : Page
         }
 
         // If everything is OK, update the URI before saving it
-        Central.Settings.JellyfinServer = uriString;
-
+        Central.Settings.JellyfinServer = serverUri.ToString();
         return true;
     }
 

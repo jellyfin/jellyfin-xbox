@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="Core\Central.cs" />
     <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

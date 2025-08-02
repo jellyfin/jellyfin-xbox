@@ -71,7 +71,8 @@
                 <Button 
                     x:Name="btnConnect"
                     Style="{StaticResource PrimaryButton}"
-                    Content="Connect"  />
+                    Content="Connect"
+                    Click="BtnConnect_Click" />
             </StackPanel>
         </Grid>
         
