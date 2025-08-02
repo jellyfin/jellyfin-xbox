@@ -29,15 +29,10 @@ public sealed partial class OnBoarding : Page
         txtUrl.Focus(FocusState.Programmatic);
     }
 
-    private async void BtnConnect_Click(object sender, RoutedEventArgs e)
-    {
-        await BtnConnect_ClickAsync();
-    }
-
-    private async Task BtnConnect_ClickAsync()
-    {
-        btnConnect.IsEnabled = false;
-        txtError.Visibility = Visibility.Collapsed;
+        private async void BtnConnect_Click(object sender, RoutedEventArgs e)
+        {
+            btnConnect.IsEnabled = false;
+            txtError.Visibility = Visibility.Collapsed;
 
         string inputUrl = txtUrl.Text;
 
