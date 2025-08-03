@@ -147,6 +147,7 @@
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="Utils\GamepadManager.cs" />
     <Compile Include="Utils\GamepadState.cs" />
+    <Compile Include="Utils\Mvvm\RelayCommand.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
     </Compile>

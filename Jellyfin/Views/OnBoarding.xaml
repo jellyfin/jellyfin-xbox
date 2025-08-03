@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Jellyfin.Views.OnBoarding"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="OverlayColorBG" Color="LightGray" Opacity="0.2" />
+    </Page.Resources>
 
     <Grid Background="{StaticResource Color0}">
         <VisualStateManager.VisualStateGroups>
@@ -75,6 +79,9 @@
                     Click="BtnConnect_Click" />
             </StackPanel>
         </Grid>
-        
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource OverlayColorBG}" Visibility="Collapsed" x:Name="ProgressIndicator">
+            <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
+        </Grid>
     </Grid>
 </Page>
