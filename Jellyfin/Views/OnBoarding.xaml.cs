@@ -34,7 +34,7 @@ public sealed partial class OnBoarding : Page
         txtUrl.Focus(FocusState.Programmatic);
     }
 
-    private async void BtnConnect_Click(object sender, RoutedEventArgs e)
+    private void BtnConnect_Click(object sender, RoutedEventArgs e)
     {
         btnConnect.IsEnabled = false;
         txtError.Visibility = Visibility.Collapsed;
@@ -51,19 +51,31 @@ public sealed partial class OnBoarding : Page
             return;
         }
 
-        // Check if the parsed URI is pointing to a Jellyfin server.
-        if (!await IsJellyfinServerUrlValidAsync(parsedUri))
+        ProgressIndicator.Visibility = Visibility.Visible;
+
+        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
         {
-            txtError.Visibility = Visibility.Visible;
-            btnConnect.IsEnabled = true;
-            return;
-        }
+            try
+            {
+                // Check if the parsed URI is pointing to a Jellyfin server.
+                if (!await IsJellyfinServerUrlValidAsync(parsedUri))
+                {
+                    txtError.Visibility = Visibility.Visible;
+                    btnConnect.IsEnabled = true;
+                    return;
+                }
 
-        // Save validated URL and navigate to page containing the web view.
-        Central.Settings.JellyfinServer = parsedUri.ToString();
-        (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+                // Save validated URL and navigate to page containing the web view.
+                Central.Settings.JellyfinServer = parsedUri.ToString();
+                (Window.Current.Content as Frame).Navigate(typeof(MainPage));
 
-        btnConnect.IsEnabled = true;
+                btnConnect.IsEnabled = true;
+            }
+            finally
+            {
+                ProgressIndicator.Visibility = Visibility.Collapsed;
+            }
+        });
     }
 
     private void TxtUrl_KeyUp(object sender, KeyRoutedEventArgs e)
