@@ -45,15 +45,8 @@
   </Applications>
 
   <Capabilities>
-	<Capability Name="internetClient" />
+    <Capability Name="internetClient" />
     <Capability Name="privateNetworkClientServer"/>
-
-	  <!-- 
-	  The "hevcPlayback" capability grants the app the ability to play 4K video content on Xbox.
-         Usage of this capability requires approval from Microsoft. Work with your Microsoft
-         business representative if you need this capability.
-      -->
-	<rescap:Capability Name="hevcPlayback" />
-	  
+    <rescap:Capability Name="hevcPlayback" />	  
   </Capabilities>
 </Package>
