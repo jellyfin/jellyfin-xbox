@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Jellyfin.Core;
 
-namespace Jellyfin.Core
+/// <summary>
+/// Provides access to core application services and managers.
+/// </summary>
+public static class Central
 {
-    public static class Central
-    {
-        public static SettingsManager Settings { get; } = new SettingsManager();
-    }
+    /// <summary>
+    /// Gets the settings manager for application configuration.
+    /// </summary>
+    public static SettingsManager Settings { get; } = new SettingsManager();
 }

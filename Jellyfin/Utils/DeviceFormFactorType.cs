@@ -1,16 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Jellyfin.Utils;
 
-namespace Jellyfin.Utils
+/// <summary>
+/// Specifies the form factor type of a device.
+/// </summary>
+public enum DeviceFormFactorType
 {
-    public enum DeviceFormFactorType
-    {
-        Desktop,
-        Mobile,
-        Holographic,
-        Xbox
-    }
+    /// <summary>
+    /// A desktop device.
+    /// </summary>
+    Desktop,
+
+    /// <summary>
+    /// A mobile device.
+    /// </summary>
+    Mobile,
+
+    /// <summary>
+    /// A holographic device.
+    /// </summary>
+    Holographic,
+
+    /// <summary>
+    /// An Xbox device.
+    /// </summary>
+    Xbox
 }
