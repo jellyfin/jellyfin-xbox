@@ -112,11 +112,12 @@ public sealed partial class OnBoarding : Page
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
-            // Check if the response is a Jellyfin server response.
-            if (!IsJellyfinServerResponse(content))
+            // Check if the response is from a supported Jellyfin server.
+            var (isValid, errorMessage) = ValidateJellyfinServerResponse(content);
+            if (!isValid)
             {
                 txtError.Visibility = Visibility.Visible;
-                txtError.Text = "Jellyfin server not found, is it online?";
+                txtError.Text = errorMessage;
                 return false;
             }
         }
@@ -143,30 +144,49 @@ public sealed partial class OnBoarding : Page
     }
 
     /// <summary>
-    /// Determines whether the provided JSON string represents a response from a Jellyfin Server.
+    /// Validates the JSON response from the Jellyfin server to ensure it is a supported server.
     /// </summary>
-    /// <param name="jsonContent">The JSON response string to evaluate.</param>
-    /// <returns><see langword="true"/> if the response is from a Jellyfin Server; otherwise,
-    /// <see langword="false"/>.</returns>
-    private static bool IsJellyfinServerResponse(string jsonContent)
+    /// <param name="serverInfoResponse">The JSON response string to evaluate.</param>
+    /// <returns>(IsValid, ErrorMessage): Indicates whether the response is valid and provides an error message if not.</returns>
+    private static (bool IsValid, string ErrorMessage) ValidateJellyfinServerResponse(string serverInfoResponse)
     {
         try
         {
-            using var json = JsonDocument.Parse(jsonContent);
+            using var json = JsonDocument.Parse(serverInfoResponse);
 
             // Making sure we are talking with a Jellyfin server.
             if (json.RootElement.TryGetProperty("ProductName", out var productNameProperty))
             {
-                string productName = productNameProperty.GetString();
-                return string.Equals(productName, ValidProductName, StringComparison.OrdinalIgnoreCase);
+                var productName = productNameProperty.GetString();
+                if (!string.Equals(productName, ValidProductName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (false, $"ProductName '{productName}' does not match '{ValidProductName}'.");
+                }
+            }
+
+            // Check if the server version is at least the minimum supported version that this client supports.
+            if (json.RootElement.TryGetProperty("Version", out var versionProperty))
+            {
+                string versionString = versionProperty.GetString();
+                if (!Version.TryParse(versionString, out var serverVersion))
+                {
+                    return (false, $"Invalid server version format: '{versionString}'.");
+                }
+
+                if (serverVersion < Central.MinimumSupportedServerVersion)
+                {
+                    return (false, $"The minimum supported server version is {Central.MinimumSupportedServerVersion}, but the server is running {serverVersion}.");
+                }
+
+                return (true, null);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return false;
+            return (false, $"Exception parsing server response: {ex.Message}");
         }
 
-        return false;
+        return (false, "Unknown error validating server response.");
     }
 
     private void UpdateErrorMessage(int statusCode)
