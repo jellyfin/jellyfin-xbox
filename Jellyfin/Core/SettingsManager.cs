@@ -1,53 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Jellyfin.Core
+namespace Jellyfin.Core;
+
+/// <summary>
+/// Manages application settings for Jellyfin, including server configuration.
+/// </summary>
+public class SettingsManager
 {
-    public class SettingsManager
+    private string _containerSettings = "APPSETTINGS";
+    private string _settingsServer = "SERVER";
+
+    private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+
+    private ApplicationDataContainer ContainerSettings
     {
-        string CONTAINER_SETTINGS = "APPSETTINGS";
-        string SETTING_SERVER = "SERVER";
-
-        private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
-        private ApplicationDataContainer ContainerSettings
+        get
         {
-            get
+            if (!LocalSettings.Containers.ContainsKey(_containerSettings))
             {
-                if (!LocalSettings.Containers.ContainsKey(CONTAINER_SETTINGS))
-                {
-                    LocalSettings.CreateContainer(CONTAINER_SETTINGS, ApplicationDataCreateDisposition.Always);
-                }
-                return LocalSettings.Containers[CONTAINER_SETTINGS];
-            }
-        }
-
-        public bool HasJellyfinServer => !String.IsNullOrEmpty(JellyfinServer);
-
-        public String JellyfinServer
-        {
-            get => GetProperty<String>(SETTING_SERVER);
-            set => SetProperty(SETTING_SERVER, value);
-        }
-
-        private void SetProperty(String propertyName, object value)
-        {
-            ContainerSettings.Values[propertyName] = value;
-        }
-
-        public T GetProperty<T>(String propertyName, T defaultValue = default(T))
-        {
-            var value = ContainerSettings.Values[propertyName];
-
-            if (value != null)
-            {
-                return (T)value;
+                LocalSettings.CreateContainer(_containerSettings, ApplicationDataCreateDisposition.Always);
             }
 
-            return defaultValue;
+            return LocalSettings.Containers[_containerSettings];
         }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether a Jellyfin server is configured.
+    /// </summary>
+    public bool HasJellyfinServer => !string.IsNullOrEmpty(JellyfinServer);
+
+    /// <summary>
+    /// Gets or sets the configured Jellyfin server address.
+    /// </summary>
+    public string JellyfinServer
+    {
+        get => GetProperty<string>(_settingsServer);
+        set => SetProperty(_settingsServer, value);
+    }
+
+    private void SetProperty(string propertyName, object value)
+    {
+        ContainerSettings.Values[propertyName] = value;
+    }
+
+    /// <summary>
+    /// Gets the value of a property from the settings container.
+    /// </summary>
+    /// <typeparam name="T">The type of the property value.</typeparam>
+    /// <param name="propertyName">The name of the property to retrieve.</param>
+    /// <param name="defaultValue">The default value to return if the property is not found.</param>
+    /// <returns>The value of the property if found; otherwise, the default value.</returns>
+    public T GetProperty<T>(string propertyName, T defaultValue = default)
+    {
+        var value = ContainerSettings.Values[propertyName];
+
+        if (value != null)
+        {
+            return (T)value;
+        }
+
+        return defaultValue;
     }
 }
