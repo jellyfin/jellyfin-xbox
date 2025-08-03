@@ -16,9 +16,9 @@ body:
       options:
         - label: This is a **bug**, not a question or a configuration issue; Please visit our [forum or chat rooms](https://jellyfin.org/contact/) first to troubleshoot with volunteers, before creating a report.
           required: true
-        - label: This issue is **not** already reported on [GitHub](https://github.com/jellyfin/jellyfin-uwp/issues?q=is%3Aopen+is%3Aissue) _(I've searched it)_.
+        - label: This issue is **not** already reported on [GitHub](https://github.com/jellyfin/jellyfin-xbox/issues?q=is%3Aopen+is%3Aissue) _(I've searched it)_.
           required: true
-        - label: I'm using an up to date version of Jellyfin UWP and Jellyfin Server, unstable or master; We generally do not support previous older versions. If possible, please update to the latest version before opening an issue.
+        - label: I'm using an up to date version of Jellyfin for Xbox and Jellyfin Server, unstable or master; We generally do not support previous older versions. If possible, please update to the latest version before opening an issue.
           required: true
         - label: I agree to follow Jellyfin's [Code of Conduct](https://jellyfin.org/docs/general/community-standards.html#code-of-conduct).
           required: true
@@ -44,7 +44,7 @@ body:
       label: Description of the bug
       description: Please provide a detailed description on the bug you encountered, in a readable and comprehensible way.
       placeholder: |
-        After upgrading to version x.y.z of Jellyfin UWP, I observed that x occurs instead of the expected y. I have attempted actions x, y, and z to resolve the issue, but the problem persists.
+        After upgrading to version x.y.z of Jellyfin for Xbox, I observed that x occurs instead of the expected y. I have attempted actions x, y, and z to resolve the issue, but the problem persists.
     validations:
       required: true
   - type: textarea
@@ -53,7 +53,7 @@ body:
       label: Reproduction steps
       description: Reproduction steps should be complete and self-contained. Anyone can reproduce this issue by following these steps. Furthermore, the steps should be clear and easy to follow.
       placeholder: |
-        1. Open the Jellyfin UWP client and log in.
+        1. Open the Jellyfin for Xbox client and log in.
         2. Attempt to play a movie.
         3. Observe if the media loads and starts playing.
     validations:
@@ -77,17 +77,17 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: version-uwp
+    id: version-xbox
     attributes:
-      label: Jellyfin UWP version
-      description: What version of Jellyfin UWP are you using?
+      label: Jellyfin for Xbox version
+      description: What version of Jellyfin for Xbox are you using?
       options:
         - 0.9.0+
         - Master
     validations:
       required: true
   - type: input
-    id: version-uwp-master
+    id: version-xbox-master
     attributes:
       label: "Specify commit id"
       description: Fill in this field in case the option 'master' is selected. Provide the commit id it was built on.
