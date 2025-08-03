@@ -11,6 +11,6 @@
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />    
     <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3179.45"/>
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3351.48"/>
   </ItemGroup>
 </Project>
