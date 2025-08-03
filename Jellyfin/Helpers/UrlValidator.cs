@@ -13,7 +13,7 @@ public static class UrlValidator
     /// <remarks>If the input does not include a scheme, assumes "http://" by default.</remarks>
     /// <param name="input">The server address input as a string. This can include or omit the scheme "http://".</param>
     /// <returns>
-    /// (isValid, uri, errorMessage): Whether the input is valid, the parsed Uri if valid, and an error message if not.
+    /// (IsValid, Uri, ErrorMessage): Whether the input is valid, the parsed Uri if valid, and an error message if not.
     /// </returns>
     public static (bool IsValid, Uri Uri, string ErrorMessage) ParseServerUri(string input)
     {
