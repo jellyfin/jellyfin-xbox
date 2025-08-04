@@ -86,12 +86,12 @@ public sealed partial class OnBoarding : Page, IDisposable
         });
     }
 
-    private void ServerDiscovery_OnDiscover()
+    private async void ServerDiscovery_OnDiscover()
     {
         DiscoveredServer discoveredServer = null;
         while (_serverDiscovery.DiscoveredServers.TryDequeue(out discoveredServer))
         {
-            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (!_discoveredServers.Contains(discoveredServer))
                 {

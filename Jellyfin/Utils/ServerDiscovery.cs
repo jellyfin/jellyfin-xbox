@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Models;
@@ -68,12 +69,11 @@ namespace Jellyfin.Utils
                     while (true)
                     {
                         udpSocket.Receive(recieveBuffer);
-                        var receivedText = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length);
+                        var receivedText = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length)
+                            .Replace("\0", string.Empty);
                         Debug.WriteLine($"Received: {receivedText}");
-                        // FIXME: change library
-                        // var discoveredServer = JsonConvert.DeserializeObject<DiscoveredServer>(receivedText);
-
-                        // DiscoveredServers.Enqueue(discoveredServer);
+                        var discoveredServer = JsonSerializer.Deserialize<DiscoveredServer>(receivedText);
+                        DiscoveredServers.Enqueue(discoveredServer);
                         OnDiscover?.Invoke();
                     }
                 }

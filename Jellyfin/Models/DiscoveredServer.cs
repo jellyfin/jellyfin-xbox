@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace Jellyfin.Models
     /// </summary>
     public class DiscoveredServer
     {
+        private Guid _id = Guid.Empty;
+
         /// <summary>
         /// Gets or sets the name of the server.
         /// </summary>
@@ -19,7 +22,14 @@ namespace Jellyfin.Models
         /// <summary>
         /// Gets or sets the unique ID of the server.
         /// </summary>
-        public Guid Id { get; set; }
+        public string Id
+        {
+            get => _id.ToString();
+            set
+            {
+                _id = Guid.Parse(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the Main address of the server.
@@ -34,7 +44,7 @@ namespace Jellyfin.Models
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return _id.GetHashCode();
         }
     }
 }
