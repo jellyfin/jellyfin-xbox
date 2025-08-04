@@ -19,9 +19,8 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>F0C17F6BBCFE884DEF3258E3DF23D2603B09877C</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>
-    </PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>A8B9BE24CD80AF57928A9239AEED481F31CA9B84</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>Jellyfin_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
@@ -147,7 +146,9 @@
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="Utils\GamepadManager.cs" />
     <Compile Include="Utils\GamepadState.cs" />
+    <Compile Include="Utils\JellyfinServerValidationResult.cs" />
     <Compile Include="Utils\Mvvm\RelayCommand.cs" />
+    <Compile Include="Utils\ServerCheckUtil.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
     </Compile>
