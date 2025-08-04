@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Utils;
 using Jellyfin.Views;
@@ -15,9 +16,9 @@ namespace Jellyfin.Controls;
 /// <summary>
 /// Represents a custom web view control for interacting with a Jellyfin server.
 /// </summary>
-public sealed partial class JellyfinWebView : UserControl, IDisposable
+public sealed partial class JellyfinWebView : UserControl
 {
-    private GamepadManager _gamepadManager;
+    private WebView2 _wView;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JellyfinWebView"/> class.
@@ -64,39 +65,25 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
 
     private void InitialiseWebView()
     {
+        _wView = new WebView2();
         // Set WebView source
-        WView.Source = new Uri(Central.Settings.JellyfinServer);
+        _wView.Source = new Uri(Central.Settings.JellyfinServer);
 
-        WView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
-        WView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
-        SystemNavigationManager.GetForCurrentView().BackRequested += Back_BackRequested;
-
-        // Initialize GamepadManager
-        _gamepadManager = new GamepadManager();
-        _gamepadManager.OnBackPressed += HandleGamepadBackPress;
-    }
-
-    private void HandleGamepadBackPress()
-    {
-        if (WView.CanGoBack)
-        {
-            WView.GoBack();
-        }
+        _wView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
+        _wView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
     }
 
     private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
     {
-        WView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
-    }
+        // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
+        Content = _wView;
+        _wView.Focus(FocusState.Programmatic);
 
-    private void Back_BackRequested(object sender, BackRequestedEventArgs args)
-    {
-        if (WView.CanGoBack)
-        {
-            WView.GoBack();
-        }
+        // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
+        _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
 
-        args.Handled = true;
+        _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
+        _wView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }
 
     private async void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
@@ -108,13 +95,12 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
             await md.ShowAsync();
         }
 
-        await WView.ExecuteScriptAsync("navigator.gamepadInputEmulation = 'mouse';");
         ProgressIndicator.Visibility = Visibility.Collapsed;
     }
 
     private void JellyfinWebView_ContainsFullScreenElementChanged(CoreWebView2 sender, object args)
     {
-        ApplicationView appView = ApplicationView.GetForCurrentView();
+        var appView = ApplicationView.GetForCurrentView();
 
         if (sender.ContainsFullScreenElement)
         {
@@ -126,11 +112,5 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
         {
             appView.ExitFullScreenMode();
         }
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        _gamepadManager?.Dispose();
     }
 }
