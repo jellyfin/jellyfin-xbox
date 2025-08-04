@@ -4,11 +4,12 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap mp rescap">
 
   <Identity
     Name="20468Jellyfin.Jellyfin"
-    Publisher="CN=3D3639CB-31B4-4125-B529-F73741781F84"
+    Publisher="CN=DevelopmentJellyfinCert"
     Version="0.9.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72ea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
@@ -46,5 +47,6 @@
   <Capabilities>
     <Capability Name="internetClient" />
     <Capability Name="privateNetworkClientServer"/>
+    <rescap:Capability Name="hevcPlayback" />	  
   </Capabilities>
 </Package>

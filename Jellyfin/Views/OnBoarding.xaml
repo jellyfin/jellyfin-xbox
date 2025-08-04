@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Jellyfin.Views.OnBoarding"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -48,14 +48,6 @@
                 Height="80" />
         </Grid>
 
-        <muxc:ProgressRing
-            x:Name="spinnerConnecting"
-            Grid.RowSpan="2" 
-            Grid.ColumnSpan="2"
-            Height="100"
-            Width="100"
-            IsActive="False"/>
-
         <Grid Grid.Row="1" Padding="0 40 0 0">
             <StackPanel 
                 x:Name="pnlMain" 
@@ -87,7 +79,8 @@
                 <Button 
                     x:Name="btnConnect"
                     Style="{StaticResource PrimaryButton}"
-                    Content="Connect"  />
+                    Content="Connect"
+                    Click="BtnConnect_Click" />
             </StackPanel>
         </Grid>
 
@@ -117,6 +110,10 @@
                     </StackPanel>
                 </ListView.Header>
             </ListView>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"  Background="{StaticResource OverlayColorBG}" Visibility="Collapsed" x:Name="ProgressIndicator">
+            <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
         </Grid>
     </Grid>
 </Page>

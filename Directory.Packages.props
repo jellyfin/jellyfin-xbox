@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <!-- Run "dotnet list package (dash,dash)outdated" to see the latest versions of each package.-->
+  <ItemGroup Label="Package Dependencies">
+    <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="4.14.0" />
+    <PackageVersion Include="SerilogAnalyzer" Version="0.15.0" />
+    <PackageVersion Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />    
+    <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+    <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3351.48"/>
+    <PackageVersion Include="System.Text.Json" Version="9.0.7" />
+  </ItemGroup>
+</Project>
