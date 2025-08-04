@@ -26,12 +26,12 @@ public record JellyfinServerValidationResult
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the Jellyfin server entered is valid.
+    /// Gets a value indicating whether the Jellyfin server entered is valid.
     /// </summary>
-    public bool IsValid { get; set; }
+    public bool IsValid { get; private set; }
 
     /// <summary>
-    /// Gets or sets the error message if the validation failed.
+    /// Gets the error message if the validation failed.
     /// </summary>
-    public string ErrorMessage { get; set; }
+    public string ErrorMessage { get; private set; }
 }
