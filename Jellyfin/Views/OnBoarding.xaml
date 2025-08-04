@@ -8,10 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <SolidColorBrush x:Key="OverlayColorBG" Color="LightGray" Opacity="0.2" />
-    </Page.Resources>
-
     <Grid Background="{StaticResource Color0}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

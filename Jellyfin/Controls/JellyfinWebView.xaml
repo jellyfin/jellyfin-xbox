@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Jellyfin.Controls.JellyfinWebView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,4 +8,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <!-- WebView2 is created programatically otherwise it won't gain focus -->
+    <Grid Grid.Row="0" Background="{StaticResource OverlayColorBG}" Visibility="Visible" x:Name="ProgressIndicator">
+        <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
+    </Grid>
 </UserControl>
