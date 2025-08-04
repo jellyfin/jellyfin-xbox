@@ -59,6 +59,7 @@ public sealed partial class OnBoarding : Page
                 // Check if the parsed URI is pointing to a Jellyfin server.
                 if (!jellyfinServerCheck.IsValid)
                 {
+                    txtError.Text = jellyfinServerCheck.ErrorMessage;
                     txtError.Visibility = Visibility.Visible;
                     btnConnect.IsEnabled = true;
                     return;
