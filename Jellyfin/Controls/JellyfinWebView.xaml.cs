@@ -11,6 +11,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.Controls;
 
+/// <summary>
+/// Represents a custom web view control for interacting with a Jellyfin server.
+/// </summary>
 public sealed partial class JellyfinWebView : UserControl
 {
     private readonly WebView2 _wView;

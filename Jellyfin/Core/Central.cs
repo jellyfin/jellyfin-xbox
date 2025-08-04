@@ -1,3 +1,5 @@
+using System;
+
 namespace Jellyfin.Core;
 
 /// <summary>
@@ -9,4 +11,9 @@ public static class Central
     /// Gets the settings manager for application configuration.
     /// </summary>
     public static SettingsManager Settings { get; } = new SettingsManager();
+
+    /// <summary>
+    /// Gets the minimum supported Jellyfin server version supported on this client.
+    /// </summary>
+    public static Version MinimumSupportedServerVersion { get; } = new(10, 11, 0);
 }
