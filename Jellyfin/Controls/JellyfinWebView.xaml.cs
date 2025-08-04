@@ -1,11 +1,13 @@
 using System;
 using Jellyfin.Core;
 using Jellyfin.Utils;
+using Jellyfin.Views;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.Controls;
@@ -15,7 +17,7 @@ namespace Jellyfin.Controls;
 /// </summary>
 public sealed partial class JellyfinWebView : UserControl, IDisposable
 {
-    private readonly GamepadManager _gamepadManager;
+    private GamepadManager _gamepadManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JellyfinWebView"/> class.
@@ -24,6 +26,44 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
     {
         InitializeComponent();
 
+        if (Central.Settings.JellyfinServerValidated)
+        {
+            InitialiseWebView();
+        }
+        else
+        {
+            BeginServerValidation();
+        }
+    }
+
+    private void BeginServerValidation()
+    {
+        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+        {
+            try
+            {
+                var jellyfinServerCheck = await ServerCheckUtil.IsJellyfinServerUrlValidAsync(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
+                // Check if the parsed URI is pointing to a Jellyfin server.
+                if (!jellyfinServerCheck.IsValid)
+                {
+                    MessageDialog md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
+                        $" {jellyfinServerCheck.ErrorMessage}");
+                    await md.ShowAsync();
+                    (Window.Current.Content as Frame).Navigate(typeof(OnBoarding));
+                    return;
+                }
+
+                InitialiseWebView();
+            }
+            finally
+            {
+                ProgressIndicator.Visibility = Visibility.Collapsed;
+            }
+        });
+    }
+
+    private void InitialiseWebView()
+    {
         // Set WebView source
         WView.Source = new Uri(Central.Settings.JellyfinServer);
 
@@ -69,6 +109,7 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
         }
 
         await WView.ExecuteScriptAsync("navigator.gamepadInputEmulation = 'mouse';");
+        ProgressIndicator.Visibility = Visibility.Collapsed;
     }
 
     private void JellyfinWebView_ContainsFullScreenElementChanged(CoreWebView2 sender, object args)

@@ -39,6 +39,11 @@ public class SettingsManager
         set => SetProperty(_settingsServer, value);
     }
 
+    /// <summary>
+    /// Gets a value indicating whether the state of the <see cref="JellyfinServer"/>s validation state.
+    /// </summary>
+    public bool JellyfinServerValidated { get; internal set; }
+
     private void SetProperty(string propertyName, object value)
     {
         ContainerSettings.Values[propertyName] = value;
