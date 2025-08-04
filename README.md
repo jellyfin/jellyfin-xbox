@@ -5,7 +5,7 @@
 <img alt="Logo banner" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo-solid.svg?sanitize=true"/>
 <br/><br/>
 <a href="https://github.com/jellyfin/jellyfin-xbox">
-<img alt="MIT License" src="https://img.shields.io/github/license/jellyfin/jellyfin-xbox.svg"/>
+<img alt="GPL 2.0 License" src="https://img.shields.io/github/license/jellyfin/jellyfin-xbox.svg"/>
 </a>
 <a href="https://github.com/jellyfin/jellyfin-xbox/releases">
 <img alt="Current Release" src="https://img.shields.io/github/release/jellyfin/jellyfin-xbox.svg"/>
