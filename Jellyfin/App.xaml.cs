@@ -34,6 +34,8 @@ public sealed partial class App : Application
     /// <param name="e">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
+        System.Console.WriteLine("Build Tools");
+        System.Console.WriteLine("");
         var rootFrame = Window.Current.Content as Frame;
 
         // Do not repeat app initialization when the Window already has content,
