@@ -136,6 +136,9 @@
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Central.cs" />
+    <Compile Include="Core\FullScreenManager.cs" />
+    <Compile Include="Core\MessageHandler.cs" />
+    <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -151,6 +154,9 @@
     <Compile Include="Utils\ServerCheckUtil.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +213,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Fonts\NotoSans-Regular.ttf" />
+    <Content Include="Resources\winuwp.js" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -237,6 +244,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OnBoarding.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

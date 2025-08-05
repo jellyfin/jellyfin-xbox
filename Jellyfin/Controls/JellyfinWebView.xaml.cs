@@ -1,11 +1,15 @@
 using System;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Utils;
 using Jellyfin.Views;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Windows.UI.Core;
+using Windows.Data.Json;
+using Windows.Graphics.Display.Core;
+using Windows.System.Profile;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -18,6 +22,7 @@ namespace Jellyfin.Controls;
 /// </summary>
 public sealed partial class JellyfinWebView : UserControl
 {
+    private readonly MessageHandler _messageHandler;
     private WebView2 _wView;
 
     /// <summary>
@@ -26,6 +31,8 @@ public sealed partial class JellyfinWebView : UserControl
     public JellyfinWebView()
     {
         InitializeComponent();
+
+        _messageHandler = new MessageHandler(Window.Current.Content as Frame);
 
         if (Central.Settings.JellyfinServerValidated)
         {
@@ -66,11 +73,67 @@ public sealed partial class JellyfinWebView : UserControl
     private void InitialiseWebView()
     {
         _wView = new WebView2();
-        // Set WebView source
-        _wView.Source = new Uri(Central.Settings.JellyfinServer);
 
         _wView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         _wView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
+        _wView.WebMessageReceived += OnWebMessageReceived;
+
+        HdmiDisplayInformation hdmiInfo = HdmiDisplayInformation.GetForCurrentView();
+        if (hdmiInfo != null)
+        {
+            hdmiInfo.DisplayModesChanged += OnDisplayModeChanged;
+        }
+
+        InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer));
+    }
+
+    private async void InitializeWebViewAndNavigateTo(Uri uri)
+    {
+        await _wView.EnsureCoreWebView2Async();
+        if (_wView.CoreWebView2 == null)
+        {
+            Debug.WriteLine("Failed to EnsureCoreWebView2");
+            Application.Current.Exit();
+        }
+
+        AddDeviceFormToUserAgent();
+        await InjectNativeShellScript();
+
+        _wView.Source = uri;
+    }
+
+    private async Task InjectNativeShellScript()
+    {
+        string nativeShellScript = await NativeShellScriptLoader.LoadNativeShellScript();
+        try
+        {
+            await _wView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(nativeShellScript);
+            Debug.WriteLine("Injected nativeShellScript");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Failed to add NativeShell JS: " + ex.Message);
+        }
+    }
+
+    private void OnWebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
+    {
+        try
+        {
+            var jsonMessage = args.TryGetWebMessageAsString();
+            if (JsonObject.TryParse(jsonMessage, out JsonObject argsJson))
+            {
+                _messageHandler.HandleJsonNotification(argsJson);
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to parse args as JSON: {jsonMessage}");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Failed to process OnWebMessageReceived: {e}");
+        }
     }
 
     private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
@@ -79,11 +142,23 @@ public sealed partial class JellyfinWebView : UserControl
         Content = _wView;
         _wView.Focus(FocusState.Programmatic);
 
-        // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
-        _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
-
         _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         _wView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+    }
+
+    private void AddDeviceFormToUserAgent()
+    {
+        string userAgent = _wView.CoreWebView2.Settings.UserAgent;
+        string deviceForm = AnalyticsInfo.DeviceForm;
+
+        if (!userAgent.Contains(deviceForm) && !string.Equals(deviceForm, "Unknown", StringComparison.OrdinalIgnoreCase))
+        {
+            const string ToReplace = ")";
+            string userAgentWithDeviceForm = new Regex(Regex.Escape(ToReplace))
+                .Replace(userAgent, "; " + deviceForm + ToReplace, 1);
+
+            _wView.CoreWebView2.Settings.UserAgent = userAgentWithDeviceForm;
+        }
     }
 
     private async void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
@@ -112,5 +187,22 @@ public sealed partial class JellyfinWebView : UserControl
         {
             appView.ExitFullScreenMode();
         }
+    }
+
+    private void OnDisplayModeChanged(HdmiDisplayInformation sender, object args)
+    {
+        _ = Task.Run(async () =>
+        {
+            string nativeShellScript = await NativeShellScriptLoader.LoadNativeShellScript();
+            try
+            {
+                await _wView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(nativeShellScript);
+                Debug.WriteLine("Injected nativeShellScript on display mode change");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Failed to inject script on display mode change: " + ex.Message);
+            }
+        });
     }
 }
