@@ -1,10 +1,13 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Core;
 using Jellyfin.Helpers;
+using Jellyfin.Models;
 using Jellyfin.Utils;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -14,8 +17,11 @@ namespace Jellyfin.Views;
 /// <summary>
 /// Represents the onboarding page for the application, allowing users to connect to a Jellyfin server.
 /// </summary>
-public sealed partial class OnBoarding : Page
+public sealed partial class OnBoarding : Page, IDisposable
 {
+    private ObservableCollection<DiscoveredServer> _discoveredServers = new ObservableCollection<DiscoveredServer>();
+    private ServerDiscovery _serverDiscovery = new ServerDiscovery();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="OnBoarding"/> class.
     /// </summary>
@@ -25,6 +31,7 @@ public sealed partial class OnBoarding : Page
         this.Loaded += OnBoarding_Loaded;
         txtUrl.KeyUp += TxtUrl_KeyUp;
         txtUrl.Text = Central.Settings.JellyfinServer ?? string.Empty;
+        _serverDiscovery.OnDiscover += ServerDiscovery_OnDiscover;
     }
 
     private void OnBoarding_Loaded(object sender, RoutedEventArgs e)
@@ -79,11 +86,48 @@ public sealed partial class OnBoarding : Page
         });
     }
 
+    private async void ServerDiscovery_OnDiscover()
+    {
+        DiscoveredServer discoveredServer = null;
+        while (_serverDiscovery.DiscoveredServers.TryDequeue(out discoveredServer))
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (!_discoveredServers.Contains(discoveredServer))
+                {
+                    _discoveredServers.Add(discoveredServer);
+                    txtDiscoverNoneFound.Visibility = Visibility.Collapsed;
+                }
+            });
+        }
+    }
+
     private void TxtUrl_KeyUp(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key == Windows.System.VirtualKey.Enter)
         {
             BtnConnect_Click(btnConnect, null);
         }
+    }
+
+    private void DiscoveredList_ItemClick(object clickedItem, ItemClickEventArgs e)
+    {
+        var discoveredServer = (DiscoveredServer)e.ClickedItem;
+        var addressString = discoveredServer.Address.ToString();
+        txtUrl.Text = addressString;
+        BtnConnect_Click(clickedItem, e);
+    }
+
+    private void Page_Unloaded(object sender, RoutedEventArgs e)
+    {
+        Dispose();
+    }
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    public void Dispose()
+    {
+        _serverDiscovery.Dispose();
     }
 }

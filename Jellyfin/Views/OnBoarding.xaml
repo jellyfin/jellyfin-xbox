@@ -4,10 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Jellyfin.Views"
     xmlns:c="using:Jellyfin.Controls"
+    xmlns:models="using:Jellyfin.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Unloaded="Page_Unloaded"
     mc:Ignorable="d">
 
+    
     <Grid Background="{StaticResource Color0}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -30,8 +34,12 @@
             <RowDefinition x:Name="RowHeader" Height="200" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <Grid Background="{StaticResource Color10}">
+        <Grid Background="{StaticResource Color10}" Grid.ColumnSpan="2">
             <Image 
                 x:Name="logo" 
                 Source="/Assets/OnBoardingLogo.png" 
@@ -76,7 +84,35 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource OverlayColorBG}" Visibility="Collapsed" x:Name="ProgressIndicator">
+        <Grid Grid.Row="1" Grid.Column="1">
+            <ListView x:Name="lstDiscovered" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:DiscoveredServer">
+                            <StackPanel>
+                                <TextBlock Text="{x:Bind Name}" FontSize="{StaticResource FontM}"/>
+                                <TextBlock Text="{x:Bind Address}" FontSize="{StaticResource FontS}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock
+                            x:Name="txtDiscoverTitle"
+                            Text="Discover Server" 
+                            Foreground="White" FontSize="{StaticResource FontL}"
+                            Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
+                            Padding="0 40 0 0"
+                            HorizontalAlignment="Center" />
+                        <TextBlock x:Name="txtDiscoverNoneFound" FontSize="{StaticResource FontM}" 
+                                   HorizontalAlignment="Center" TextWrapping="WrapWholeWords">
+                            No servers found, searching.
+                        </TextBlock>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"  Background="{StaticResource OverlayColorBG}" Visibility="Collapsed" x:Name="ProgressIndicator">
             <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
         </Grid>
     </Grid>
