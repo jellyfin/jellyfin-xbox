@@ -45,10 +45,7 @@
         SupportedFeatures.push('physicalvolumecontrol');
     }
 
-    // Only devices with HdmiDisplayInformation have settings currently
-    if (xbox) {
-        SupportedFeatures.push('clientsettings');
-    }
+    SupportedFeatures.push('clientsettings');
 
     console.debug('SupportedFeatures', SupportedFeatures);
 

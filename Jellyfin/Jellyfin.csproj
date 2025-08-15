@@ -135,6 +135,8 @@
     <Compile Include="Controls\JellyfinWebView.xaml.cs">
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\BooleanVisibilityConverter.cs" />
+    <Compile Include="Converter\BooleanVisibilityInverseConverter.cs" />
     <Compile Include="Core\Central.cs" />
     <Compile Include="Core\FullScreenManager.cs" />
     <Compile Include="Core\MessageHandler.cs" />
@@ -293,4 +295,5 @@
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" />
     <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" PrivateAssets="All" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

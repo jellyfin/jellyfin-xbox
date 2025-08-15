@@ -17,12 +17,18 @@ public sealed partial class Settings : Page
     {
         InitializeComponent();
         btnSave.Click += BtnSave_Click;
+        btnAbort.Click += BtnAbort_Click;
 
         HdmiDisplayInformation hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
         checkBoxAutoRefreshRate.IsEnabled = hdmiDisplayInformation != null;
         checkBoxAutoRefreshRate.IsChecked = Central.Settings.AutoRefreshRate;
         checkBoxAutoResolution.IsEnabled = hdmiDisplayInformation != null;
         checkBoxAutoResolution.IsChecked = Central.Settings.AutoResolution;
+    }
+
+    private void BtnAbort_Click(object sender, RoutedEventArgs e)
+    {
+        NavigateToMainPage();
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)
