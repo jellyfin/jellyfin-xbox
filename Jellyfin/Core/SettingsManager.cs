@@ -9,6 +9,8 @@ public class SettingsManager
 {
     private string _containerSettings = "APPSETTINGS";
     private string _settingsServer = "SERVER";
+    private string _autoResolution = "AUTO_RESOLUTION";
+    private string _autoRefreshRate = "AUTO_REFRESH_RATE";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -43,6 +45,24 @@ public class SettingsManager
     /// Gets a value indicating whether the state of the <see cref="JellyfinServer"/>s validation state.
     /// </summary>
     public bool JellyfinServerValidated { get; internal set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the display resolution should be set to match the video resolution.
+    /// </summary>
+    public bool AutoResolution
+    {
+        get => GetProperty<bool>(_autoResolution);
+        set => SetProperty(_autoResolution, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the display refresh rate should be set to match the video refresh rate.
+    /// </summary>
+    public bool AutoRefreshRate
+    {
+        get => GetProperty<bool>(_autoRefreshRate);
+        set => SetProperty(_autoRefreshRate, value);
+    }
 
     private void SetProperty(string propertyName, object value)
     {
