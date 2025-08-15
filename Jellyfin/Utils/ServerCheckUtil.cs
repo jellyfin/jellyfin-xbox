@@ -112,7 +112,8 @@ public static class ServerCheckUtil
                     return new JellyfinServerValidationResult(false, $"Invalid server version format: '{versionString}'.");
                 }
 
-                IsFutureUnsupportedVersion = serverVersion <= Central.MinimumFutureSupportedServerVersion;
+                IsFutureUnsupportedVersion = serverVersion < Central.MinimumFutureSupportedServerVersion;
+                Central.ServerVersion = serverVersion;
 
                 if (serverVersion < Central.MinimumSupportedServerVersion)
                 {

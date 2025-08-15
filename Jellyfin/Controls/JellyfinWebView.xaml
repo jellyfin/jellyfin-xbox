@@ -18,7 +18,6 @@
                              To="0"
                              Duration="0:0:0.8"
                              EnableDependentAnimation="true" />
-            <!--<PopOutThemeAnimation TargetName="DepricationNoticeGrid"></PopOutThemeAnimation>-->
         </Storyboard>
     </UserControl.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

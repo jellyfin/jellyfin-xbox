@@ -64,18 +64,6 @@ public sealed partial class JellyfinWebView : UserControl
                     return;
                 }
 
-                if (ServerCheckUtil.IsFutureUnsupportedVersion)
-                {
-                    DepricationNoticeGrid.Visibility = Visibility.Visible;
-                    _ = Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith((f) =>
-                    {
-                        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            ExitStoryboard.Begin();
-                        });
-                    });
-                }
-
                 await InitialiseWebView().ConfigureAwait(true);
             }
             finally
@@ -87,6 +75,18 @@ public sealed partial class JellyfinWebView : UserControl
 
     private async Task InitialiseWebView()
     {
+        if (ServerCheckUtil.IsFutureUnsupportedVersion)
+        {
+            DepricationNoticeGrid.Visibility = Visibility.Visible;
+            _ = Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith((f) =>
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    ExitStoryboard.Begin();
+                });
+            });
+        }
+
         _wView = new WebView2();
 
         _wView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
@@ -160,6 +160,7 @@ public sealed partial class JellyfinWebView : UserControl
         _wView.Focus(FocusState.Programmatic);
 
         // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
+
         // _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
 
         _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
