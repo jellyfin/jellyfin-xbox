@@ -36,7 +36,10 @@ public sealed partial class JellyfinWebView : UserControl
 
         if (Central.Settings.JellyfinServerValidated)
         {
-            InitialiseWebView();
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                await InitialiseWebView().ConfigureAwait(true);
+            });
         }
         else
         {
@@ -61,7 +64,7 @@ public sealed partial class JellyfinWebView : UserControl
                     return;
                 }
 
-                InitialiseWebView();
+                await InitialiseWebView().ConfigureAwait(true);
             }
             finally
             {
@@ -70,7 +73,7 @@ public sealed partial class JellyfinWebView : UserControl
         });
     }
 
-    private void InitialiseWebView()
+    private async Task InitialiseWebView()
     {
         _wView = new WebView2();
 
@@ -78,33 +81,34 @@ public sealed partial class JellyfinWebView : UserControl
         _wView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
         _wView.WebMessageReceived += OnWebMessageReceived;
 
-        HdmiDisplayInformation hdmiInfo = HdmiDisplayInformation.GetForCurrentView();
+        var hdmiInfo = HdmiDisplayInformation.GetForCurrentView();
         if (hdmiInfo != null)
         {
             hdmiInfo.DisplayModesChanged += OnDisplayModeChanged;
         }
 
-        InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer));
+        await InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
     }
 
-    private async void InitializeWebViewAndNavigateTo(Uri uri)
+    private async Task InitializeWebViewAndNavigateTo(Uri uri)
     {
         await _wView.EnsureCoreWebView2Async();
         if (_wView.CoreWebView2 == null)
         {
+            await new MessageDialog("Could not initialise WebView.").ShowAsync();
             Debug.WriteLine("Failed to EnsureCoreWebView2");
             Application.Current.Exit();
         }
 
         AddDeviceFormToUserAgent();
-        await InjectNativeShellScript();
+        await InjectNativeShellScript().ConfigureAwait(true);
 
         _wView.Source = uri;
     }
 
     private async Task InjectNativeShellScript()
     {
-        string nativeShellScript = await NativeShellScriptLoader.LoadNativeShellScript();
+        string nativeShellScript = await NativeShellScriptLoader.LoadNativeShellScript().ConfigureAwait(true);
         try
         {
             await _wView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(nativeShellScript);
@@ -123,7 +127,7 @@ public sealed partial class JellyfinWebView : UserControl
             var jsonMessage = args.TryGetWebMessageAsString();
             if (JsonObject.TryParse(jsonMessage, out JsonObject argsJson))
             {
-                _messageHandler.HandleJsonNotification(argsJson);
+                _messageHandler.HandleJsonNotification(argsJson).GetAwaiter().GetResult();
             }
             else
             {
@@ -161,16 +165,19 @@ public sealed partial class JellyfinWebView : UserControl
         }
     }
 
-    private async void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+    private void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
     {
-        if (!args.IsSuccess)
+        _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
         {
-            CoreWebView2WebErrorStatus errorStatus = args.WebErrorStatus;
-            MessageDialog md = new MessageDialog($"Navigation failed: {errorStatus}");
-            await md.ShowAsync();
-        }
+            if (!args.IsSuccess)
+            {
+                CoreWebView2WebErrorStatus errorStatus = args.WebErrorStatus;
+                MessageDialog md = new MessageDialog($"Navigation failed: {errorStatus}");
+                await md.ShowAsync();
+            }
 
-        ProgressIndicator.Visibility = Visibility.Collapsed;
+            ProgressIndicator.Visibility = Visibility.Collapsed;
+        });
     }
 
     private void JellyfinWebView_ContainsFullScreenElementChanged(CoreWebView2 sender, object args)

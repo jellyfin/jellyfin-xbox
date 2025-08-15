@@ -15,23 +15,24 @@ namespace Jellyfin.Core;
 /// </summary>
 public static class NativeShellScriptLoader
 {
+    private static readonly Uri StorageUri = new Uri("ms-appx:///Resources/winuwp.js");
+
     /// <summary>
     /// LoadNativeShellScript.
     /// </summary>
     /// <returns><see cref="Task"/>representing the asynchronous operation.</returns>
     public static async Task<string> LoadNativeShellScript()
     {
-        Uri uri = new Uri("ms-appx:///Resources/winuwp.js");
-        StorageFile storageFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
-        string nativeShellScript = await FileIO.ReadTextAsync(storageFile);
+        var storageFile = await StorageFile.GetFileFromApplicationUriAsync(StorageUri);
+        var nativeShellScript = await FileIO.ReadTextAsync(storageFile);
 
-        Assembly assembly = Assembly.GetExecutingAssembly();
+        var assembly = Assembly.GetExecutingAssembly();
         nativeShellScript = nativeShellScript.Replace(
             "APP_NAME",
             Wrap(assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title, '\''));
         nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(assembly.GetName().Version.ToString(), '\''));
 
-        string deviceForm = AnalyticsInfo.DeviceForm;
+        var deviceForm = AnalyticsInfo.DeviceForm;
         if (deviceForm == "Unknown")
         {
             deviceForm = AppUtils.GetDeviceFormFactorType().ToString();
@@ -39,13 +40,13 @@ public static class NativeShellScriptLoader
 
         nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(deviceForm, '\''));
 
-        HdmiDisplayInformation hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+        var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
         if (hdmiDisplayInformation != null)
         {
-            IReadOnlyList<HdmiDisplayMode> supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes();
-            bool supportsHdr = supportedDisplayModes.Any(mode => mode.IsSmpte2084Supported);
+            var supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes();
+            var supportsHdr = supportedDisplayModes.Any(mode => mode.IsSmpte2084Supported);
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_HDR", supportsHdr.ToString().ToLower());
-            bool supportsDovi = supportedDisplayModes.Any(mode => mode.IsDolbyVisionLowLatencySupported);
+            var supportsDovi = supportedDisplayModes.Any(mode => mode.IsDolbyVisionLowLatencySupported);
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_DOVI", supportsDovi.ToString().ToLower());
         }
         else

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Jellyfin.Views;
 using Windows.Data.Json;
 using Windows.UI.Core;
@@ -29,18 +30,19 @@ public class MessageHandler
     /// Handle Json Notification from winuwp.js.
     /// </summary>
     /// <param name="json">JsonObject.</param>
-    public async void HandleJsonNotification(JsonObject json)
+    /// <returns>A task that completes when the notification action has been performed.</returns>
+    public async Task HandleJsonNotification(JsonObject json)
     {
-        string eventType = json.GetNamedString("type");
-        JsonObject args = json.GetNamedObject("args");
+        var eventType = json.GetNamedString("type");
+        var args = json.GetNamedObject("args");
 
         if (eventType == "enableFullscreen")
         {
-            await _fullScreenManager.EnableFullscreenAsync(args);
+            await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);
         }
         else if (eventType == "disableFullscreen")
         {
-            _fullScreenManager.DisableFullScreen();
+            await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
         }
         else if (eventType == "selectServer")
         {
