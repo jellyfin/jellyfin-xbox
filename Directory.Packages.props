@@ -12,6 +12,6 @@
     <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3351.48"/>
-    <PackageVersion Include="System.Text.Json" Version="9.0.7" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.8" />
   </ItemGroup>
 </Project>
