@@ -67,7 +67,7 @@
                     Visibility="Collapsed"
                     FontSize="{StaticResource FontM}"
                     Margin="1 1 1 20"
-                    Foreground="#CF4A4A" />
+                    Foreground="{StaticResource DangerColor}" />
                 <Button 
                     x:Name="btnConnect"
                     Style="{StaticResource PrimaryButton}"

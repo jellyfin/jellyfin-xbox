@@ -75,7 +75,7 @@
                 <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                        Grid.Row="1"
                        FontSize="{StaticResource FontM}"
-                       Foreground="#CF4A4A" >
+                       Foreground="{StaticResource DangerColor}" >
                 Auto display refresh rate is not supported on this device.
                 </TextBlock>
 
@@ -87,7 +87,7 @@
                 <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                        Grid.Row="3"
                        FontSize="{StaticResource FontM}"
-                       Foreground="#CF4A4A" >
+                       Foreground="{StaticResource DangerColor}" >
                 Display resolution is not supported on this device.
                 </TextBlock>
 
