@@ -10,6 +10,7 @@ using Microsoft.Web.WebView2.Core;
 using Windows.Data.Json;
 using Windows.Graphics.Display.Core;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -24,6 +25,7 @@ namespace Jellyfin.Controls;
 public sealed partial class JellyfinWebView : UserControl, IDisposable
 {
     private readonly MessageHandler _messageHandler;
+    private readonly IDisposable _navigationHandler;
     private WebView2 _wView;
 
     /// <summary>
@@ -34,6 +36,7 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
         InitializeComponent();
 
         _messageHandler = new MessageHandler(Window.Current.Content as Frame);
+        _navigationHandler = GamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
         if (Central.Settings.JellyfinServerValidated)
         {
@@ -101,22 +104,14 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
         }
 
         await InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
-
-        var frame = Window.Current.Content as Frame;
-        frame.Navigating += Frame_Navigating;
     }
 
-    private void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
+    private void WebView_BackRequested(BackRequestedEventArgs e)
     {
-        if (e.NavigationMode == NavigationMode.Back && _wView.CanGoBack)
+        if (_wView.CanGoBack && !e.Handled)
         {
-            e.Cancel = true; // Prevent the frame from navigating back.
+            e.Handled = true;
             _wView.GoBack(); // Navigate back in the WebView2 control.
-        }
-        else if (e.NavigationMode == NavigationMode.Forward && _wView.CanGoForward)
-        {
-            e.Cancel = true; // Prevent the frame from navigating forward.
-            _wView.GoForward(); // Navigate forward in the WebView2 control.
         }
     }
 
@@ -251,7 +246,6 @@ public sealed partial class JellyfinWebView : UserControl, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        var frame = Window.Current.Content as Frame;
-        frame.Navigating -= Frame_Navigating;
+        _navigationHandler.Dispose();
     }
 }

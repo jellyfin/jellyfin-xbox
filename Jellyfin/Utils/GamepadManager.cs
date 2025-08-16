@@ -1,98 +1,77 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Windows.Gaming.Input;
-using Windows.System;
-using Windows.UI.Xaml;
+using System.Linq;
+using Windows.UI.Core;
 
 namespace Jellyfin.Utils;
 
 /// <summary>
 /// Manages gamepad input, handles gamepad connection events, and raises events for specific button presses.
 /// </summary>
-public sealed class GamepadManager : IDisposable
+public static class GamepadManager
 {
-    private const int ButtonPressCooldownMs = 250;
+    private static readonly IDictionary<SystemNavigationManager, List<(int Priority, Action<BackRequestedEventArgs> Execute)>> _gamepadActions;
 
-    private readonly Dictionary<Gamepad, GamepadState> _gamepadStates = new Dictionary<Gamepad, GamepadState>();
-    private readonly DispatcherQueue _dispatcherQueue;
-    private readonly DispatcherTimer _gamepadPollingTimer;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GamepadManager"/> class.
-    /// </summary>
-    public GamepadManager()
+    static GamepadManager()
     {
-        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
-        Gamepad.GamepadAdded += Gamepad_Added;
-        Gamepad.GamepadRemoved += Gamepad_Removed;
-
-        _gamepadPollingTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(10),
-        };
-        _gamepadPollingTimer.Tick += GamepadPollingTimer_Tick;
-        _gamepadPollingTimer.Start();
+        _gamepadActions = new Dictionary<SystemNavigationManager, List<(int Priority, Action<BackRequestedEventArgs> Execute)>>();
     }
 
     /// <summary>
-    /// Occurs when the Back (B) button is pressed on a connected gamepad.
+    /// Registers a handler for the back button event on the system navigation manager.
     /// </summary>
-    public event Action OnBackPressed;
-
-    private void Gamepad_Added(object sender, Gamepad e)
+    /// <param name="handler">Callback delegate for handling the back action.</param>
+    /// <param name="priority">Priority with which the handler should be executed.</param>
+    /// <returns>A disposable that can be used to revoke the registration.</returns>
+    public static IDisposable ObserveBackEvent(Action<BackRequestedEventArgs> handler, int priority = int.MaxValue)
     {
-        if (!_gamepadStates.ContainsKey(e))
+        var manager = SystemNavigationManager.GetForCurrentView();
+        manager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+        if (!_gamepadActions.TryGetValue(manager, out var queue))
         {
-            _gamepadStates[e] = new GamepadState();
-        }
-    }
+            _gamepadActions[manager] = queue = new List<(int, Action<BackRequestedEventArgs>)>();
 
-    private void Gamepad_Removed(object sender, Gamepad e)
-    {
-        _gamepadStates.Remove(e);
-    }
-
-    private void GamepadPollingTimer_Tick(object sender, object e)
-    {
-        if (_dispatcherQueue.HasThreadAccess)
-        {
-            ProcessGamepadInput();
-        }
-        else
-        {
-            _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.High, ProcessGamepadInput);
-        }
-    }
-
-    private void ProcessGamepadInput()
-    {
-        foreach (Gamepad gamepad in _gamepadStates.Keys)
-        {
-            GamepadState gamepadState = _gamepadStates[gamepad];
-            GamepadReading reading = gamepad.GetCurrentReading();
-            bool isBPressed = (reading.Buttons & GamepadButtons.B) == GamepadButtons.B;
-
-            if (isBPressed && !gamepadState.WasBPressed && gamepadState.ButtonCooldownTimer.ElapsedMilliseconds >= ButtonPressCooldownMs) // press detected
+            void OnManagerOnBackRequested(object sender, BackRequestedEventArgs args)
             {
-                OnBackPressed?.Invoke();
-                gamepadState.WasBPressed = true;
-                gamepadState.ButtonCooldownTimer.Restart();
+                if (queue.Count > 0)
+                {
+                    foreach (var valueTuple in queue.OrderBy(e => e.Priority).TakeWhile(e => !args.Handled))
+                    {
+                        valueTuple.Execute?.Invoke(args);
+                    }
+                }
             }
-            else if (!isBPressed)
-            {
-                gamepadState.WasBPressed = false;
-            }
+
+            manager.BackRequested += OnManagerOnBackRequested;
+        }
+
+        queue.Add((priority, handler));
+
+        return new UnregisterDisposable(handler, manager);
+    }
+
+    private static void UnregisterHandler(Action<BackRequestedEventArgs> handler, SystemNavigationManager systemNavigationManager)
+    {
+        if (_gamepadActions.TryGetValue(systemNavigationManager, out var queue))
+        {
+            queue.RemoveAll(e => e.Execute == handler);
         }
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
+    private sealed class UnregisterDisposable : IDisposable
     {
-        _gamepadPollingTimer.Stop();
-        _gamepadPollingTimer.Tick -= GamepadPollingTimer_Tick;
-        Gamepad.GamepadAdded -= Gamepad_Added;
-        Gamepad.GamepadRemoved -= Gamepad_Removed;
+        private readonly Action<BackRequestedEventArgs> _handler;
+        private readonly SystemNavigationManager _systemNavigationManager;
+
+        public UnregisterDisposable(Action<BackRequestedEventArgs> handler, SystemNavigationManager systemNavigationManager)
+        {
+            _handler = handler;
+            _systemNavigationManager = systemNavigationManager;
+        }
+
+        public void Dispose()
+        {
+            GamepadManager.UnregisterHandler(_handler, _systemNavigationManager);
+        }
     }
 }

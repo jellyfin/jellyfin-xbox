@@ -1,4 +1,4 @@
-<Page
+<UserControl
     x:Class="Jellyfin.Views.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     Background="{StaticResource Color0}"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="CheckboxContentTemplate">
                 <TextBlock Text="{Binding}" 
@@ -19,100 +19,100 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource CheckboxContentTemplate}"/>
             </Style>
         </ResourceDictionary>
-    </Page.Resources>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource Color0}">
+        <Grid VerticalAlignment="Top">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup>
 
-    <Grid 
-        VerticalAlignment="Top" >
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
+                    <VisualState>
+                        <VisualState.StateTriggers>
+                            <c:DeviceFamilyStateTrigger TargetDeviceFamily="Desktop" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="Image.HorizontalAlignment" Value="Left" />
+                            <Setter Target="Image.Height" Value="28" />
+                            <Setter Target="Image.Margin" Value="28 0 0 0" />
+                            <Setter Target="TextBox.FontSize" Value="22" />
+                            <Setter Target="TextBox.MaxWidth" Value="400" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <c:DeviceFamilyStateTrigger TargetDeviceFamily="Desktop" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="Image.HorizontalAlignment" Value="Left" />
-                        <Setter Target="Image.Height" Value="28" />
-                        <Setter Target="Image.Margin" Value="28 0 0 0" />
-                        <Setter Target="TextBox.FontSize" Value="22" />
-                        <Setter Target="TextBox.MaxWidth" Value="400" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-
-        <Grid Background="{StaticResource Color10}">
-            <Image 
+            <Grid Background="{StaticResource Color10}">
+                <Image 
                 x:Name="logo" 
                 Source="/Assets/OnBoardingLogo.png" 
                 Stretch="Uniform" 
                 HorizontalAlignment="Center" 
                 Height="80" />
-        </Grid>
+            </Grid>
 
-        <Grid
+            <Grid
             Grid.Row="1"
             HorizontalAlignment="Center"
             Margin="0,30,0,0"
             Width="640">
 
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-            <CheckBox 
+                <CheckBox 
                 x:Name="checkBoxAutoRefreshRate"
                 Grid.Row="0"
                 Content="Set the display refresh rate to the media refresh rate">
-            </CheckBox>
-            <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                </CheckBox>
+                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                        Grid.Row="1"
                        FontSize="{StaticResource FontM}"
                        Foreground="#CF4A4A" >
                 Auto display refresh rate is not supported on this device.
-            </TextBlock>
+                </TextBlock>
 
-            <CheckBox 
+                <CheckBox 
                 x:Name="checkBoxAutoResolution"
                 Content="Set the display resolution to the media resolution"
                 Foreground="White" FontSize="{StaticResource FontL}"
                 Grid.Row="2"/>
-            <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                        Grid.Row="3"
                        FontSize="{StaticResource FontM}"
                        Foreground="#CF4A4A" >
                 Display resolution is not supported on this device.
-            </TextBlock>
+                </TextBlock>
 
-            <Grid
+                <Grid
                 HorizontalAlignment="Stretch"
                 Margin="0,30,0,0"
                 Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Button
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button
                     x:Name="btnAbort"
                     Grid.Column="0"
                     Style="{StaticResource SecondaryButton}"
                     Content="Abort"  />
-                <Button
+                    <Button
                     x:Name="btnSave"
                     Grid.Column="1"
                     Style="{StaticResource PrimaryButton}"
                     Content="Save"  />
-            </Grid>
+                </Grid>
 
-            
+
+            </Grid>
         </Grid>
     </Grid>
-</Page>
+</UserControl>
