@@ -21,6 +21,7 @@
                     <SolidColorBrush x:Key="SecondaryColor" Color="#756296" />
                     <SolidColorBrush x:Key="SecondaryColorHover" Color="#756B86" />
                     <SolidColorBrush x:Key="OverlayColorBG" Color="LightGray" Opacity="0.2" />
+                    <SolidColorBrush x:Key="DangerColor" Color="#CF4A4A"/>
 
                     <FontFamily x:Key="JellyfinFamilyFont">/Fonts/NotoSans-Regular.ttf#Noto Sans</FontFamily>
 

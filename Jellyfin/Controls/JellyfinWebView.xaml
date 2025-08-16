@@ -7,8 +7,50 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <!-- WebView2 is created programatically otherwise it won't gain focus -->
-    <Grid Grid.Row="0" Background="{StaticResource OverlayColorBG}" Visibility="Visible" x:Name="ProgressIndicator">
-        <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
+    <UserControl.Resources>
+        <Storyboard x:Name="EnterStoryboard">
+            <FadeInThemeAnimation Storyboard.TargetName="DepricationNoticeGrid" />
+        </Storyboard>
+        <Storyboard x:Name="ExitStoryboard">
+            <DoubleAnimation Storyboard.TargetName="DepricationNoticeGrid"
+                             Storyboard.TargetProperty="Height"
+                             From="60"
+                             To="0"
+                             Duration="0:0:0.8"
+                             EnableDependentAnimation="true" />
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Name="DepricationNoticeGrid"
+            Visibility="Collapsed"
+            Height="60"
+            BorderBrush="{StaticResource DangerColor}"
+            BorderThickness="1"
+            Background="{StaticResource Color90}">
+          
+            <TextBlock HorizontalAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       Foreground="{StaticResource DangerColor}"
+            >
+This version of jellyfin-for-xbox will soon be deprecated. <LineBreak />
+Please update the Jellyfin Server to 10.11 when its released. <LineBreak />
+Shortly after the official 10.11 release the next version of this client will not be compatible.
+            </TextBlock>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Grid.Row="1"
+              Name="ContentGrid">
+            <!-- WebView2 is created programatically otherwise it won't gain focus -->
+            <Grid Grid.Row="0" Background="{StaticResource OverlayColorBG}" Visibility="Visible" x:Name="ProgressIndicator">
+                <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

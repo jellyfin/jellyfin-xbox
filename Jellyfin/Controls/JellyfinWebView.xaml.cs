@@ -75,6 +75,18 @@ public sealed partial class JellyfinWebView : UserControl
 
     private async Task InitialiseWebView()
     {
+        if (ServerCheckUtil.IsFutureUnsupportedVersion)
+        {
+            DepricationNoticeGrid.Visibility = Visibility.Visible;
+            _ = Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith((f) =>
+            {
+                _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    ExitStoryboard.Begin();
+                });
+            });
+        }
+
         _wView = new WebView2();
 
         _wView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
@@ -143,11 +155,13 @@ public sealed partial class JellyfinWebView : UserControl
     private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
     {
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
-        Content = _wView;
+        ContentGrid.Children.Clear();
+        ContentGrid.Children.Add(_wView);
         _wView.Focus(FocusState.Programmatic);
 
         // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
-        _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
+
+        // _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
 
         _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         _wView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
