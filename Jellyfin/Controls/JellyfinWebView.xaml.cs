@@ -14,13 +14,14 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Jellyfin.Controls;
 
 /// <summary>
 /// Represents a custom web view control for interacting with a Jellyfin server.
 /// </summary>
-public sealed partial class JellyfinWebView : UserControl
+public sealed partial class JellyfinWebView : UserControl, IDisposable
 {
     private readonly MessageHandler _messageHandler;
     private WebView2 _wView;
@@ -100,6 +101,23 @@ public sealed partial class JellyfinWebView : UserControl
         }
 
         await InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
+
+        var frame = Window.Current.Content as Frame;
+        frame.Navigating += Frame_Navigating;
+    }
+
+    private void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
+    {
+        if (e.NavigationMode == NavigationMode.Back && _wView.CanGoBack)
+        {
+            e.Cancel = true; // Prevent the frame from navigating back.
+            _wView.GoBack(); // Navigate back in the WebView2 control.
+        }
+        else if (e.NavigationMode == NavigationMode.Forward && _wView.CanGoForward)
+        {
+            e.Cancel = true; // Prevent the frame from navigating forward.
+            _wView.GoForward(); // Navigate forward in the WebView2 control.
+        }
     }
 
     private async Task InitializeWebViewAndNavigateTo(Uri uri)
@@ -161,7 +179,7 @@ public sealed partial class JellyfinWebView : UserControl
 
         // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
 
-        // _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
+        _wView.CoreWebView2.Settings.UserAgent += " WebView2 " + Utils.AppUtils.GetDeviceFormFactorType().ToString();
 
         _wView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         _wView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
@@ -228,5 +246,12 @@ public sealed partial class JellyfinWebView : UserControl
                 Debug.WriteLine("Failed to inject script on display mode change: " + ex.Message);
             }
         });
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        var frame = Window.Current.Content as Frame;
+        frame.Navigating -= Frame_Navigating;
     }
 }
