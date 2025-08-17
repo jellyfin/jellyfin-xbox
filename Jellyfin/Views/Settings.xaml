@@ -5,59 +5,45 @@
     xmlns:c="using:Jellyfin.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Jellyfin.ViewModels" 
+    xmlns:behaviors="using:Jellyfin.Behaviors" 
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     Background="{StaticResource Color0}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="CheckboxContentTemplate">
-                <TextBlock Text="{Binding}" 
+                <TextBlock Text="{Binding}"
                            Foreground="White"
-                           FontSize="{StaticResource FontL}"/>
+                           FontSize="{StaticResource FontL}" />
             </DataTemplate>
             <Style TargetType="CheckBox">
-                <Setter Property="ContentTemplate" Value="{StaticResource CheckboxContentTemplate}"/>
+                <Setter Property="ContentTemplate" Value="{StaticResource CheckboxContentTemplate}" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{StaticResource Color0}">
         <Grid VerticalAlignment="Top">
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-
-                    <VisualState>
-                        <VisualState.StateTriggers>
-                            <c:DeviceFamilyStateTrigger TargetDeviceFamily="Desktop" />
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="Image.HorizontalAlignment" Value="Left" />
-                            <Setter Target="Image.Height" Value="28" />
-                            <Setter Target="Image.Margin" Value="28 0 0 0" />
-                            <Setter Target="TextBox.FontSize" Value="22" />
-                            <Setter Target="TextBox.MaxWidth" Value="400" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
             <Grid Background="{StaticResource Color10}">
-                <Image 
-                x:Name="logo" 
-                Source="/Assets/OnBoardingLogo.png" 
-                Stretch="Uniform" 
-                HorizontalAlignment="Center" 
-                Height="80" />
+                <Image
+                    Source="/Assets/OnBoardingLogo.png"
+                    Stretch="Uniform"
+                    HorizontalAlignment="Center"
+                    Height="80" />
             </Grid>
 
             <Grid
-            Grid.Row="1"
-            HorizontalAlignment="Center"
-            Margin="0,30,0,0"
-            Width="640">
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="0,30,0,0"
+                Width="640">
 
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -67,51 +53,54 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <CheckBox 
-                x:Name="checkBoxAutoRefreshRate"
-                Grid.Row="0"
-                Content="Set the display refresh rate to the media refresh rate">
+                <CheckBox
+                    IsChecked="{Binding AutoRefreshRate}"
+                    IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                    Grid.Row="0"
+                    Content="Set the display refresh rate to the media refresh rate">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:AutoFocusBehavior FocusOnEnable="True" />
+                    </interactivity:Interaction.Behaviors>
                 </CheckBox>
                 <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                       Grid.Row="1"
-                       FontSize="{StaticResource FontM}"
-                       Foreground="{StaticResource DangerColor}" >
-                Auto display refresh rate is not supported on this device.
+                           Grid.Row="1"
+                           FontSize="{StaticResource FontM}"
+                           Foreground="{StaticResource DangerColor}">
+                    Auto display refresh rate is not supported on this device.
                 </TextBlock>
 
-                <CheckBox 
-                x:Name="checkBoxAutoResolution"
-                Content="Set the display resolution to the media resolution"
-                Foreground="White" FontSize="{StaticResource FontL}"
-                Grid.Row="2"/>
+                <CheckBox
+                    IsChecked="{Binding AutoResolution}"
+                    IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                    Content="Set the display resolution to the media resolution"
+                    Foreground="White" FontSize="{StaticResource FontL}"
+                    Grid.Row="2" />
                 <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                       Grid.Row="3"
-                       FontSize="{StaticResource FontM}"
-                       Foreground="{StaticResource DangerColor}" >
-                Display resolution is not supported on this device.
+                           Grid.Row="3"
+                           FontSize="{StaticResource FontM}"
+                           Foreground="{StaticResource DangerColor}">
+                    Display resolution is not supported on this device.
                 </TextBlock>
 
                 <Grid
-                HorizontalAlignment="Stretch"
-                Margin="0,30,0,0"
-                Grid.Row="4">
+                    HorizontalAlignment="Stretch"
+                    Margin="0,30,0,0"
+                    Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button
-                    x:Name="btnAbort"
-                    Grid.Column="0"
-                    Style="{StaticResource SecondaryButton}"
-                    Content="Abort"  />
+                        Grid.Column="0"
+                        Style="{StaticResource SecondaryButton}"
+                        Content="Abort"
+                        Command="{Binding AbortCommand}"/>
                     <Button
-                    x:Name="btnSave"
-                    Grid.Column="1"
-                    Style="{StaticResource PrimaryButton}"
-                    Content="Save"  />
+                        Grid.Column="1"
+                        Style="{StaticResource PrimaryButton}"
+                        Content="Save"
+                        Command="{Binding SaveCommand}"/>
                 </Grid>
-
-
             </Grid>
         </Grid>
     </Grid>

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Jellyfin.Core.Contract;
 using Jellyfin.Views;
 using Windows.Data.Json;
 using Windows.UI.Core;
@@ -12,7 +13,7 @@ namespace Jellyfin.Core;
 /// <summary>
 /// Handle Json Notification from winuwp.js.
 /// </summary>
-public class MessageHandler
+public class MessageHandler : IMessageHandler
 {
     private readonly Frame _frame;
     private readonly FullScreenManager _fullScreenManager;

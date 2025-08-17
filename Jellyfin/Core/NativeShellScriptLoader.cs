@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Graphics.Display.Core;
 using Windows.Storage;
@@ -13,7 +14,7 @@ namespace Jellyfin.Core;
 /// <summary>
 /// Injects the NativeShell javascript script to be able to interact with the UWP code.
 /// </summary>
-public static class NativeShellScriptLoader
+public class NativeShellScriptLoader : INativeShellScriptLoader
 {
     private static readonly Uri StorageUri = new Uri("ms-appx:///Resources/winuwp.js");
 
@@ -21,7 +22,7 @@ public static class NativeShellScriptLoader
     /// LoadNativeShellScript.
     /// </summary>
     /// <returns><see cref="Task"/>representing the asynchronous operation.</returns>
-    public static async Task<string> LoadNativeShellScript()
+    public async Task<string> LoadNativeShellScript()
     {
         var storageFile = await StorageFile.GetFileFromApplicationUriAsync(StorageUri);
         var nativeShellScript = await FileIO.ReadTextAsync(storageFile);

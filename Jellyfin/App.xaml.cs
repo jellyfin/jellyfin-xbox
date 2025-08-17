@@ -1,5 +1,9 @@
 using System;
+using Jellyfin.Core;
+using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
+using Jellyfin.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI;
@@ -25,6 +29,47 @@ public sealed partial class App : Application
         InitializeComponent();
         Suspending += OnSuspending;
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+
+        Services = ConfigureServices();
+    }
+
+    /// <summary>
+    /// Gets the current <see cref="App"/> instance in use.
+    /// </summary>
+    public static new App Current => (App)Application.Current;
+
+    /// <summary>
+    /// Gets the <see cref="IServiceProvider"/> instance to resolve application services.
+    /// </summary>
+#pragma warning disable IDISP006
+    public IServiceProvider Services { get; }
+#pragma warning restore IDISP006
+
+    /// <summary>
+    /// Configures the services for the application.
+    /// </summary>
+    private static IServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
+
+        // ViewModels
+        services.AddSingleton<JellyfinWebViewModel>();
+        services.AddTransient<OnBoardingViewModel>();
+        services.AddTransient<SettingsViewModel>();
+
+        // Core
+        services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
+
+        // Services
+        services.AddSingleton<IFullScreenManager, FullScreenManager>();
+        services.AddSingleton<IMessageHandler, MessageHandler>();
+        services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
+        services.AddSingleton<ISettingsManager, SettingsManager>();
+        services.AddSingleton<IGamepadManager, GamepadManager>();
+
+#pragma warning disable IDISP005
+        return services.BuildServiceProvider();
+#pragma warning restore IDISP005
     }
 
     /// <summary>

@@ -12,7 +12,14 @@
                 <ResourceDictionary Source="Resources/JellyfinStyleResources.xaml"/>
                 <ResourceDictionary>
                     <converter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
+                    <converter:BooleanInverseConverter x:Key="BooleanInverseConverter" />
                     <converter:BooleanVisibilityInverseConverter x:Key="BooleanVisibilityInverseConverter" />
+                    <converter:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+                    <converter:NullToBooleanInverseConverter x:Key="NullToBooleanInverseConverter"/>
+                    <converter:ChainConverter x:Key="NullToVisibilityConverter">
+                        <converter:NullToBooleanConverter />
+                        <converter:BooleanVisibilityInverseConverter />
+                    </converter:ChainConverter>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

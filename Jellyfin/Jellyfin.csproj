@@ -132,14 +132,24 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Behaviors\AutoFocusBehavior.cs" />
+    <Compile Include="Behaviors\KeyEventTriggerBehavior.cs" />
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Controls\JellyfinWebView.xaml.cs">
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\BooleanInverseConverter.cs" />
     <Compile Include="Converter\BooleanVisibilityConverter.cs" />
     <Compile Include="Converter\BooleanVisibilityInverseConverter.cs" />
+    <Compile Include="Converter\ChainConverter.cs" />
+    <Compile Include="Converter\NullToBooleanConverter.cs" />
+    <Compile Include="Converter\NullToBooleanInverseConverter.cs" />
     <Compile Include="Core\Central.cs" />
     <Compile Include="Core\FullScreenManager.cs" />
+    <Compile Include="Core\Contract\IFullScreenManager.cs" />
+    <Compile Include="Core\Contract\IMessageHandler.cs" />
+    <Compile Include="Core\Contract\INativeShellScriptLoader.cs" />
+    <Compile Include="Core\Contract\ISettingsManager.cs" />
     <Compile Include="Core\MessageHandler.cs" />
     <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\SettingsManager.cs" />
@@ -150,10 +160,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
-    <Compile Include="Utils\GamepadManager.cs" />
+    <Compile Include="Core\GamepadManager.cs" />
+    <Compile Include="Core\Contract\IGamepadManager.cs" />
     <Compile Include="Utils\JellyfinServerValidationResult.cs" />
-    <Compile Include="Utils\Mvvm\RelayCommand.cs" />
     <Compile Include="Utils\ServerCheckUtil.cs" />
+    <Compile Include="ViewModels\JellyfinWebViewModel.cs" />
+    <Compile Include="ViewModels\OnBoardingViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
     </Compile>
@@ -259,9 +272,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" />
     <PackageReference Include="Microsoft.UI.Xaml" />
     <PackageReference Include="Microsoft.Web.WebView2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
@@ -299,5 +315,7 @@
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" />
     <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Behaviors\Actions\" />
+  </ItemGroup>
 </Project>

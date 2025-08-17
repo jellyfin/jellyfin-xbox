@@ -1,3 +1,4 @@
+using Jellyfin.Core.Contract;
 using Windows.Storage;
 
 namespace Jellyfin.Core;
@@ -5,7 +6,7 @@ namespace Jellyfin.Core;
 /// <summary>
 /// Manages application settings for Jellyfin, including server configuration.
 /// </summary>
-public class SettingsManager
+public class SettingsManager : ISettingsManager
 {
     private string _containerSettings = "APPSETTINGS";
     private string _settingsServer = "SERVER";

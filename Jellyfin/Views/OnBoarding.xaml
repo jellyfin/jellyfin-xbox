@@ -2,81 +2,79 @@
     x:Class="Jellyfin.Views.OnBoarding"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Jellyfin.Views"
-    xmlns:c="using:Jellyfin.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:viewModels="using:Jellyfin.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Jellyfin.Behaviors"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
     <Grid Background="{StaticResource Color0}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <c:DeviceFamilyStateTrigger TargetDeviceFamily="Desktop" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="RowHeader.Height" Value="60" />
-                        <Setter Target="logo.HorizontalAlignment" Value="Left" />
-                        <Setter Target="logo.Height" Value="28" />
-                        <Setter Target="logo.Margin" Value="28 0 0 0" />
-                        <Setter Target="txtTitle.FontSize" Value="22" />
-                        <Setter Target="pnlMain.MaxWidth" Value="400" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="RowHeader" Height="200" />
+            <RowDefinition Height="200" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <Grid Background="{StaticResource Color10}">
-            <Image 
-                x:Name="logo" 
-                Source="/Assets/OnBoardingLogo.png" 
-                Stretch="Uniform" 
-                HorizontalAlignment="Center" 
+            <Image
+                Source="/Assets/OnBoardingLogo.png"
+                Stretch="Uniform"
+                HorizontalAlignment="Center"
                 Height="80" />
         </Grid>
 
-        <Grid Grid.Row="1" Padding="0 40 0 0">
-            <StackPanel 
-                x:Name="pnlMain" 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Top" 
+        <Grid Grid.Row="1"
+              Padding="0 40 0 0">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
                 Width="640">
                 <TextBlock
-                    x:Name="txtTitle"
-                    Text="Connect to Jellyfin Server" 
-                    Foreground="White" FontSize="{StaticResource FontL}"
+                    Text="Connect to Jellyfin Server"
+                    Foreground="White"
+                    FontSize="{StaticResource FontL}"
                     Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
                     HorizontalAlignment="Center" />
-                <TextBox 
-                    x:Name="txtUrl" 
-                    Style="{StaticResource PrimaryTextBox}" 
+                <TextBox
+                    Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource PrimaryTextBox}"
                     Margin="0 8 0 8"
-                    PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org"/>
-                <TextBlock 
-                    x:Name="txtError"
+                    IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
+                    PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org">
+                    <interactivity:Interaction.Behaviors>
+                        <interactivity:BehaviorCollection>
+                            <behaviors:AutoFocusBehavior FocusOnEnable="True" />
+                            <behaviors:KeyEventTriggerBehavior>
+                                <behaviors:KeyEventTriggerBehavior.Filter>
+                                    <KeyboardAccelerator Key="Enter" />
+                                </behaviors:KeyEventTriggerBehavior.Filter>
+                                <interactivity:InvokeCommandAction Command="{Binding ConnectCommand}" />
+                            </behaviors:KeyEventTriggerBehavior>
+                        </interactivity:BehaviorCollection>
+                    </interactivity:Interaction.Behaviors>
+                </TextBox>
+                <TextBlock
                     FontFamily="{StaticResource JellyfinFamilyFont}"
-                    Text="We're unable to connect to the selected server right now. Please ensure it is running and try again" 
+                    Text="{Binding ErrorMessage}"
                     HorizontalAlignment="Center"
                     TextAlignment="Center"
                     TextWrapping="Wrap"
-                    Visibility="Collapsed"
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
                     FontSize="{StaticResource FontM}"
                     Margin="1 1 1 20"
                     Foreground="{StaticResource DangerColor}" />
-                <Button 
-                    x:Name="btnConnect"
+                <Button
                     Style="{StaticResource PrimaryButton}"
                     Content="Connect"
-                    Click="BtnConnect_Click" />
+                    Command="{Binding ConnectCommand}" />
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource OverlayColorBG}" Visibility="Collapsed" x:Name="ProgressIndicator">
+        <Grid Grid.Row="0"
+              Grid.RowSpan="2"
+              Background="{StaticResource OverlayColorBG}"
+              Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
             <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
         </Grid>
     </Grid>

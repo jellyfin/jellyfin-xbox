@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Data.Json;
 using Windows.Graphics.Display.Core;
@@ -13,7 +14,7 @@ namespace Jellyfin.Core;
 /// <summary>
 /// Responsible for changing the full screen mode to best match the video content.
 /// </summary>
-public sealed class FullScreenManager
+public sealed class FullScreenManager : IFullScreenManager
 {
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
     {
