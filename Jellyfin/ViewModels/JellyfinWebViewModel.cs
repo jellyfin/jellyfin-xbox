@@ -32,10 +32,10 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     private readonly IMessageHandler _messageHandler;
     private readonly IGamepadManager _gamepadManager;
     private readonly IDisposable _navigationHandler;
+    private readonly CoreDispatcher _dispatcher;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
-    private CoreDispatcher _dispatcher = Window.Current.Dispatcher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JellyfinWebViewModel"/> class.
@@ -43,11 +43,17 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     /// <param name="nativeShellScriptLoader">Service for loading and prepping the window injection script.</param>
     /// <param name="messageHandler">Service for handling messages send by the WinUI.</param>
     /// <param name="gamepadManager">Service for handling gamepad input.</param>
-    public JellyfinWebViewModel(INativeShellScriptLoader nativeShellScriptLoader, IMessageHandler messageHandler, IGamepadManager gamepadManager)
+    /// <param name="dispatcher">UI dispatcher.</param>
+    public JellyfinWebViewModel(
+        INativeShellScriptLoader nativeShellScriptLoader,
+        IMessageHandler messageHandler,
+        IGamepadManager gamepadManager,
+        CoreDispatcher dispatcher)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
         _gamepadManager = gamepadManager;
+        _dispatcher = dispatcher;
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
         if (Central.Settings.JellyfinServerValidated)

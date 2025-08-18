@@ -15,18 +15,23 @@ namespace Jellyfin.ViewModels;
 /// </summary>
 public sealed class OnBoardingViewModel : ObservableObject
 {
+    private readonly CoreDispatcher _dispatcher;
+    private readonly Frame _frame;
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
-    private CoreDispatcher _dispatcher = Window.Current.Dispatcher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OnBoardingViewModel"/> class.
     /// </summary>
-    public OnBoardingViewModel()
+    /// <param name="dispatcher">UI Dispatcher.</param>
+    /// <param name="frame">Frame for navigation.</param>
+    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame)
     {
         ConnectCommand = new RelayCommand(ConnectToServerAsync, CanExecuteConnectToServer);
         ServerUrl = Central.Settings.JellyfinServer ?? string.Empty;
+        _dispatcher = dispatcher;
+        _frame = frame;
     }
 
     /// <summary>
@@ -110,7 +115,7 @@ public sealed class OnBoardingViewModel : ObservableObject
                         Central.Settings.JellyfinServer = parsedUri.ToString();
                         Central.Settings.JellyfinServerValidated = true;
 
-                        (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+                        _frame.Navigate(typeof(MainPage));
                     });
             }
             finally
