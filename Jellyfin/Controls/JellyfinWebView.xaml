@@ -26,14 +26,14 @@
                     <VisualState>
                         <Storyboard x:Name="ExitStoryboard">
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                           Storyboard.TargetName="DepricationNoticeGrid">
+                                                           Storyboard.TargetName="DeprecationNoticeGrid">
                                 <DiscreteObjectKeyFrame KeyTime="0">
                                     <DiscreteObjectKeyFrame.Value>
                                         <Visibility>Collapsed</Visibility>
                                     </DiscreteObjectKeyFrame.Value>
                                 </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DepricationNoticeGrid"
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DeprecationNoticeGrid"
                                                            Storyboard.TargetProperty="Height"
                                                            EnableDependentAnimation="true">
                                 <DiscreteDoubleKeyFrame KeyTime="0:1:0" Value="60" />
@@ -49,6 +49,7 @@
 
             <TextBlock HorizontalAlignment="Center"
                        HorizontalTextAlignment="Center"
+                       Name="DeprecationNoticeGrid"
                        Foreground="{StaticResource DangerColor}">
                 This version of jellyfin-for-xbox will soon be deprecated. <LineBreak />
                 Please update the Jellyfin Server to 10.11 when its released. <LineBreak />

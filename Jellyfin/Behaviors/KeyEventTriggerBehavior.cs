@@ -38,7 +38,7 @@ internal class KeyEventTriggerBehavior : Trigger
 
         if (AssociatedObject is not TextBox element)
         {
-            throw new InvalidOperationException("KeyEventTriggerBehavior can only be attached to FrameworkElement.");
+            throw new InvalidOperationException("KeyEventTriggerBehavior can only be attached to TextBox.");
         }
 
         foreach (var keyboardAccelerator in Filter)
@@ -54,7 +54,7 @@ internal class KeyEventTriggerBehavior : Trigger
 
         if (AssociatedObject is not TextBox element)
         {
-            throw new InvalidOperationException("KeyEventTriggerBehavior can only be attached to FrameworkElement.");
+            throw new InvalidOperationException("KeyEventTriggerBehavior can only be attached to TextBox.");
         }
 
         foreach (var keyboardAccelerator in Filter)
