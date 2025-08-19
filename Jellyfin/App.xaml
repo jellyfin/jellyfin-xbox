@@ -8,28 +8,18 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-
-                    <SolidColorBrush x:Key="Color0" Color="#101010" />
-                    <SolidColorBrush x:Key="Color10" Color="#202020" />
-                    <SolidColorBrush x:Key="Color20" Color="#303030" />
-                    <SolidColorBrush x:Key="Color80" Color="#828282" />
-                    <SolidColorBrush x:Key="Color90" Color="#a9a9a9" />
-                    <SolidColorBrush x:Key="Color100" Color="#FFFFFF" />
-                    <SolidColorBrush x:Key="PrimaryColor" Color="#00A4DC" />
-                    <SolidColorBrush x:Key="PrimaryColorHover" Color="#0CB0E8" />
-                    <SolidColorBrush x:Key="SecondaryColor" Color="#756296" />
-                    <SolidColorBrush x:Key="SecondaryColorHover" Color="#756B86" />
-                    <SolidColorBrush x:Key="OverlayColorBG" Color="LightGray" Opacity="0.2" />
-                    <SolidColorBrush x:Key="DangerColor" Color="#CF4A4A"/>
-
-                    <FontFamily x:Key="JellyfinFamilyFont">/Fonts/NotoSans-Regular.ttf#Noto Sans</FontFamily>
-
-                </ResourceDictionary>
+                <ResourceDictionary Source="Resources/JellyfinStyleResources.Base.xaml"/>
                 <ResourceDictionary Source="Resources/JellyfinStyleResources.xaml"/>
                 <ResourceDictionary>
                     <converter:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
+                    <converter:BooleanInverseConverter x:Key="BooleanInverseConverter" />
                     <converter:BooleanVisibilityInverseConverter x:Key="BooleanVisibilityInverseConverter" />
+                    <converter:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+                    <converter:NullToBooleanInverseConverter x:Key="NullToBooleanInverseConverter"/>
+                    <converter:ChainConverter x:Key="NullToVisibilityConverter">
+                        <converter:NullToBooleanConverter />
+                        <converter:BooleanVisibilityInverseConverter />
+                    </converter:ChainConverter>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

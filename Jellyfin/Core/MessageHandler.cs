@@ -1,17 +1,19 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Jellyfin.Core.Contract;
 using Jellyfin.Views;
 using Windows.Data.Json;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Jellyfin.Core;
 
 /// <summary>
 /// Handle Json Notification from winuwp.js.
 /// </summary>
-public class MessageHandler
+public class MessageHandler : IMessageHandler
 {
     private readonly Frame _frame;
     private readonly FullScreenManager _fullScreenManager;
@@ -56,7 +58,21 @@ public class MessageHandler
         {
             _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                _frame.Navigate(typeof(Settings));
+                var settingsPopup = new Popup()
+                {
+                    HorizontalOffset = 0,
+                    VerticalOffset = 0,
+                    Width = Window.Current.Bounds.Width,
+                    Height = Window.Current.Bounds.Height,
+                };
+                settingsPopup.Child = new Settings()
+                {
+                    ParentPopup = settingsPopup,
+                    Width = Window.Current.Bounds.Width,
+                    Height = Window.Current.Bounds.Height,
+                };
+                settingsPopup.IsOpen = true;
+                (settingsPopup.Child as Control).Focus(FocusState.Programmatic);
             });
         }
         else if (eventType == "exit")
