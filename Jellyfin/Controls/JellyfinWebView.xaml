@@ -6,59 +6,40 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="400"
+    d:DesignWidth="800"
     d:DataContext="{d:DesignInstance viewModels:JellyfinWebViewModel}">
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="FadeOut">
+            <VisualState>
+                <Storyboard>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DeprecationNoticeTransform"
+                                                   Storyboard.TargetProperty="Y"
+                                                   BeginTime="0:0:20"
+                                                   EnableDependentAnimation="True">
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-5" />
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-5" />
+                        <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="120" />
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                   Storyboard.TargetName="DeprecationNoticeGrid"
+                                                   BeginTime="0:0:21">
+                        <DiscreteObjectKeyFrame>
+                            <DiscreteObjectKeyFrame.Value>
+                                <Visibility>Collapsed</Visibility>
+                            </DiscreteObjectKeyFrame.Value>
+                        </DiscreteObjectKeyFrame>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+                <VisualState.StateTriggers>
+                    <StateTrigger IsActive="{Binding DisplayDeprecationNotice, Mode=OneWay}" />
+                </VisualState.StateTriggers>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid
-            Grid.Row="0"
-            Visibility="Collapsed"
-            Height="60"
-            BorderBrush="{StaticResource DangerColor}"
-            BorderThickness="1"
-            Background="{StaticResource Color90}">
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="FadeOut">
-                    <VisualState>
-                        <Storyboard x:Name="ExitStoryboard">
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                           Storyboard.TargetName="DeprecationNoticeGrid">
-                                <DiscreteObjectKeyFrame KeyTime="0">
-                                    <DiscreteObjectKeyFrame.Value>
-                                        <Visibility>Collapsed</Visibility>
-                                    </DiscreteObjectKeyFrame.Value>
-                                </DiscreteObjectKeyFrame>
-                            </ObjectAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DeprecationNoticeGrid"
-                                                           Storyboard.TargetProperty="Height"
-                                                           EnableDependentAnimation="true">
-                                <DiscreteDoubleKeyFrame KeyTime="0:1:0" Value="60" />
-                                <DiscreteDoubleKeyFrame KeyTime="0:1:0.9" Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                        </Storyboard>
-                        <VisualState.StateTriggers>
-                            <StateTrigger IsActive="{Binding DisplayDeprecationNotice, Mode=OneWay}" />
-                        </VisualState.StateTriggers>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
-
-            <TextBlock HorizontalAlignment="Center"
-                       HorizontalTextAlignment="Center"
-                       Name="DeprecationNoticeGrid"
-                       Foreground="{StaticResource DangerColor}">
-                This version of jellyfin-for-xbox will soon be deprecated. <LineBreak />
-                Please update the Jellyfin Server to 10.11 when its released. <LineBreak />
-                Shortly after the official 10.11 release the next version of this client will not be compatible.
-            </TextBlock>
-        </Grid>
         <Grid HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Grid.Row="1">
+              VerticalAlignment="Stretch">
             <ContentPresenter HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                               Content="{Binding  WebView}">
@@ -70,5 +51,27 @@
                 <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
             </Grid>
         </Grid>
+
+        <Border
+            Visibility="{Binding DisplayDeprecationNotice, Converter={StaticResource BooleanVisibilityConverter}}"
+            Name="DeprecationNoticeGrid"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Center"
+            BorderBrush="{StaticResource DangerColor}"
+            BorderThickness="1"
+            CornerRadius="32"
+            Background="{StaticResource Color90}">
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="DeprecationNoticeTransform"/>
+            </Border.RenderTransform>
+            <TextBlock HorizontalAlignment="Center"
+                       Padding="8"
+                       HorizontalTextAlignment="Center"
+                       Foreground="{StaticResource DangerColor}">
+                This version of Jellyfin-for-xbox will soon be deprecated. <LineBreak />
+                Please update the Jellyfin Server to 10.11 when it's released. <LineBreak />
+                Shortly after the official 10.11 release the next version of this client will not be compatible.
+            </TextBlock>
+        </Border>
     </Grid>
 </UserControl>
