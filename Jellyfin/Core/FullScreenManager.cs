@@ -16,6 +16,17 @@ namespace Jellyfin.Core;
 /// </summary>
 public sealed class FullScreenManager : IFullScreenManager
 {
+    private readonly ApplicationView _applicationView;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
+    /// </summary>
+    /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
+    public FullScreenManager(ApplicationView applicationView)
+    {
+        _applicationView = applicationView;
+    }
+
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
     {
         var bestDisplayMode =
@@ -164,7 +175,7 @@ public sealed class FullScreenManager : IFullScreenManager
         }
         else
         {
-            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            _applicationView.TryEnterFullScreenMode();
         }
     }
 
@@ -180,7 +191,7 @@ public sealed class FullScreenManager : IFullScreenManager
         }
         else
         {
-            ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            _applicationView.ExitFullScreenMode();
         }
     }
 }
