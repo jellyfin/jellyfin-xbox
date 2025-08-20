@@ -15,15 +15,15 @@
                 <Storyboard>
                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="DeprecationNoticeTransform"
                                                    Storyboard.TargetProperty="Y"
-                                                   BeginTime="0:1:0"
+                                                   BeginTime="0:0:20"
                                                    EnableDependentAnimation="True">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="5" />
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="5" />
-                        <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="-120" />
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-5" />
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-5" />
+                        <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="120" />
                     </DoubleAnimationUsingKeyFrames>
                     <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                    Storyboard.TargetName="DeprecationNoticeGrid"
-                                                   BeginTime="0:0:3">
+                                                   BeginTime="0:0:21">
                         <DiscreteObjectKeyFrame>
                             <DiscreteObjectKeyFrame.Value>
                                 <Visibility>Collapsed</Visibility>
@@ -55,7 +55,7 @@
         <Border
             Visibility="{Binding DisplayDeprecationNotice, Converter={StaticResource BooleanVisibilityConverter}}"
             Name="DeprecationNoticeGrid"
-            VerticalAlignment="Top"
+            VerticalAlignment="Bottom"
             HorizontalAlignment="Center"
             BorderBrush="{StaticResource DangerColor}"
             BorderThickness="1"
