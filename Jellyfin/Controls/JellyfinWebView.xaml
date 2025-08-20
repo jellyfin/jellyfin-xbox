@@ -68,8 +68,8 @@
                        Padding="8"
                        HorizontalTextAlignment="Center"
                        Foreground="{StaticResource DangerColor}">
-                This version of jellyfin-for-xbox will soon be deprecated. <LineBreak />
-                Please update the Jellyfin Server to 10.11 when its released. <LineBreak />
+                This version of Jellyfin-for-xbox will soon be deprecated. <LineBreak />
+                Please update the Jellyfin Server to 10.11 when it's released. <LineBreak />
                 Shortly after the official 10.11 release the next version of this client will not be compatible.
             </TextBlock>
         </Border>
