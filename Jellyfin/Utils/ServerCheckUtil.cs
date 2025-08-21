@@ -16,6 +16,11 @@ public static class ServerCheckUtil
     private const string ValidProductName = "Jellyfin Server";
 
     /// <summary>
+    /// Gets or sets a value indicating whether the server version is unsupported in the future by this client version.
+    /// </summary>
+    public static bool IsFutureUnsupportedVersion { get; set; } = false;
+
+    /// <summary>
     /// Asynchronously validates whether the specified URL points to a valid Jellyfin server.
     /// </summary>
     /// <param name="serverUri">The URL to validate as a string.</param>
@@ -106,6 +111,9 @@ public static class ServerCheckUtil
                 {
                     return new JellyfinServerValidationResult(false, $"Invalid server version format: '{versionString}'.");
                 }
+
+                IsFutureUnsupportedVersion = serverVersion < Central.MinimumFutureSupportedServerVersion;
+                Central.ServerVersion = serverVersion;
 
                 if (serverVersion < Central.MinimumSupportedServerVersion)
                 {

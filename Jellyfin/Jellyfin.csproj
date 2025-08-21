@@ -19,7 +19,8 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>A8B9BE24CD80AF57928A9239AEED481F31CA9B84</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>
+    </PackageCertificateThumbprint>
     <PackageCertificateKeyFile>Jellyfin_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
@@ -131,11 +132,26 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Behaviors\AutoFocusBehavior.cs" />
+    <Compile Include="Behaviors\KeyEventTriggerBehavior.cs" />
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Controls\JellyfinWebView.xaml.cs">
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\BooleanInverseConverter.cs" />
+    <Compile Include="Converter\BooleanVisibilityConverter.cs" />
+    <Compile Include="Converter\BooleanVisibilityInverseConverter.cs" />
+    <Compile Include="Converter\ChainConverter.cs" />
+    <Compile Include="Converter\NullToBooleanConverter.cs" />
+    <Compile Include="Converter\NullToBooleanInverseConverter.cs" />
     <Compile Include="Core\Central.cs" />
+    <Compile Include="Core\FullScreenManager.cs" />
+    <Compile Include="Core\Contract\IFullScreenManager.cs" />
+    <Compile Include="Core\Contract\IMessageHandler.cs" />
+    <Compile Include="Core\Contract\INativeShellScriptLoader.cs" />
+    <Compile Include="Core\Contract\ISettingsManager.cs" />
+    <Compile Include="Core\MessageHandler.cs" />
+    <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -145,14 +161,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
-    <Compile Include="Utils\GamepadManager.cs" />
+    <Compile Include="Core\GamepadManager.cs" />
     <Compile Include="Utils\ServerDiscovery.cs" />
-    <Compile Include="Utils\GamepadState.cs" />
+    <Compile Include="Core\Contract\IGamepadManager.cs" />
     <Compile Include="Utils\JellyfinServerValidationResult.cs" />
-    <Compile Include="Utils\Mvvm\RelayCommand.cs" />
     <Compile Include="Utils\ServerCheckUtil.cs" />
+    <Compile Include="ViewModels\JellyfinWebViewModel.cs" />
+    <Compile Include="ViewModels\OnBoardingViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\OnBoarding.xaml.cs">
       <DependentUpon>OnBoarding.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +230,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Fonts\NotoSans-Regular.ttf" />
+    <Content Include="Resources\winuwp.js" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -230,6 +252,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Resources\JellyfinStyleResources.Base.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\JellyfinStyleResources.DeviceFamily-Desktop.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -242,11 +268,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Settings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" />
     <PackageReference Include="Microsoft.UI.Xaml" />
     <PackageReference Include="Microsoft.Web.WebView2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>
@@ -283,5 +316,8 @@
     <PackageReference Include="SerilogAnalyzer" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" />
     <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Behaviors\Actions\" />
   </ItemGroup>
 </Project>
