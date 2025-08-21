@@ -54,7 +54,7 @@ public sealed partial class App : Application
         var services = new ServiceCollection();
 
         // ViewModels
-        services.AddSingleton<JellyfinWebViewModel>();
+        services.AddTransient<JellyfinWebViewModel>();
         services.AddTransient<OnBoardingViewModel>();
         services.AddTransient<SettingsViewModel>();
 

@@ -1,17 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Graphics.Display;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace Jellyfin.ViewModels;
 
