@@ -61,6 +61,7 @@ public sealed partial class App : Application
         // Core
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
         services.AddTransient<CoreDispatcher>(_ => Window.Current.Dispatcher);
+        services.AddTransient<ApplicationView>(_ => ApplicationView.GetForCurrentView());
 
         // Services
         services.AddSingleton<IFullScreenManager, FullScreenManager>();

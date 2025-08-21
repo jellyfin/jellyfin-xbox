@@ -203,7 +203,17 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
             var jsonMessage = args.TryGetWebMessageAsString();
             if (JsonObject.TryParse(jsonMessage, out var argsJson))
             {
-                _messageHandler.HandleJsonNotification(argsJson).GetAwaiter().GetResult();
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _messageHandler.HandleJsonNotification(argsJson).ConfigureAwait(true);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine($"Error handling JSON message: {e}");
+                    }
+                });
             }
             else
             {
