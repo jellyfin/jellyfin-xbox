@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,6 +7,7 @@ using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Windows.Data.Json;
@@ -33,6 +31,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     private readonly IGamepadManager _gamepadManager;
     private readonly IDisposable _navigationHandler;
     private readonly CoreDispatcher _dispatcher;
+    private readonly Frame _frame;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
@@ -44,16 +43,19 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     /// <param name="messageHandler">Service for handling messages send by the WinUI.</param>
     /// <param name="gamepadManager">Service for handling gamepad input.</param>
     /// <param name="dispatcher">UI dispatcher.</param>
+    /// <param name="frame">Current frame of the top application.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
         IGamepadManager gamepadManager,
-        CoreDispatcher dispatcher)
+        CoreDispatcher dispatcher,
+        Frame frame)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
         _gamepadManager = gamepadManager;
         _dispatcher = dispatcher;
+        _frame = frame;
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
         if (Central.Settings.JellyfinServerValidated)
@@ -111,7 +113,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
                     var md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
                                                $" {jellyfinServerCheck.ErrorMessage}");
                     await md.ShowAsync();
-                    (Window.Current.Content as Frame).Navigate(typeof(OnBoarding));
+                    _frame.Navigate(typeof(OnBoarding));
                     return;
                 }
 
@@ -128,10 +130,19 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     {
         if (ServerCheckUtil.IsFutureUnsupportedVersion)
         {
+            new ToastContentBuilder()
+                .AddAttributionText("Jellyfin Server - Deprecated")
+                .AddText("This version of Jellyfin-for-xbox will soon be deprecated.")
+                .AddText("Please update the Jellyfin Server to 10.11 when it's released.")
+                .AddText("Shortly after the official 10.11 release the next version of this client will not be compatible.")
+                .SetToastDuration(ToastDuration.Long)
+                .SetToastScenario(ToastScenario.Reminder)
+                .Show();
             DisplayDeprecationNotice = true;
         }
 
         WebView = new WebView2();
+        WebView.RequiresPointer = Central.ServerVersion <= Version.Parse("10.11") ? RequiresPointer.WhenFocused : RequiresPointer.Never;
 
         WebView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         WebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
