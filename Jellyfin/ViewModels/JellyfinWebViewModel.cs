@@ -210,16 +210,22 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
         WebView.Focus(FocusState.Programmatic);
 
-        // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
-
-        WebView.CoreWebView2.Settings.UserAgent += " WebView2 " + AppUtils.GetDeviceFormFactorType().ToString();
-
         WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }
 
     private void AddDeviceFormToUserAgent()
     {
+        // Set useragent to Xbox and WebView2 since WebView2 only sets these in Sec-CA-UA, which isn't available over HTTP.
+        if (Central.Settings.ForceEnableTvMode && AppUtils.GetDeviceFormFactorType() != DeviceFormFactorType.Xbox)
+        {
+            WebView.CoreWebView2.Settings.UserAgent += " WebView2 Xbox";
+        }
+        else
+        {
+            WebView.CoreWebView2.Settings.UserAgent += " WebView2 " + AppUtils.GetDeviceFormFactorType().ToString();
+        }
+
         var userAgent = WebView.CoreWebView2.Settings.UserAgent;
         var deviceForm = AnalyticsInfo.DeviceForm;
 

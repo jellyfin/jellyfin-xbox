@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Windows.Graphics.Display;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
@@ -24,6 +25,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     private HdmiDisplayInformation _hdmiDisplayInformation;
     private bool _autoRefreshRate;
     private bool _autoResolution;
+    private bool _forceEnableTvMode;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -35,11 +37,29 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
         AutoRefreshRate = Central.Settings.AutoRefreshRate;
         AutoResolution = Central.Settings.AutoResolution;
+        ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
 
         _navigationHandler = _gamepadManager.ObserveBackEvent(ModalPage_BackRequested, -10);
+        try
+        {
+            HdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+        }
+        catch (Exception e)
+        {
+            Debug.Write(e);
+        }
 
         SaveCommand = new RelayCommand(OnSaveExecute);
         AbortCommand = new RelayCommand(OnAbortExecute);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force enable TV mode.
+    /// </summary>
+    public bool ForceEnableTvMode
+    {
+        get => _forceEnableTvMode;
+        set => SetProperty(ref _forceEnableTvMode, value);
     }
 
     /// <summary>
@@ -114,6 +134,8 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
             Central.Settings.AutoRefreshRate = AutoRefreshRate;
             Central.Settings.AutoResolution = AutoResolution;
         }
+
+        Central.Settings.ForceEnableTvMode = ForceEnableTvMode;
     }
 
     /// <inheritdoc />

@@ -38,68 +38,89 @@
                     HorizontalAlignment="Center"
                     Height="80" />
             </Grid>
-
-            <Grid
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                Margin="0,30,0,0"
-                Width="640">
-
+            <Grid VerticalAlignment="Top"
+                  Grid.Row="1"
+                  Margin="0,30,0,0"
+                  Width="750">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <CheckBox
+                <Grid
+                Grid.Row="0"
+                HorizontalAlignment="Center">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <CheckBox
                     IsChecked="{Binding AutoRefreshRate}"
                     IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
                     Grid.Row="0"
                     Content="Set the display refresh rate to the media refresh rate">
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:AutoFocusBehavior FocusOnEnable="True" />
-                    </interactivity:Interaction.Behaviors>
-                </CheckBox>
-                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:AutoFocusBehavior FocusOnEnable="True" />
+                        </interactivity:Interaction.Behaviors>
+                    </CheckBox>
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                            Grid.Row="1"
                            FontSize="{StaticResource FontM}"
                            Foreground="{StaticResource DangerColor}">
                     Auto display refresh rate is not supported on this device.
-                </TextBlock>
+                    </TextBlock>
 
-                <CheckBox
-                    IsChecked="{Binding AutoResolution}"
-                    IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
-                    Content="Set the display resolution to the media resolution"
-                    Foreground="White" FontSize="{StaticResource FontL}"
-                    Grid.Row="2" />
-                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                           Grid.Row="3"
-                           FontSize="{StaticResource FontM}"
-                           Foreground="{StaticResource DangerColor}">
-                    Display resolution is not supported on this device.
-                </TextBlock>
+                    <CheckBox
+                        IsChecked="{Binding AutoResolution}"
+                        IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                        Content="Set the display resolution to the media resolution"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="2" />
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                               Grid.Row="3"
+                               FontSize="{StaticResource FontM}"
+                               Foreground="{StaticResource DangerColor}">
+                        Display resolution is not supported on this device.
+                    </TextBlock>
 
+                    <CheckBox
+                        IsChecked="{Binding ForceEnableTvMode}"
+                        Content="Force TV mode"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="4" />
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                               Grid.Row="5"
+                               FontSize="{StaticResource FontM}"
+                               Foreground="{StaticResource Color100}">
+                        Overrides the device detection and sets it to "Xbox" to force the WebUI to operate in TV mode.
+                    </TextBlock>
+                </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
                     Margin="0,30,0,0"
-                    Grid.Row="4">
+                    Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button
-                        Grid.Column="0"
-                        Style="{StaticResource SecondaryButton}"
-                        Content="Abort"
-                        Command="{Binding AbortCommand}"/>
+                    Grid.Column="0"
+                    Style="{StaticResource SecondaryButton}"
+                    Content="Abort"
+                    Margin="0,0,6,0"
+                    Command="{Binding AbortCommand}"/>
                     <Button
-                        Grid.Column="1"
-                        Style="{StaticResource PrimaryButton}"
-                        Content="Save"
-                        Command="{Binding SaveCommand}"/>
+                    Grid.Column="1"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="6,0,0,0"
+                    Content="Save"
+                    Command="{Binding SaveCommand}"/>
                 </Grid>
             </Grid>
         </Grid>
