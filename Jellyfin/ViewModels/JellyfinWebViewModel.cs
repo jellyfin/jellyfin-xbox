@@ -133,7 +133,6 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         }
 
         WebView = new WebView2();
-        WebView.RequiresPointer = Central.ServerVersion <= Version.Parse("10.11") ? RequiresPointer.WhenFocused : RequiresPointer.Never;
 
         WebView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         WebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
