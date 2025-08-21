@@ -16,16 +16,17 @@ namespace Jellyfin.Core;
 public class MessageHandler : IMessageHandler
 {
     private readonly Frame _frame;
-    private readonly FullScreenManager _fullScreenManager;
+    private readonly IFullScreenManager _fullScreenManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageHandler"/> class.
     /// </summary>
     /// <param name="frame">Frame.</param>
-    public MessageHandler(Frame frame)
+    /// <param name="fullScreenManager">The service responsible for managing HDMI and fullscreen states.</param>
+    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager)
     {
         _frame = frame;
-        _fullScreenManager = new FullScreenManager();
+        _fullScreenManager = fullScreenManager;
     }
 
     /// <summary>
