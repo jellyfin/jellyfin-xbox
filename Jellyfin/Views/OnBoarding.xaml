@@ -2,25 +2,48 @@
     x:Class="Jellyfin.Views.OnBoarding"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Jellyfin.Views"
+    xmlns:c="using:Jellyfin.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
+    xmlns:converers="using:Jellyfin.Converter"
+    xmlns:models="using:Jellyfin.Models" 
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
     <Grid Background="{StaticResource Color0}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ServerListStates">
+                <VisualState x:Name="ListEmptyState"/>
+                <VisualState x:Name="ListNotEmptyState" >
+                    <VisualState.StateTriggers>
+                        <winui:IsNullOrEmptyStateTrigger Value="{Binding DiscoveredServers}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="EmptyServersMessage.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <Grid Background="{StaticResource Color10}">
-            <Image
-                Source="/Assets/OnBoardingLogo.png"
-                Stretch="Uniform"
-                HorizontalAlignment="Center"
+        <Grid Background="{StaticResource Color10}" Grid.ColumnSpan="2">
+            <Image 
+                Source="/Assets/OnBoardingLogo.png" 
+                Stretch="Uniform" 
+                HorizontalAlignment="Center" 
                 Height="80" />
         </Grid>
 
@@ -71,8 +94,41 @@
             </StackPanel>
         </Grid>
 
+        <Grid Grid.Row="1" Grid.Column="1">
+            <ListView ItemsSource="{Binding DiscoveredServers}"
+                      IsItemClickEnabled="True"
+                      ItemClick="ListView_ItemClick"
+                      IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontSize="{StaticResource FontM}"/>
+                                <TextBlock Text="{Binding Address}" FontSize="{StaticResource FontS}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                <ListView.Header>
+                    <StackPanel>
+                        <TextBlock
+                            Text="Discover Server" 
+                            Foreground="White" FontSize="{StaticResource FontL}"
+                            Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
+                            Padding="0 40 0 0"
+                            HorizontalAlignment="Center" />
+                        <TextBlock x:Name="EmptyServersMessage" FontSize="{StaticResource FontM}" 
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="WrapWholeWords"
+                                   Visibility="Collapsed">
+                            No servers found, searching.
+                        </TextBlock>
+                    </StackPanel>
+                </ListView.Header>
+            </ListView>
+        </Grid>
+
         <Grid Grid.Row="0"
               Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
               Background="{StaticResource OverlayColorBG}"
               Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
             <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
