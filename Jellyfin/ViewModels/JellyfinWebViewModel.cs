@@ -31,6 +31,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     private readonly IDisposable _navigationHandler;
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
+    private readonly ApplicationView _applicationView;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
@@ -43,18 +44,21 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     /// <param name="gamepadManager">Service for handling gamepad input.</param>
     /// <param name="dispatcher">UI dispatcher.</param>
     /// <param name="frame">Current frame of the top application.</param>
+    /// <param name="applicationView">Application view for managing the app's view state.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
         IGamepadManager gamepadManager,
         CoreDispatcher dispatcher,
-        Frame frame)
+        Frame frame,
+        ApplicationView applicationView)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
         _gamepadManager = gamepadManager;
         _dispatcher = dispatcher;
         _frame = frame;
+        _applicationView = applicationView;
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
         if (Central.Settings.JellyfinServerValidated)
@@ -267,17 +271,22 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
 
     private void JellyfinWebView_ContainsFullScreenElementChanged(CoreWebView2 sender, object args)
     {
-        var appView = ApplicationView.GetForCurrentView();
-
-        if (sender.ContainsFullScreenElement)
+        try
         {
-            appView.TryEnterFullScreenMode();
-            return;
+            if (sender.ContainsFullScreenElement)
+            {
+                _applicationView.TryEnterFullScreenMode();
+                return;
+            }
+
+            if (_applicationView.IsFullScreenMode)
+            {
+                _applicationView.ExitFullScreenMode();
+            }
         }
-
-        if (appView.IsFullScreenMode)
+        catch (Exception e)
         {
-            appView.ExitFullScreenMode();
+            Debug.WriteLine($"Error in ContainsFullScreenElementChanged: {e}");
         }
     }
 
