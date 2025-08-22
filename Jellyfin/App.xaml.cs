@@ -29,7 +29,7 @@ public sealed partial class App : Application
     {
         InitializeComponent();
         Suspending += OnSuspending;
-        // RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+        RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
         Services = ConfigureServices();
     }
