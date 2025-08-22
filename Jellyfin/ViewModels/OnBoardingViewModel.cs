@@ -1,8 +1,11 @@
+using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Helpers;
+using Jellyfin.Models;
 using Jellyfin.Utils;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -13,13 +16,15 @@ namespace Jellyfin.ViewModels;
 /// <summary>
 /// ViewModel for the OnBoarding page.
 /// </summary>
-public sealed class OnBoardingViewModel : ObservableObject
+public sealed class OnBoardingViewModel : ObservableObject, IDisposable
 {
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
+    private ServerDiscovery _serverDiscovery = new ServerDiscovery();
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OnBoardingViewModel"/> class.
@@ -32,6 +37,7 @@ public sealed class OnBoardingViewModel : ObservableObject
         ServerUrl = Central.Settings.JellyfinServer ?? string.Empty;
         _dispatcher = dispatcher;
         _frame = frame;
+        _serverDiscovery.OnDiscover += ServerDiscovery_OnDiscover;
     }
 
     /// <summary>
@@ -72,6 +78,11 @@ public sealed class OnBoardingViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>
+    /// Gets the list of discovered servers on the network.
+    /// </summary>
+    public ObservableCollection<DiscoveredServer> DiscoveredServers { get; } = new ObservableCollection<DiscoveredServer>();
 
     /// <summary>
     /// Gets the command to connect to the server.
@@ -128,5 +139,52 @@ public sealed class OnBoardingViewModel : ObservableObject
                     });
             }
         });
+    }
+
+    private void ServerDiscovery_OnDiscover()
+    {
+        var currentServer = _serverDiscovery.DiscoveredServers.Dequeue();
+        if (!DiscoveredServers.Contains(currentServer))
+        {
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                DiscoveredServers.Add(currentServer);
+            });
+        }
+    }
+
+    /// <summary>
+    /// Connects to a server from the discovery list.
+    /// </summary>
+    /// <param name="server">A network discovered server.</param>
+    public void ConnectToDiscoveredServer(DiscoveredServer server)
+    {
+        ServerUrl = server.Address.ToString();
+        if (CanExecuteConnectToServer())
+        {
+            ConnectToServerAsync();
+        }
+    }
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _serverDiscovery.Dispose();
+        _disposed = true;
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(GetType().FullName);
+        }
     }
 }

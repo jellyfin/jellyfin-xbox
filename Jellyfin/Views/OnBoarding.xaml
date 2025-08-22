@@ -8,12 +8,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
+    xmlns:converers="using:Jellyfin.Converter"
+    xmlns:models="using:Jellyfin.Models" 
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
-    
     <Grid Background="{StaticResource Color0}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ServerListStates">
+                <VisualState x:Name="ListEmptyState"/>
+                <VisualState x:Name="ListNotEmptyState" >
+                    <VisualState.StateTriggers>
+                        <winui:IsNullOrEmptyStateTrigger Value="{Binding DiscoveredServers}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="EmptyServersMessage.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
             <RowDefinition />
@@ -79,26 +95,30 @@
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1">
-            <ListView x:Name="lstDiscovered" IsItemClickEnabled="True" ItemClick="DiscoveredList_ItemClick" ItemsSource="{x:Bind _discoveredServers}">
+            <ListView ItemsSource="{Binding DiscoveredServers}"
+                      IsItemClickEnabled="True"
+                      ItemClick="ListView_ItemClick"
+                      IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}">
                     <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:DiscoveredServer">
+                        <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{x:Bind Name}" FontSize="{StaticResource FontM}"/>
-                                <TextBlock Text="{x:Bind Address}" FontSize="{StaticResource FontS}"/>
+                                <TextBlock Text="{Binding Name}" FontSize="{StaticResource FontM}"/>
+                                <TextBlock Text="{Binding Address}" FontSize="{StaticResource FontS}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 <ListView.Header>
                     <StackPanel>
                         <TextBlock
-                            x:Name="txtDiscoverTitle"
                             Text="Discover Server" 
                             Foreground="White" FontSize="{StaticResource FontL}"
                             Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
                             Padding="0 40 0 0"
                             HorizontalAlignment="Center" />
-                        <TextBlock x:Name="txtDiscoverNoneFound" FontSize="{StaticResource FontM}" 
-                                   HorizontalAlignment="Center" TextWrapping="WrapWholeWords">
+                        <TextBlock x:Name="EmptyServersMessage" FontSize="{StaticResource FontM}" 
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="WrapWholeWords"
+                                   Visibility="Collapsed">
                             No servers found, searching.
                         </TextBlock>
                     </StackPanel>
@@ -108,6 +128,7 @@
 
         <Grid Grid.Row="0"
               Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
               Background="{StaticResource OverlayColorBG}"
               Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
             <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />

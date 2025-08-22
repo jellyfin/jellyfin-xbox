@@ -46,5 +46,11 @@ namespace Jellyfin.Models
         {
             return _id.GetHashCode();
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
     }
 }

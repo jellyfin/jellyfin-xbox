@@ -14,6 +14,7 @@
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3351.48"/>
     <PackageVersion Include="System.Text.Json" Version="9.0.8" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Triggers" Version="8.2.250402" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
   </ItemGroup>
