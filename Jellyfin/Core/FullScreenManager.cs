@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Data.Json;
-using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
 using Windows.UI.ViewManagement;
 

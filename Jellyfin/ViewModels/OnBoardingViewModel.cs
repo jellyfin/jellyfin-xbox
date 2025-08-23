@@ -130,7 +130,7 @@ public sealed class OnBoardingViewModel : ObservableObject
                         () =>
                         {
                             // Save validated URL and navigate to page containing the web view.
-                            Central.Settings.JellyfinServer = parsedUri.ToString();
+                            Central.Settings.JellyfinServer = uriVarient.ToString();
                             Central.Settings.JellyfinServerValidated = true;
 
                             _frame.Navigate(typeof(MainPage));
