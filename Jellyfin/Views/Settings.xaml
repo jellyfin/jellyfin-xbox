@@ -41,7 +41,7 @@
             <Grid VerticalAlignment="Top"
                   Grid.Row="1"
                   Margin="0,30,0,0"
-                  Width="750">
+                  HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
