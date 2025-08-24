@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,10 +17,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 {
     private readonly IGamepadManager _gamepadManager;
     private readonly IDisposable _navigationHandler;
-    private HdmiDisplayInformation _hdmiDisplayInformation;
+    private HdmiDisplayInformation _currentHdmiDisplayInformation;
     private bool _autoRefreshRate;
     private bool _autoResolution;
     private bool _forceEnableTvMode;
+    private HdmiDisplayMode _currentDisplayMode;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -36,7 +38,9 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         _navigationHandler = _gamepadManager.ObserveBackEvent(ModalPage_BackRequested, -10);
         try
         {
-            HdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+            CurrentHdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+            CurrentDisplayMode = CurrentHdmiDisplayInformation.GetCurrentDisplayMode();
+            PossibleDisplayModes = new(CurrentHdmiDisplayInformation.GetSupportedDisplayModes());
         }
         catch (Exception e)
         {
@@ -57,12 +61,26 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     }
 
     /// <summary>
+    /// Gets or sets the collection of possible HDMI display modes.
+    /// </summary>
+    public ObservableCollection<HdmiDisplayMode> PossibleDisplayModes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current HDMI display mode.
+    /// </summary>
+    public HdmiDisplayMode CurrentDisplayMode
+    {
+        get => _currentDisplayMode;
+        set => SetProperty(ref _currentDisplayMode, value);
+    }
+
+    /// <summary>
     /// Gets or sets the HDMI display information.
     /// </summary>
-    public HdmiDisplayInformation HdmiDisplayInformation
+    public HdmiDisplayInformation CurrentHdmiDisplayInformation
     {
-        get => _hdmiDisplayInformation;
-        set => SetProperty(ref _hdmiDisplayInformation, value);
+        get => _currentHdmiDisplayInformation;
+        set => SetProperty(ref _currentHdmiDisplayInformation, value);
     }
 
     /// <summary>
@@ -123,7 +141,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
     private void SaveSettings()
     {
-        if (HdmiDisplayInformation != null)
+        if (CurrentHdmiDisplayInformation != null)
         {
             Central.Settings.AutoRefreshRate = AutoRefreshRate;
             Central.Settings.AutoResolution = AutoResolution;
