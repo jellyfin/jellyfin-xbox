@@ -5,9 +5,10 @@
     xmlns:c="using:Jellyfin.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Jellyfin.ViewModels" 
-    xmlns:behaviors="using:Jellyfin.Behaviors" 
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:viewModels="using:Jellyfin.ViewModels"
+    xmlns:behaviors="using:Jellyfin.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Windows.Graphics.Display.Core"
     Background="{StaticResource Color0}"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
@@ -22,6 +23,9 @@
             <Style TargetType="CheckBox">
                 <Setter Property="ContentTemplate" Value="{StaticResource CheckboxContentTemplate}" />
             </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="White" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{StaticResource Color0}">
@@ -30,62 +34,88 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <Grid Background="{StaticResource Color10}">
+            <Grid Background="{StaticResource Color10}"
+                  Grid.ColumnSpan="3">
                 <Image
                     Source="/Assets/OnBoardingLogo.png"
                     Stretch="Uniform"
                     HorizontalAlignment="Center"
                     Height="80" />
             </Grid>
-
-            <Grid
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                Margin="0,30,0,0"
-                Width="640">
-
+            <Grid VerticalAlignment="Top"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Margin="0,30,0,0"
+                  HorizontalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <CheckBox
-                    IsChecked="{Binding AutoRefreshRate}"
-                    IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                <Grid
                     Grid.Row="0"
-                    Content="Set the display refresh rate to the media refresh rate">
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:AutoFocusBehavior FocusOnEnable="True" />
-                    </interactivity:Interaction.Behaviors>
-                </CheckBox>
-                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                           Grid.Row="1"
-                           FontSize="{StaticResource FontM}"
-                           Foreground="{StaticResource DangerColor}">
-                    Auto display refresh rate is not supported on this device.
-                </TextBlock>
+                    HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-                <CheckBox
-                    IsChecked="{Binding AutoResolution}"
-                    IsEnabled="{Binding HdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
-                    Content="Set the display resolution to the media resolution"
-                    Foreground="White" FontSize="{StaticResource FontL}"
-                    Grid.Row="2" />
-                <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                           Grid.Row="3"
-                           FontSize="{StaticResource FontM}"
-                           Foreground="{StaticResource DangerColor}">
-                    Display resolution is not supported on this device.
-                </TextBlock>
+                    <CheckBox
+                        IsChecked="{Binding AutoRefreshRate}"
+                        IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                        Grid.Row="0"
+                        Name="checkBoxAutoRefreshRate"
+                        Content="Set the display refresh rate to the media refresh rate">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:AutoFocusBehavior FocusOnEnable="True" />
+                        </interactivity:Interaction.Behaviors>
+                    </CheckBox>
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                               Grid.Row="1"
+                               FontSize="{StaticResource FontM}"
+                               Foreground="{StaticResource DangerColor}">
+                        Auto display refresh rate is not supported on this device.
+                    </TextBlock>
 
+                    <CheckBox
+                        IsChecked="{Binding AutoResolution}"
+                        IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
+                        Content="Set the display resolution to the media resolution"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="2" />
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                               Grid.Row="3"
+                               FontSize="{StaticResource FontM}"
+                               Foreground="{StaticResource DangerColor}">
+                        Display resolution is not supported on this device.
+                    </TextBlock>
+
+                    <CheckBox
+                        IsChecked="{Binding ForceEnableTvMode}"
+                        Content="Force TV mode"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="4" />
+                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
+                               Grid.Row="5"
+                               FontSize="{StaticResource FontM}"
+                               Foreground="{StaticResource Color100}">
+                        Overrides the device detection and sets it to "Xbox" to force the WebUI to operate in TV mode.
+                    </TextBlock>
+                </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
                     Margin="0,30,0,0"
-                    Grid.Row="4">
+                    Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -94,13 +124,107 @@
                         Grid.Column="0"
                         Style="{StaticResource SecondaryButton}"
                         Content="Abort"
-                        Command="{Binding AbortCommand}"/>
+                        Margin="0,0,6,0"
+                        Command="{Binding AbortCommand}" />
                     <Button
                         Grid.Column="1"
                         Style="{StaticResource PrimaryButton}"
+                        Margin="6,0,0,0"
                         Content="Save"
-                        Command="{Binding SaveCommand}"/>
+                        Command="{Binding SaveCommand}" />
                 </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Column="2"
+                Grid.Row="1"
+                Margin="10,10,0,0"
+                ColumnSpacing="10"
+                Visibility="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToVisibilityConverter}}">
+                <Grid.Resources>
+                    <DataTemplate x:DataType="core:HdmiDisplayMode" x:Key="ResolutionDisplay">
+                       <StackPanel Orientation="Horizontal">
+                           <TextBlock Text="{Binding ResolutionHeightInRawPixels}" />
+                           <TextBlock Text="x" Margin="5,0,5,0" />
+                           <TextBlock Text="{Binding ResolutionWidthInRawPixels}" />
+                           <TextBlock Text="-" Margin="5,0,5,0" />
+                           <TextBlock Text="{Binding RefreshRate}" />
+                           <TextBlock Text="Fps" Margin="5,0,5,0" />
+                       </StackPanel>
+                    </DataTemplate>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Display: " />
+                <StackPanel
+                    Orientation="Horizontal"
+                    Grid.Row="0"
+                    Grid.Column="1">
+                    <ContentPresenter Content="{Binding CurrentDisplayMode}"
+                                      ContentTemplate="{StaticResource ResolutionDisplay}"/>
+                </StackPanel>
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="Color Space: " />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding CurrentDisplayMode.ColorSpace}" />
+
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Text="HDR 10: " />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding CurrentDisplayMode.Is2086MetadataSupported}" />
+
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Text="DV Low Latency: " />
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Text="{Binding CurrentDisplayMode.IsDolbyVisionLowLatencySupported}" />
+
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Text="SMTPE: " />
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Text="{Binding CurrentDisplayMode.IsSmpte2084Supported}" />
+
+                <TextBlock
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Text="Available Display: " />
+                <ItemsControl
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    ItemsSource="{Binding PossibleDisplayModes}"
+                    ItemTemplate="{StaticResource ResolutionDisplay}">
+                </ItemsControl>
             </Grid>
         </Grid>
     </Grid>

@@ -6,7 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:Jellyfin.Behaviors"
+    xmlns:behaviors="using:Jellyfin.Behaviors" 
+    xmlns:system="using:System"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
@@ -26,12 +27,25 @@
 
         <Grid Grid.Row="1"
               Padding="0 40 0 0">
-            <StackPanel
+            <Grid
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Width="640">
+                Width="640"
+                Margin="0,0,80,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <TextBlock
                     Text="Connect to Jellyfin Server"
+                    Grid.Column="1"
+                    Grid.Row="0"
                     Foreground="White"
                     FontSize="{StaticResource FontL}"
                     Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
@@ -41,7 +55,9 @@
                     Style="{StaticResource PrimaryTextBox}"
                     Margin="0 8 0 8"
                     IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
-                    PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org">
+                    PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org"
+                    Grid.Column="1"
+                    Grid.Row="1">
                     <interactivity:Interaction.Behaviors>
                         <interactivity:BehaviorCollection>
                             <behaviors:AutoFocusBehavior FocusOnEnable="True" />
@@ -54,21 +70,46 @@
                         </interactivity:BehaviorCollection>
                     </interactivity:Interaction.Behaviors>
                 </TextBox>
-                <TextBlock
-                    FontFamily="{StaticResource JellyfinFamilyFont}"
-                    Text="{Binding ErrorMessage}"
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center"
-                    TextWrapping="Wrap"
-                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
-                    FontSize="{StaticResource FontM}"
-                    Margin="1 1 1 20"
-                    Foreground="{StaticResource DangerColor}" />
+
                 <Button
                     Style="{StaticResource PrimaryButton}"
                     Content="Connect"
-                    Command="{Binding ConnectCommand}" />
-            </StackPanel>
+                    Command="{Binding ConnectCommand}"
+                    Grid.Column="1"
+                    Grid.Row="2" />
+
+                <StackPanel
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock
+                        FontFamily="{StaticResource JellyfinFamilyFont}"
+                        Text="{Binding ErrorMessage}"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        FontSize="{StaticResource FontM}"
+                        Margin="1 1 1 20"
+                        Foreground="{StaticResource DangerColor}" />
+
+                    <TextBlock Text="Attempted to connect to:"
+                               Foreground="{StaticResource DangerColor}"/>
+                    <ItemsControl ItemsSource="{Binding TestedUris}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:Key="UriDataTemplate">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- "
+                                               Margin="0,0,8,0"
+                                               Foreground="{StaticResource DangerColor}"/>
+                                    <TextBlock Text="{Binding }"
+                                               Foreground="{StaticResource DangerColor}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="0"

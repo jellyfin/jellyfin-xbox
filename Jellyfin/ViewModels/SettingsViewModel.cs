@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace Jellyfin.ViewModels;
 
@@ -21,9 +17,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 {
     private readonly IGamepadManager _gamepadManager;
     private readonly IDisposable _navigationHandler;
-    private HdmiDisplayInformation _hdmiDisplayInformation;
+    private HdmiDisplayInformation _currentHdmiDisplayInformation;
     private bool _autoRefreshRate;
     private bool _autoResolution;
+    private bool _forceEnableTvMode;
+    private HdmiDisplayMode _currentDisplayMode;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
@@ -35,20 +33,54 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
         AutoRefreshRate = Central.Settings.AutoRefreshRate;
         AutoResolution = Central.Settings.AutoResolution;
+        ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
 
         _navigationHandler = _gamepadManager.ObserveBackEvent(ModalPage_BackRequested, -10);
+        try
+        {
+            CurrentHdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+            CurrentDisplayMode = CurrentHdmiDisplayInformation.GetCurrentDisplayMode();
+            PossibleDisplayModes = new(CurrentHdmiDisplayInformation.GetSupportedDisplayModes());
+        }
+        catch (Exception e)
+        {
+            Debug.Write(e);
+        }
 
         SaveCommand = new RelayCommand(OnSaveExecute);
         AbortCommand = new RelayCommand(OnAbortExecute);
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to force enable TV mode.
+    /// </summary>
+    public bool ForceEnableTvMode
+    {
+        get => _forceEnableTvMode;
+        set => SetProperty(ref _forceEnableTvMode, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the collection of possible HDMI display modes.
+    /// </summary>
+    public ObservableCollection<HdmiDisplayMode> PossibleDisplayModes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current HDMI display mode.
+    /// </summary>
+    public HdmiDisplayMode CurrentDisplayMode
+    {
+        get => _currentDisplayMode;
+        set => SetProperty(ref _currentDisplayMode, value);
+    }
+
+    /// <summary>
     /// Gets or sets the HDMI display information.
     /// </summary>
-    public HdmiDisplayInformation HdmiDisplayInformation
+    public HdmiDisplayInformation CurrentHdmiDisplayInformation
     {
-        get => _hdmiDisplayInformation;
-        set => SetProperty(ref _hdmiDisplayInformation, value);
+        get => _currentHdmiDisplayInformation;
+        set => SetProperty(ref _currentHdmiDisplayInformation, value);
     }
 
     /// <summary>
@@ -109,11 +141,13 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
     private void SaveSettings()
     {
-        if (HdmiDisplayInformation != null)
+        if (CurrentHdmiDisplayInformation != null)
         {
             Central.Settings.AutoRefreshRate = AutoRefreshRate;
             Central.Settings.AutoResolution = AutoResolution;
         }
+
+        Central.Settings.ForceEnableTvMode = ForceEnableTvMode;
     }
 
     /// <inheritdoc />

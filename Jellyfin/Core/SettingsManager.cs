@@ -12,6 +12,7 @@ public class SettingsManager : ISettingsManager
     private string _settingsServer = "SERVER";
     private string _autoResolution = "AUTO_RESOLUTION";
     private string _autoRefreshRate = "AUTO_REFRESH_RATE";
+    private string _forceEnableTvMode = "FORCE_TV_MODE";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -63,6 +64,15 @@ public class SettingsManager : ISettingsManager
     {
         get => GetProperty<bool>(_autoRefreshRate);
         set => SetProperty(_autoRefreshRate, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force enable TV mode, which may adjust UI elements for better TV compatibility.
+    /// </summary>
+    public bool ForceEnableTvMode
+    {
+        get => GetProperty<bool>(_forceEnableTvMode);
+        set => SetProperty(_forceEnableTvMode, value);
     }
 
     private void SetProperty(string propertyName, object value)

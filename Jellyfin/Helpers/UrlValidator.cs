@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Jellyfin.Helpers;
 
@@ -15,7 +16,7 @@ public static class UrlValidator
     /// <returns>
     /// (IsValid, Uri, ErrorMessage): Whether the input is valid, the parsed Uri if valid, and an error message if not.
     /// </returns>
-    public static (bool IsValid, Uri Uri, string ErrorMessage) ParseServerUri(string input)
+    public static (bool IsValid, Uri[] UriCandidates, string ErrorMessage) ParseServerUri(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
@@ -24,29 +25,33 @@ public static class UrlValidator
 
         input = input.Trim();
 
-        // Check for scheme separator "://" to determine if the input has a scheme.
-        int schemeSeparatorIndex = input.IndexOf("://", StringComparison.Ordinal);
-        if (schemeSeparatorIndex == 0)
-        {
-            return (false, null, "Please enter a valid HTTP or HTTPS URL scheme.");
-        }
+        var uriCandidates = new List<Uri>();
 
-        // If no scheme is present, default to http://.
-        if (schemeSeparatorIndex < 0)
-        {
-            input = $"{Uri.UriSchemeHttp}://{input}";
-        }
+        // check for existing protocol
 
-        if (!Uri.TryCreate(input, UriKind.Absolute, out var uri))
+        if (!Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out var uri))
         {
             return (false, null, "Please enter a valid server URL.");
         }
 
-        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+        uriCandidates.Add(uri);
+
+        if (!uri.IsAbsoluteUri || string.IsNullOrWhiteSpace(uri.Scheme))
         {
-            return (false, null, "Please enter a valid HTTP or HTTPS URL scheme.");
+            if (!uri.IsAbsoluteUri || uri.Port == 0)
+            {
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttps, Port = 443 }.Uri);
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttp, Port = 80 }.Uri);
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttps, Port = 8920 }.Uri);
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttp, Port = 8096 }.Uri);
+            }
+            else
+            {
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttps }.Uri);
+                uriCandidates.Add(new UriBuilder(input) { Scheme = Uri.UriSchemeHttp }.Uri);
+            }
         }
 
-        return (true, uri, null);
+        return (true, uriCandidates.ToArray(), null);
     }
 }

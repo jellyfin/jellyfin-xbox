@@ -29,7 +29,7 @@ public sealed partial class App : Application
     {
         InitializeComponent();
         Suspending += OnSuspending;
-        // RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+        RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
         Services = ConfigureServices();
     }
@@ -54,7 +54,7 @@ public sealed partial class App : Application
         var services = new ServiceCollection();
 
         // ViewModels
-        services.AddSingleton<JellyfinWebViewModel>();
+        services.AddTransient<JellyfinWebViewModel>();
         services.AddTransient<OnBoardingViewModel>();
         services.AddTransient<SettingsViewModel>();
 
