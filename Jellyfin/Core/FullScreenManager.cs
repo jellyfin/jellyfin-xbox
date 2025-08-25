@@ -80,7 +80,17 @@ public sealed class FullScreenManager : IFullScreenManager
         return mode => Math.Abs(refreshRate - mode.RefreshRate) <= 0.5;
     }
 
+    private static Func<HdmiDisplayMode, bool> MinRefreshRateMatches(double refreshRate)
+    {
+        return mode => refreshRate > mode.RefreshRate;
+    }
+
     private static Func<HdmiDisplayMode, bool> ResolutionMatches(uint width, uint height)
+    {
+        return mode => mode.ResolutionWidthInRawPixels == width || mode.ResolutionHeightInRawPixels == height;
+    }
+
+    private static Func<HdmiDisplayMode, bool> MinResolutionMatches(uint width, uint height)
     {
         return mode => mode.ResolutionWidthInRawPixels >= width || mode.ResolutionHeightInRawPixels >= height;
     }
@@ -100,24 +110,13 @@ public sealed class FullScreenManager : IFullScreenManager
         // `GetHdmiDisplayHdrOption(...)` ensures the HdmiDisplayHdrOption is always a mode the display supports
         var hdmiDisplayModes = supportedHdmiDisplayModes.Where(HdmiDisplayHdrOptionMatches(hdmiDisplayHdrOption)).ToArray();
 
-        var filteredToVideoResolution = false;
         if (Central.Settings.AutoResolution)
         {
             var matchingResolution = hdmiDisplayModes.Where(ResolutionMatches(videoWidth, videoHeight)).ToArray();
             if (matchingResolution.Any())
             {
                 hdmiDisplayModes = matchingResolution;
-                filteredToVideoResolution = true;
             }
-        }
-
-        var currentHdmiDisplayMode = hdmiDisplayInformation.GetCurrentDisplayMode();
-
-        if (!filteredToVideoResolution)
-        {
-            hdmiDisplayModes = hdmiDisplayModes.Where(ResolutionMatches(
-                currentHdmiDisplayMode.ResolutionWidthInRawPixels,
-                currentHdmiDisplayMode.ResolutionHeightInRawPixels)).ToArray();
         }
 
         if (Central.Settings.AutoRefreshRate)
@@ -130,10 +129,8 @@ public sealed class FullScreenManager : IFullScreenManager
         }
 
         return hdmiDisplayModes
-            .Where(ResolutionMatches(
-                currentHdmiDisplayMode.ResolutionWidthInRawPixels,
-                currentHdmiDisplayMode.ResolutionHeightInRawPixels))
-            .Where(RefreshRateMatches(currentHdmiDisplayMode.RefreshRate))
+            .Where(MinResolutionMatches(videoWidth, videoHeight))
+            .Where(MinRefreshRateMatches(videoHeight - 3))
             .OrderBy(e => e.ResolutionHeightInRawPixels * e.ResolutionWidthInRawPixels)
             .ThenBy(e => e.RefreshRate)
             .FirstOrDefault()!;
