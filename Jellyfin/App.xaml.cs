@@ -96,7 +96,7 @@ public sealed partial class App : Application
         {
             if (Central.Settings.HasJellyfinServer && Central.Settings.JellyfinServerValidated && !string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
             {
-                var md = new MessageDialog($"Do you want to attempt to upload the logfiles to your Jellyfin server?", "Unexpected error.");
+                var md = new MessageDialog($"The Application has encountered an unexpected issue. Do you want to attempt to upload the logfiles to your Jellyfin server?", "Unexpected error.");
                 md.Commands.Add(new UICommand("Yes", command =>
                 {
                     Task.Run(async () =>
@@ -113,7 +113,7 @@ public sealed partial class App : Application
             }
             else
             {
-                var md = new MessageDialog($"The application will now close.", "Unexpected error.");
+                var md = new MessageDialog($"The Application has encountered an unexpected issue and will now close.", "Unexpected error.");
                 md.Commands.Add(new UICommand("Ok", command => Exit()));
                 await md.ShowAsync();
             }
