@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core.Contract;
 using Jellyfin.Views;
 using Windows.Data.Json;
@@ -17,16 +18,19 @@ public class MessageHandler : IMessageHandler
 {
     private readonly Frame _frame;
     private readonly IFullScreenManager _fullScreenManager;
+    private readonly IMessenger _messenger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageHandler"/> class.
     /// </summary>
     /// <param name="frame">Frame.</param>
     /// <param name="fullScreenManager">The service responsible for managing HDMI and fullscreen states.</param>
-    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager)
+    /// <param name="messenger">The Messenger service.</param>
+    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager, IMessenger messenger)
     {
         _frame = frame;
         _fullScreenManager = fullScreenManager;
+        _messenger = messenger;
     }
 
     /// <summary>
@@ -79,6 +83,10 @@ public class MessageHandler : IMessageHandler
         else if (eventType == "exit")
         {
             Exit();
+        }
+        else if (eventType == "loaded")
+        {
+            _messenger.Send(new WebMessage(eventType, args));
         }
         else
         {

@@ -154,6 +154,7 @@
     <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\RollingAppLoggerProvider.cs" />
     <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Core\WebMessage.cs" />
     <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
