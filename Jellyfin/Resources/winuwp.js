@@ -123,6 +123,7 @@
 
         getPlugins: function () {
             console.debug('getPlugins');
+            postMessage('loaded');
             return [];
         },
 

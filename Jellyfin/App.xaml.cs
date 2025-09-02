@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
@@ -72,6 +73,7 @@ public sealed partial class App : Application
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
         services.AddTransient<CoreDispatcher>(_ => Window.Current.Dispatcher);
         services.AddTransient<ApplicationView>(_ => ApplicationView.GetForCurrentView());
+        services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
 
         // Services
         services.AddSingleton<IFullScreenManager, FullScreenManager>();
