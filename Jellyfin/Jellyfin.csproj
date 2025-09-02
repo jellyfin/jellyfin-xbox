@@ -152,6 +152,7 @@
     <Compile Include="Core\Contract\ISettingsManager.cs" />
     <Compile Include="Core\MessageHandler.cs" />
     <Compile Include="Core\NativeShellScriptLoader.cs" />
+    <Compile Include="Core\RollingAppLoggerProvider.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -280,6 +281,9 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" />
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Quicksand-Regular.ttf" />

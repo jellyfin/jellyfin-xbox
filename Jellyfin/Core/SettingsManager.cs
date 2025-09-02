@@ -49,6 +49,11 @@ public class SettingsManager : ISettingsManager
     public bool JellyfinServerValidated { get; internal set; }
 
     /// <summary>
+    /// Gets a value representing the last access token used to communicating with the jellyfin server.
+    /// </summary>
+    public string JellyfinServerAccessToken { get; internal set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the display resolution should be set to match the video resolution.
     /// </summary>
     public bool AutoResolution
