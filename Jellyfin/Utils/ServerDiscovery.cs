@@ -22,17 +22,27 @@ namespace Jellyfin.Utils
     /// </summary>
     public sealed class ServerDiscovery : IDisposable
     {
-        private readonly TimeSpan _discoverInterval = TimeSpan.FromSeconds(10);
         private readonly ThreadPoolTimer _discoveryTimer;
         private readonly byte[] _sendBuffer = Encoding.ASCII.GetBytes("Who is JellyfinServer?");
+        private readonly Socket _udpSocket = new Socket(SocketType.Dgram, ProtocolType.Udp);
+        private bool _disposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServerDiscovery"/> class.
         /// </summary>
         public ServerDiscovery()
         {
-            _discoveryTimer = ThreadPoolTimer.CreatePeriodicTimer(DiscoveryPolling_Timer, _discoverInterval);
-            new Thread(() => { DiscoverServers(); }).Start();
+            _udpSocket.EnableBroadcast = true;
+            _udpSocket.ReceiveTimeout = 10000;
+
+            _discoveryTimer = ThreadPoolTimer.CreatePeriodicTimer(
+                (_) =>
+                {
+                    SendDiscoverMessage();
+                },
+                TimeSpan.FromSeconds(10));
+            Task.Run(SendDiscoverMessage)
+                .ContinueWith((_) => ReceiveDiscoveryMessages());
         }
 
         /// <summary>
@@ -45,53 +55,51 @@ namespace Jellyfin.Utils
         /// </summary>
         public Queue<DiscoveredServer> DiscoveredServers { get; } = new Queue<DiscoveredServer>();
 
-        private void DiscoveryPolling_Timer(object sender)
+        private void SendDiscoverMessage()
         {
-            DiscoverServers();
+            try
+            {
+                _udpSocket.SendTo(_sendBuffer, new IPEndPoint(IPAddress.Broadcast, 7359));
+                Debug.WriteLine("Sent message");
+            }
+            catch (SocketException ex)
+            {
+                Debug.WriteLine($"Broadcast errored with message: {ex.Message}");
+            }
         }
 
-        private void DiscoverServers()
+        private void ReceiveDiscoveryMessages()
         {
-            using (var udpSocket = new Socket(SocketType.Dgram, ProtocolType.Udp))
+            while (!_disposed)
             {
-                Debug.WriteLine("New UDPSocket");
-                udpSocket.EnableBroadcast = true;
-                udpSocket.ReceiveTimeout = (int)_discoverInterval.TotalMilliseconds;
-
-                var broadcastAddress = IPAddress.Broadcast;
-                var broadcastEndpoint = new IPEndPoint(broadcastAddress, 7359);
-                udpSocket.SendTo(_sendBuffer, broadcastEndpoint);
-                Debug.WriteLine($"Sent to {broadcastAddress}");
-
-                var recieveBuffer = new byte[256];
                 try
                 {
-                    while (true)
-                    {
-                        udpSocket.Receive(recieveBuffer);
-                        var receivedText = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length)
-                            .Replace("\0", string.Empty);
-                        Debug.WriteLine($"Received: {receivedText}");
-                        var discoveredServer = JsonSerializer.Deserialize<DiscoveredServer>(receivedText);
-                        DiscoveredServers.Enqueue(discoveredServer);
-                        OnDiscover?.Invoke();
-                    }
+                    var buffer = new byte[_udpSocket.ReceiveBufferSize];
+                    _udpSocket.Receive(buffer);
+                    var text = Encoding.ASCII.GetString(buffer, 0, buffer.Length).Replace("\0", string.Empty);
+                    Debug.WriteLine($"Received: {text}");
+
+                    var discoveredServer = JsonSerializer.Deserialize<DiscoveredServer>(text);
+                    DiscoveredServers.Enqueue(discoveredServer);
+                    OnDiscover?.Invoke();
                 }
                 catch (SocketException ex)
                 {
-                    if (ex.SocketErrorCode == SocketError.TimedOut)
+                    switch (ex.SocketErrorCode)
                     {
-                        Debug.WriteLine($"Socket Timed out after {_discoverInterval.TotalSeconds}s");
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"Broadcast Address: {broadcastAddress}, errored with message: {ex.Message}");
-                        throw ex;
+                        case SocketError.TimedOut:
+                            Debug.WriteLine($"Socket Timed out");
+                            break;
+                        case SocketError.Interrupted:
+                            // Socket disposed
+                            Debug.WriteLine("Socket interrupted.");
+                            return;
+                        default:
+                            Debug.WriteLine($"Socket Error: {ex.Message}");
+                            throw ex;
                     }
                 }
             }
-
-            Debug.WriteLine("UDPSocket ended");
         }
 
         /// <summary>
@@ -100,6 +108,8 @@ namespace Jellyfin.Utils
         public void Dispose()
         {
             _discoveryTimer.Cancel();
+            _udpSocket.Dispose();
+            _disposed = true;
         }
     }
 }

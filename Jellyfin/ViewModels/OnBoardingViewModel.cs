@@ -126,6 +126,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
                         Central.Settings.JellyfinServer = parsedUri.ToString();
                         Central.Settings.JellyfinServerValidated = true;
 
+                        Dispose();
                         _frame.Navigate(typeof(MainPage));
                     });
             }
