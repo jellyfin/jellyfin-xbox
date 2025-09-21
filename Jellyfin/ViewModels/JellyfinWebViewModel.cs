@@ -1,12 +1,15 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Windows.Data.Json;
@@ -23,7 +26,7 @@ namespace Jellyfin.ViewModels;
 /// <summary>
 /// ViewModel for the Jellyfin WebView.
 /// </summary>
-public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
+public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRecipient<WebMessage>
 {
     private readonly INativeShellScriptLoader _nativeShellScriptLoader;
     private readonly IMessageHandler _messageHandler;
@@ -32,6 +35,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
     private readonly ApplicationView _applicationView;
+    private readonly ILogger<JellyfinWebViewModel> _logger;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
@@ -45,13 +49,17 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     /// <param name="dispatcher">UI dispatcher.</param>
     /// <param name="frame">Current frame of the top application.</param>
     /// <param name="applicationView">Application view for managing the app's view state.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="messenger">The Messenger service.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
         IGamepadManager gamepadManager,
         CoreDispatcher dispatcher,
         Frame frame,
-        ApplicationView applicationView)
+        ApplicationView applicationView,
+        ILogger<JellyfinWebViewModel> logger,
+        IMessenger messenger) : base(messenger)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
@@ -59,10 +67,17 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         _dispatcher = dispatcher;
         _frame = frame;
         _applicationView = applicationView;
+        _logger = logger;
+        _logger.LogInformation("JellyfinWebViewModel Initialising.");
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
+
+        Central.Settings.JellyfinServerAccessToken = null;
+        IsInProgress = true;
+        Messenger.Register(this);
 
         if (Central.Settings.JellyfinServerValidated)
         {
+            _logger.LogInformation("Server is validated proceed to initialise webview.");
             _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 await InitialiseWebView().ConfigureAwait(true);
@@ -70,6 +85,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         }
         else
         {
+            _logger.LogInformation("Server is not validated yet.");
             BeginServerValidation();
         }
     }
@@ -107,25 +123,21 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     {
         _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
         {
-            try
+            var jellyfinServerCheck = await ServerCheckUtil.IsJellyfinServerUrlValidAsync(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
+            // Check if the parsed URI is pointing to a Jellyfin server.
+            if (!jellyfinServerCheck.IsValid)
             {
-                var jellyfinServerCheck = await ServerCheckUtil.IsJellyfinServerUrlValidAsync(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
-                // Check if the parsed URI is pointing to a Jellyfin server.
-                if (!jellyfinServerCheck.IsValid)
-                {
-                    var md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
-                                               $" {jellyfinServerCheck.ErrorMessage}");
-                    await md.ShowAsync();
-                    _frame.Navigate(typeof(OnBoarding));
-                    return;
-                }
+                _logger.LogInformation("Server cannot be validated because: {ValidationError}.", jellyfinServerCheck.ErrorMessage);
+                var md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
+                                           $" {jellyfinServerCheck.ErrorMessage}");
+                await md.ShowAsync();
+                _frame.Navigate(typeof(OnBoarding));
+                return;
+            }
 
-                await InitialiseWebView().ConfigureAwait(true);
-            }
-            finally
-            {
-                IsInProgress = false;
-            }
+            Central.Settings.JellyfinServerValidated = true;
+            _logger.LogInformation("Server is validated proceed to initialise webview.");
+            await InitialiseWebView().ConfigureAwait(true);
         });
     }
 
@@ -133,6 +145,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     {
         if (ServerCheckUtil.IsFutureUnsupportedVersion)
         {
+            _logger.LogWarning("Server is deprecated.");
             DisplayDeprecationNotice = true;
         }
 
@@ -153,27 +166,53 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
 
     private void WebView_BackRequested(BackRequestedEventArgs e)
     {
-        if (WebView.CanGoBack && !e.Handled)
+        try
         {
-            e.Handled = true;
-            WebView.GoBack(); // Navigate back in the WebView2 control.
+            if (WebView.CanGoBack && !e.Handled)
+            {
+                e.Handled = true;
+                WebView.GoBack(); // Navigate back in the WebView2 control.
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to navigate back.");
         }
     }
 
     private async Task InitializeWebViewAndNavigateTo(Uri uri)
     {
-        await WebView.EnsureCoreWebView2Async();
-        if (WebView.CoreWebView2 == null)
+        async Task ValidateWebView(Exception ex = null)
         {
-            await new MessageDialog("Could not initialise WebView.").ShowAsync();
-            Debug.WriteLine("Failed to EnsureCoreWebView2");
-            Application.Current.Exit();
+            if (WebView.CoreWebView2 == null || ex != null)
+            {
+                _logger.LogError(ex, "WebView2 initialization failed.");
+                await new MessageDialog("Could not initialise WebView.").ShowAsync();
+                Application.Current.Exit();
+            }
         }
+
+        try
+        {
+            await WebView.EnsureCoreWebView2Async();
+        }
+        catch (Exception e)
+        {
+            await ValidateWebView(e);
+            return;
+        }
+
+        await ValidateWebView();
 
         AddDeviceFormToUserAgent();
         await InjectNativeShellScript().ConfigureAwait(true);
 
         WebView.Source = uri;
+
+        _ = Task.Delay(TimeSpan.FromSeconds(8)).ContinueWith((c) =>
+        {
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+        });
     }
 
     private async Task InjectNativeShellScript()
@@ -182,11 +221,11 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         try
         {
             await WebView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(nativeShellScript);
-            Debug.WriteLine("Injected nativeShellScript");
+            _logger.LogInformation("Native shell script injected");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine("Failed to add NativeShell JS: " + ex.Message);
+            _logger.LogError(ex, "Failed to inject native shell script.");
         }
     }
 
@@ -205,18 +244,18 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine($"Error handling JSON message: {e}");
+                        _logger.LogError(e, "Failed to handle json message.");
                     }
                 });
             }
             else
             {
-                Debug.WriteLine($"Failed to parse args as JSON: {jsonMessage}");
+                _logger.LogError("Failed to parse json message. {JsonMessage}", jsonMessage);
             }
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"Failed to process OnWebMessageReceived: {e}");
+            _logger.LogError(e, "Failed to handle json message.");
         }
     }
 
@@ -256,16 +295,35 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
 
     private void JellyfinWebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
     {
+        _logger.LogInformation("Navigation to {Url} is {Completed}", sender.Source, args.IsSuccess ? "Success" : "Failed");
         _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
         {
             if (!args.IsSuccess)
             {
+                _logger.LogError("Failed to process navigation {Status}.", args.WebErrorStatus);
                 var errorStatus = args.WebErrorStatus;
                 var md = new MessageDialog($"Navigation failed: {errorStatus}");
                 await md.ShowAsync();
             }
-
-            IsInProgress = false;
+            else if (string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
+            {
+                var accessToken = await WebView.CoreWebView2.ExecuteScriptWithResultAsync("""
+                                                                  JSON.parse(localStorage.getItem("jellyfin_credentials")).Servers[0].AccessToken
+                                                                  """);
+                if (!accessToken.Succeeded)
+                {
+                    _logger.LogError("Could not obtain access token for {Path}", args.NavigationId);
+                }
+                else
+                {
+                    var accessTokenText = accessToken.ResultAsJson.Trim('"'); // Remove quotes around the token.
+                    if (Central.Settings.JellyfinServerAccessToken != accessTokenText && !string.IsNullOrWhiteSpace(accessTokenText))
+                    {
+                        Central.Settings.JellyfinServerAccessToken = accessTokenText;
+                        _logger.LogInformation("Access token updated.");
+                    }
+                }
+            }
         });
     }
 
@@ -286,7 +344,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"Error in ContainsFullScreenElementChanged: {e}");
+            _logger.LogError(e, "Failed to process Fullscreen change");
         }
     }
 
@@ -294,16 +352,7 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     {
         _ = Task.Run(async () =>
         {
-            var nativeShellScript = await _nativeShellScriptLoader.LoadNativeShellScript();
-            try
-            {
-                await WebView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(nativeShellScript);
-                Debug.WriteLine("Injected nativeShellScript on display mode change");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Failed to inject script on display mode change: " + ex.Message);
-            }
+            await InjectNativeShellScript().ConfigureAwait(false);
         });
     }
 
@@ -311,5 +360,16 @@ public sealed class JellyfinWebViewModel : ObservableObject, IDisposable
     public void Dispose()
     {
         _navigationHandler.Dispose();
+    }
+
+    /// <inheritdoc />
+    public void Receive(WebMessage message)
+    {
+        switch (message.Type)
+        {
+            case "loaded" when IsInProgress:
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+                break;
+        }
     }
 }

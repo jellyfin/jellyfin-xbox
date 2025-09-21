@@ -1,17 +1,26 @@
 using System;
+using System.Net.Http;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace Jellyfin;
 
@@ -32,6 +41,8 @@ public sealed partial class App : Application
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
         Services = ConfigureServices();
+
+        UnhandledException += OnUnhandledException;
     }
 
     /// <summary>
@@ -62,6 +73,7 @@ public sealed partial class App : Application
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
         services.AddTransient<CoreDispatcher>(_ => Window.Current.Dispatcher);
         services.AddTransient<ApplicationView>(_ => ApplicationView.GetForCurrentView());
+        services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
 
         // Services
         services.AddSingleton<IFullScreenManager, FullScreenManager>();
@@ -70,9 +82,88 @@ public sealed partial class App : Application
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
 
+        services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
+
 #pragma warning disable IDISP005
         return services.BuildServiceProvider();
 #pragma warning restore IDISP005
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        Services.GetRequiredService<ILogger<App>>().LogCritical(e.Exception, "Unhandled exception occurred");
+        e.Handled = true;
+
+        _ = App.Current.Services.GetRequiredService<CoreDispatcher>().RunAsync(CoreDispatcherPriority.High, async () =>
+        {
+            if (Central.Settings.HasJellyfinServer && Central.Settings.JellyfinServerValidated && !string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
+            {
+                var md = new MessageDialog($"The Application has encountered an unexpected issue. Do you want to attempt to upload the logfiles to your Jellyfin server?", "Unexpected error.");
+                md.Commands.Add(new UICommand("Yes", command =>
+                {
+                    Task.Run(async () =>
+                    {
+                        await UploadClientLog().ConfigureAwait(false);
+                        Exit();
+                    });
+                }));
+                md.Commands.Add(new UICommand("No", command =>
+                {
+                    Exit();
+                }));
+                await md.ShowAsync();
+            }
+            else
+            {
+                var md = new MessageDialog($"The Application has encountered an unexpected issue and will now close.", "Unexpected error.");
+                md.Commands.Add(new UICommand("Ok", command => Exit()));
+                await md.ShowAsync();
+            }
+        });
+    }
+
+    private async Task<bool> UploadClientLog()
+    {
+        try
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+            httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
+            httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
+            var loggerProvider = (RollingAppLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
+            var logBuilder = new StringBuilder();
+            logBuilder.AppendLine($"Jellyfin for Xbox Client version {Assembly.GetCallingAssembly().GetName().Version}");
+            logBuilder.AppendLine($"UWP version: {AnalyticsInfo.VersionInfo.DeviceFamily} {AnalyticsInfo.VersionInfo.DeviceFamilyVersion}");
+            logBuilder.AppendLine($"Device info: {AnalyticsInfo.DeviceForm}");
+
+            foreach (var deviceInfo in await AnalyticsInfo.GetSystemPropertiesAsync([
+                         "App",
+                         "AppVer",
+                         "DeviceFamily",
+                         "FlightRing",
+                         "OSVersionFull",
+                     ]))
+            {
+                logBuilder.AppendLine($"{deviceInfo.Key}: {deviceInfo.Value}");
+            }
+
+            foreach (var loggerProviderLog in loggerProvider.Logs)
+            {
+                logBuilder.AppendLine($"[{loggerProviderLog.Timestamp:u}] [{loggerProviderLog.Level}] {loggerProviderLog.Message}");
+                if (loggerProviderLog.Exception != null)
+                {
+                    logBuilder.AppendLine(loggerProviderLog.Exception.ToString());
+                }
+            }
+
+            using var response = await httpClient.PostAsync("/ClientLog/Document", new StringContent(logBuilder.ToString())).ConfigureAwait(false);
+            return response.StatusCode == System.Net.HttpStatusCode.OK;
+        }
+        catch
+        {
+            // really no point in logging here, the log will never show up anywhere.
+            return false;
+        }
     }
 
     /// <summary>
