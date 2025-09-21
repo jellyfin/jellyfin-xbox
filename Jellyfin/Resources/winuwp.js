@@ -114,7 +114,6 @@
         },
 
         enableFullscreen: function (videoInfo) {
-            postMessage('enableFullscreen', videoInfo);
         },
 
         disableFullscreen: function () {
@@ -123,7 +122,7 @@
 
         getPlugins: function () {
             console.debug('getPlugins');
-            return [];
+            return ["UwpXboxHdmiSetupPlugin"];
         },
 
         selectServer: function () {
@@ -135,3 +134,72 @@
         }
     };
 })(APP_NAME, APP_VERSION, DEVICE_NAME, SUPPORTS_HDR, SUPPORTS_DOVI);
+
+
+/**
+ * Plugin build to toggle attached HDMI monitors
+ * Follows: https://github.com/jellyfin/jellyfin-web/blob/master/src/types/plugin.ts
+ */
+class UwpXboxHdmiSetupPlugin {
+    constructor(pluginOptions) {
+        this.name = "UwpXboxHdmiSetupPlugin";
+        this.id = "UwpXboxHdmiSetupPlugin";
+        this.type = "preplayintercept";
+        this.priority = 0;
+        this.PluginOptions = pluginOptions;
+    }
+
+    async intercept(options) {
+        const item = options.item;
+        if (!item) {
+            return;
+        }
+        if ("mediaSourceId" in options) {
+            const mediaSourceid = options.mediaSourceid;
+            var mediaStreams = null;
+            var mediaSource = null;
+
+            if (item.MediaSources == null) {
+                const apiClient = this.PluginOptions.ServerConnections.getApiClient(item.ServerId);
+                const isLiveTv = ["TvChannel", "LiveTvChannel"].includes(item.Type);
+                mediaStreams = isLiveTv ? null : await apiClient.getItem(apiClient.getCurrentUserId(), mediaSourceid || item.Id)
+                    .then(fullItem => {
+                        mediaSource = fullItem;
+                        return fullItem.MediaStreams;
+                    });
+            }
+            else {
+                mediaSource = item.MediaSources.find(e => e.id == mediaSourceid);
+                if (mediaSource == null) {
+                    return;
+                }
+                mediaStreams = mediaSource.MediaStreams;
+            }
+
+            if (mediaStreams == null || mediaStreams.length == 0) {
+                return;
+            }
+
+            const stream = mediaStreams.find(s => s.Type === 'Video');
+
+            if (stream == null) {
+                return;
+            }
+
+            const payload = {
+                'type': "enableFullscreen",
+                'args': {
+                    'videoWidth': stream.Width,
+                    'videoHeight': stream.Height,
+                    'videoFrameRate': (stream.AverageFrameRate || stream.RealFrameRate),
+                    'videoRangeType': stream.VideoRange
+                }
+            };
+
+            window.chrome.webview.postMessage(JSON.stringify(payload));
+            await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec before continuing with playback to setup display
+        }
+    }
+}
+
+window["UwpXboxHdmiSetupPlugin"] = async () => UwpXboxHdmiSetupPlugin;
