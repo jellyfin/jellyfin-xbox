@@ -150,7 +150,6 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         }
 
         WebView = new WebView2();
-
         WebView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         WebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
         WebView.WebMessageReceived += OnWebMessageReceived;
@@ -263,7 +262,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     {
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
         WebView.Focus(FocusState.Programmatic);
-
+        
         WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }

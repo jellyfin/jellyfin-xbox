@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Graphics.Display;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
@@ -37,6 +39,14 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
+
+        if (!ApplicationViewScaling.TrySetDisableLayoutScaling(true))
+        {
+            throw new InvalidOperationException("Failed to disable layout scaling.");
+        }
+
+        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+
         Suspending += OnSuspending;
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
@@ -186,7 +196,6 @@ public sealed partial class App : Application
             if (AppUtils.IsXbox)
             {
                 ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                ApplicationViewScaling.TrySetDisableLayoutScaling(true);
             }
             else
             {

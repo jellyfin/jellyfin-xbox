@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Data.Json;
+using Windows.Devices.Display;
+using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.Core;
 
@@ -17,14 +22,17 @@ namespace Jellyfin.Core;
 public sealed class FullScreenManager : IFullScreenManager
 {
     private readonly ApplicationView _applicationView;
+    private readonly Frame _frame;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
     /// </summary>
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
-    public FullScreenManager(ApplicationView applicationView)
+    /// <param name="frame">The root frame.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame)
     {
         _applicationView = applicationView;
+        _frame = frame;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -37,14 +45,12 @@ public sealed class FullScreenManager : IFullScreenManager
         {
             foreach (var item in bestDisplayMode)
             {
-                Console.WriteLine($"Setting display mode to {item.BitsPerPixel} {item.RefreshRate}fps {item.ResolutionHeightInRawPixels}x{item.ResolutionWidthInRawPixels}");
                 if (await hdmiDisplayInformation
-                    ?.RequestSetCurrentDisplayModeAsync(item, hdmiDisplayHdrOption))
+                    ?.RequestSetCurrentDisplayModeAsync(item))
                 {
-                    ApplicationViewScaling.TrySetDisableLayoutScaling(true);
-                    _applicationView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                    var fullscreen = _applicationView.TryEnterFullScreenMode();
-                    var resize = _applicationView.TryResizeView(new Windows.Foundation.Size(item.ResolutionWidthInRawPixels, item.ResolutionHeightInRawPixels));
+                    // _frame.Width = item.ResolutionWidthInRawPixels;
+                    // _frame.Height = item.ResolutionHeightInRawPixels;
+                    _frame.InvalidateMeasure();
                     return;
                 }
             }
