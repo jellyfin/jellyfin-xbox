@@ -53,7 +53,7 @@ public class MessageHandler : IMessageHandler
         }
         else if (eventType == "disableFullscreen")
         {
-            // await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
+            await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
         }
         else if (eventType == "selectServer")
         {

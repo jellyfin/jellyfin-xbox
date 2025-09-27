@@ -78,9 +78,14 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         if (Central.Settings.JellyfinServerValidated)
         {
             _logger.LogInformation("Server is validated proceed to initialise webview.");
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            _ = Task.Run(async () =>
             {
-                await InitialiseWebView().ConfigureAwait(true);
+                await Task.Delay(500).ConfigureAwait(true); // this delay is nessesary to have the UI rendered at least before allowing to focus it
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                {
+                    await Task.Yield();
+                    await InitialiseWebView().ConfigureAwait(true);
+                });
             });
         }
         else
@@ -210,7 +215,10 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
         _ = Task.Delay(TimeSpan.FromSeconds(8)).ContinueWith((c) =>
         {
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                IsInProgress = false;
+            });
         });
     }
 
@@ -262,7 +270,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     {
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
         WebView.Focus(FocusState.Programmatic);
-        
+
         WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }
@@ -367,7 +375,10 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         switch (message.Type)
         {
             case "loaded" when IsInProgress:
-                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    IsInProgress = false;
+                });
                 break;
         }
     }

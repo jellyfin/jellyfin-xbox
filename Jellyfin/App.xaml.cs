@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
+using Windows.Graphics.Display.Core;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
@@ -45,7 +47,21 @@ public sealed partial class App : Application
             throw new InvalidOperationException("Failed to disable layout scaling.");
         }
 
-        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+        var minSize = new Windows.Foundation.Size(800, 600);
+        var displayInfo = HdmiDisplayInformation.GetForCurrentView();
+        if (displayInfo is not null)
+        {
+            var maxSize = displayInfo.GetSupportedDisplayModes().OrderByDescending(m => m.ResolutionWidthInRawPixels * m.ResolutionHeightInRawPixels).FirstOrDefault();
+            minSize = new Windows.Foundation.Size(maxSize.ResolutionWidthInRawPixels, maxSize.ResolutionHeightInRawPixels);
+        }
+        else
+        {
+            var currentDisplay = DisplayInformation.GetForCurrentView();
+            minSize = new Windows.Foundation.Size(currentDisplay.ScreenWidthInRawPixels, currentDisplay.ScreenHeightInRawPixels);
+        }
+
+        ApplicationView.PreferredLaunchViewSize = minSize;
+        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
         Suspending += OnSuspending;
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
