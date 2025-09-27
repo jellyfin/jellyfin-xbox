@@ -16,6 +16,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
+using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
@@ -62,6 +63,7 @@ public sealed partial class App : Application
 
         ApplicationView.PreferredLaunchViewSize = minSize;
         ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        DisplayRequest = new();
 
         Suspending += OnSuspending;
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
@@ -70,6 +72,11 @@ public sealed partial class App : Application
 
         UnhandledException += OnUnhandledException;
     }
+
+    /// <summary>
+    /// Gets the Display request object for handling screen activation.
+    /// </summary>
+    public static DisplayRequest DisplayRequest { get; private set; }
 
     /// <summary>
     /// Gets the current <see cref="App"/> instance in use.
@@ -107,6 +114,7 @@ public sealed partial class App : Application
         services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
+        services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
 
         services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
 

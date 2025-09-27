@@ -9,6 +9,7 @@ using Windows.Data.Json;
 using Windows.Devices.Display;
 using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
+using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -23,16 +24,19 @@ public sealed class FullScreenManager : IFullScreenManager
 {
     private readonly ApplicationView _applicationView;
     private readonly Frame _frame;
+    private readonly DisplayRequest _displayRequest;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
     /// </summary>
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
     /// <param name="frame">The root frame.</param>
-    public FullScreenManager(ApplicationView applicationView, Frame frame)
+    /// <param name="displayRequest">The display Request.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest)
     {
         _applicationView = applicationView;
         _frame = frame;
+        _displayRequest = displayRequest;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -181,6 +185,7 @@ public sealed class FullScreenManager : IFullScreenManager
                     var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
                     var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(hdmiDisplayInformation, videoRangeType);
                     await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(false);
+                    _displayRequest.RequestActive();
                 }
                 catch (Exception ex)
                 {
@@ -212,5 +217,7 @@ public sealed class FullScreenManager : IFullScreenManager
         {
             _applicationView.ExitFullScreenMode();
         }
+
+        _displayRequest.RequestRelease();
     }
 }
