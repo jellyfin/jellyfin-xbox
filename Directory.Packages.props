@@ -11,7 +11,7 @@
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />    
     <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3485.44"/>
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3537.50"/>
     <PackageVersion Include="System.Text.Json" Version="9.0.9" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
