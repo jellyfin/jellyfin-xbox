@@ -78,9 +78,14 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         if (Central.Settings.JellyfinServerValidated)
         {
             _logger.LogInformation("Server is validated proceed to initialise webview.");
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            _ = Task.Run(async () =>
             {
-                await InitialiseWebView().ConfigureAwait(true);
+                await Task.Delay(500).ConfigureAwait(true); // this delay is nessesary to have the UI rendered at least before allowing to focus it
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                {
+                    await Task.Yield();
+                    await InitialiseWebView().ConfigureAwait(true);
+                });
             });
         }
         else
@@ -150,7 +155,6 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         }
 
         WebView = new WebView2();
-
         WebView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         WebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
         WebView.WebMessageReceived += OnWebMessageReceived;
@@ -211,7 +215,10 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
         _ = Task.Delay(TimeSpan.FromSeconds(8)).ContinueWith((c) =>
         {
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                IsInProgress = false;
+            });
         });
     }
 
@@ -368,7 +375,10 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         switch (message.Type)
         {
             case "loaded" when IsInProgress:
-                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => IsInProgress = false);
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    IsInProgress = false;
+                });
                 break;
         }
     }
