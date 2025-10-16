@@ -14,6 +14,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace Jellyfin.Core;
 
@@ -52,9 +53,6 @@ public sealed class FullScreenManager : IFullScreenManager
                 if (await hdmiDisplayInformation
                     ?.RequestSetCurrentDisplayModeAsync(item))
                 {
-                    // _frame.Width = item.ResolutionWidthInRawPixels;
-                    // _frame.Height = item.ResolutionHeightInRawPixels;
-                    _frame.InvalidateMeasure();
                     return;
                 }
             }
@@ -159,7 +157,7 @@ public sealed class FullScreenManager : IFullScreenManager
             .ThenBy(e => e.RefreshRate);
     }
 
-    private static async Task SetDefaultDisplayModeAsync()
+    private async Task SetDefaultDisplayModeAsync()
     {
         await HdmiDisplayInformation.GetForCurrentView()?.SetDefaultDisplayModeAsync();
     }
