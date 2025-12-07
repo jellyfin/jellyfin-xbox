@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
@@ -12,6 +14,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Display.Core;
+using Windows.Storage;
+using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
@@ -37,6 +43,29 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
+
+        if (!ApplicationViewScaling.TrySetDisableLayoutScaling(true))
+        {
+            throw new InvalidOperationException("Failed to disable layout scaling.");
+        }
+
+        var minSize = new Windows.Foundation.Size(800, 600);
+        var displayInfo = HdmiDisplayInformation.GetForCurrentView();
+        if (displayInfo is not null)
+        {
+            var maxSize = displayInfo.GetSupportedDisplayModes().OrderByDescending(m => m.ResolutionWidthInRawPixels * m.ResolutionHeightInRawPixels).FirstOrDefault();
+            minSize = new Windows.Foundation.Size(maxSize.ResolutionWidthInRawPixels, maxSize.ResolutionHeightInRawPixels);
+        }
+        else
+        {
+            var currentDisplay = DisplayInformation.GetForCurrentView();
+            minSize = new Windows.Foundation.Size(currentDisplay.ScreenWidthInRawPixels, currentDisplay.ScreenHeightInRawPixels);
+        }
+
+        ApplicationView.PreferredLaunchViewSize = minSize;
+        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        DisplayRequest = new();
+
         Suspending += OnSuspending;
         RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
@@ -44,6 +73,11 @@ public sealed partial class App : Application
 
         UnhandledException += OnUnhandledException;
     }
+
+    /// <summary>
+    /// Gets the Display request object for handling screen activation.
+    /// </summary>
+    public static DisplayRequest DisplayRequest { get; private set; }
 
     /// <summary>
     /// Gets the current <see cref="App"/> instance in use.
@@ -81,6 +115,7 @@ public sealed partial class App : Application
         services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
+        services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
 
         services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
 
@@ -186,7 +221,6 @@ public sealed partial class App : Application
             if (AppUtils.IsXbox)
             {
                 ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                ApplicationViewScaling.TrySetDisableLayoutScaling(true);
             }
             else
             {

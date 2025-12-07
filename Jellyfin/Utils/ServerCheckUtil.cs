@@ -123,6 +123,10 @@ public static class ServerCheckUtil
                 return new JellyfinServerValidationResult(true);
             }
         }
+        catch (Exception) when (serverInfoResponse.StartsWith("<"))
+        {
+            return new JellyfinServerValidationResult(false, $"It does not seem that the requested url runs a Jellyfin server.");
+        }
         catch (Exception ex)
         {
             return new JellyfinServerValidationResult(false, $"Exception parsing server response: {ex.Message}");

@@ -45,7 +45,11 @@ public class MessageHandler : IMessageHandler
 
         if (eventType == "enableFullscreen")
         {
-            await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);
+            Central.Settings.JellyfinServer = null;
+            _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);
+            });
         }
         else if (eventType == "disableFullscreen")
         {
@@ -92,6 +96,8 @@ public class MessageHandler : IMessageHandler
         {
             Debug.WriteLine($"Unexpected JSON message: {eventType}");
         }
+
+        await Task.CompletedTask.ConfigureAwait(true);
     }
 
     private void Exit()
