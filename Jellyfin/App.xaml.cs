@@ -16,6 +16,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
+using Windows.Storage;
 using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
