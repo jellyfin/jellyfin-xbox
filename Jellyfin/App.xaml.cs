@@ -35,6 +35,8 @@ namespace Jellyfin;
 /// </summary>
 public sealed partial class App : Application
 {
+    private static bool _layoutScalingDisabled;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -43,11 +45,7 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
-
-        if (!ApplicationViewScaling.TrySetDisableLayoutScaling(true))
-        {
-            throw new InvalidOperationException("Failed to disable layout scaling.");
-        }
+        _layoutScalingDisabled = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
 
         DisplayRequest = new();
 
@@ -223,6 +221,14 @@ public sealed partial class App : Application
 
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
+
+            if (!_layoutScalingDisabled)
+            {
+                var dialog = new MessageDialog("Could not disable layout scaling. " +
+                    "This application is not designed to run on a desktop PC but only on an xbox device. " +
+                    "You might encounter bugs when running on a PC.");
+                _ = dialog.ShowAsync();
+            }
         }
 
         if (e.PrelaunchActivated == false)
