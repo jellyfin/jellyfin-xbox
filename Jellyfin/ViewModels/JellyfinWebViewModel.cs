@@ -271,6 +271,12 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
         WebView.Focus(FocusState.Programmatic);
 
+        WebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false; // Disable right click context menu.
+        WebView.CoreWebView2.Settings.AreDevToolsEnabled = false; // Disable dev tools
+        WebView.CoreWebView2.Settings.IsStatusBarEnabled = false; // Disable status bar.
+        WebView.CoreWebView2.Settings.IsZoomControlEnabled = false; // Disable zoom control.
+        WebView.CoreWebView2.Settings.IsScriptEnabled = true; // Enable JavaScript.
+        WebView.CoreWebView2.Settings.IsIndexedDBEnabled = true; // Enable IndexedDB.        
         WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }
