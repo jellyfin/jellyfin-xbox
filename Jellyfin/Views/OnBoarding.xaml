@@ -13,7 +13,7 @@
 
     <Grid Background="{StaticResource Color0}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
+            <RowDefinition Height="250" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -31,7 +31,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Width="640"
-                Margin="0,0,80,0">
+                Margin="0,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="*" />

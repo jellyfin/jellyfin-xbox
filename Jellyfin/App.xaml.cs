@@ -35,6 +35,8 @@ namespace Jellyfin;
 /// </summary>
 public sealed partial class App : Application
 {
+    private static bool _layoutScalingDisabled;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -43,27 +45,8 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
+        _layoutScalingDisabled = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
 
-        if (!ApplicationViewScaling.TrySetDisableLayoutScaling(true))
-        {
-            throw new InvalidOperationException("Failed to disable layout scaling.");
-        }
-
-        var minSize = new Windows.Foundation.Size(800, 600);
-        var displayInfo = HdmiDisplayInformation.GetForCurrentView();
-        if (displayInfo is not null)
-        {
-            var maxSize = displayInfo.GetSupportedDisplayModes().OrderByDescending(m => m.ResolutionWidthInRawPixels * m.ResolutionHeightInRawPixels).FirstOrDefault();
-            minSize = new Windows.Foundation.Size(maxSize.ResolutionWidthInRawPixels, maxSize.ResolutionHeightInRawPixels);
-        }
-        else
-        {
-            var currentDisplay = DisplayInformation.GetForCurrentView();
-            minSize = new Windows.Foundation.Size(currentDisplay.ScreenWidthInRawPixels, currentDisplay.ScreenHeightInRawPixels);
-        }
-
-        ApplicationView.PreferredLaunchViewSize = minSize;
-        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         DisplayRequest = new();
 
         Suspending += OnSuspending;
@@ -238,6 +221,14 @@ public sealed partial class App : Application
 
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
+
+            if (!_layoutScalingDisabled)
+            {
+                var dialog = new MessageDialog("Could not disable layout scaling. " +
+                    "This application is not designed to run on a desktop PC but only on an xbox device. " +
+                    "You might encounter bugs when running on a PC.");
+                _ = dialog.ShowAsync();
+            }
         }
 
         if (e.PrelaunchActivated == false)
