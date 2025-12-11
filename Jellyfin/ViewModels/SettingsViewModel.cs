@@ -1,12 +1,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 
 namespace Jellyfin.ViewModels;
 
@@ -16,6 +18,7 @@ namespace Jellyfin.ViewModels;
 public sealed class SettingsViewModel : ObservableObject, IDisposable
 {
     private readonly IGamepadManager _gamepadManager;
+    private readonly CoreDispatcher _coreDispatcher;
     private readonly IDisposable _navigationHandler;
     private HdmiDisplayInformation _currentHdmiDisplayInformation;
     private bool _autoRefreshRate;
@@ -27,10 +30,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
     /// </summary>
     /// <param name="gamepadManager">The <see cref="IGamepadManager"/> instance used to handle gamepad-related events.</param>
-    public SettingsViewModel(IGamepadManager gamepadManager)
+    /// <param name="coreDispatcher">The Dispatcher.</param>
+    public SettingsViewModel(IGamepadManager gamepadManager, CoreDispatcher coreDispatcher)
     {
         _gamepadManager = gamepadManager;
-
+        _coreDispatcher = coreDispatcher;
         AutoRefreshRate = Central.Settings.AutoRefreshRate;
         AutoResolution = Central.Settings.AutoResolution;
         ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
@@ -49,6 +53,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
         SaveCommand = new RelayCommand(OnSaveExecute);
         AbortCommand = new RelayCommand(OnAbortExecute);
+        UploadLogfileCommand = new AsyncRelayCommand(OnUploadLogfileExecute);
     }
 
     /// <summary>
@@ -102,6 +107,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     }
 
     /// <summary>
+    /// Gets or sets the command to upload the logfile.
+    /// </summary>
+    public IRelayCommand UploadLogfileCommand { get; set; }
+
+    /// <summary>
     /// Gets or sets the command to save the settings and return back to the web app.
     /// </summary>
     public IRelayCommand SaveCommand { get; set; }
@@ -115,6 +125,25 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// Gets or sets a delegate that should be invoked to close the current popup or modal page.
     /// </summary>
     public Action CloseAction { get; set; }
+
+    private async Task OnUploadLogfileExecute()
+    {
+        if (App.Current is App currentApp)
+        {
+            var result = await currentApp.UploadClientLog().ConfigureAwait(false);
+            _ = _coreDispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            {
+                if (result)
+                {
+                    await new MessageDialog("The current logfile has been uploaded to your jellyfin server.").ShowAsync();
+                }
+                else
+                {
+                    await new MessageDialog("Error while uploading the current logfile. Please try again.").ShowAsync();
+                }
+            });
+        }
+    }
 
     private void OnAbortExecute()
     {
