@@ -208,6 +208,13 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
         await ValidateWebView();
 
+        if (Central.ServerVersion != Central.Settings.JellyfinServerVersion)
+        {
+            Central.Settings.JellyfinServerVersion = Central.ServerVersion;
+            _logger.LogInformation("Server version updated to {ServerVersion}", Central.ServerVersion);
+            await WebView.CoreWebView2.Profile.ClearBrowsingDataAsync();
+        }
+
         AddDeviceFormToUserAgent();
         await InjectNativeShellScript().ConfigureAwait(true);
 

@@ -1,3 +1,4 @@
+using System;
 using Jellyfin.Core.Contract;
 using Windows.Storage;
 
@@ -10,6 +11,7 @@ public class SettingsManager : ISettingsManager
 {
     private string _containerSettings = "APPSETTINGS";
     private string _settingsServer = "SERVER";
+    private string _settingsServerVersion = "SERVER_VERSION";
     private string _autoResolution = "AUTO_RESOLUTION";
     private string _autoRefreshRate = "AUTO_REFRESH_RATE";
     private string _forceEnableTvMode = "FORCE_TV_MODE";
@@ -41,6 +43,24 @@ public class SettingsManager : ISettingsManager
     {
         get => GetProperty<string>(_settingsServer);
         set => SetProperty(_settingsServer, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the configured Jellyfin server address.
+    /// </summary>
+    public Version? JellyfinServerVersion
+    {
+        get
+        {
+            var versionString = GetProperty<string>(_settingsServerVersion);
+            if (Version.TryParse(versionString, out var version))
+            {
+                return version;
+            }
+
+            return null;
+        }
+        set => SetProperty(_settingsServerVersion, value.ToString());
     }
 
     /// <summary>
