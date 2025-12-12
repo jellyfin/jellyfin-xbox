@@ -68,7 +68,7 @@ public sealed class FullScreenManager : IFullScreenManager
             return HdmiDisplayHdrOption.None;
         }
 
-        var supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes();
+        var supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes().Where(e => !e.StereoEnabled);
         var displaySupportsDoVi = supportedDisplayModes.Any(mode => mode.IsDolbyVisionLowLatencySupported);
         var displaySupportsHdr = supportedDisplayModes.Any(mode => mode.IsSmpte2084Supported);
 
