@@ -208,11 +208,11 @@ window["UwpXboxHdmiSetupPlugin"] = async () => UwpXboxHdmiSetupPlugin;
 if (!window.consoleXboxOverride)
 {
     window.consoleXboxOverride = true;
-    var logOverride = function(logLevel) {
-        var oldLogLevel = console[logLevel];
+    const logOverride = function(logLevel) {
+        let oldLogLevel = console[logLevel];
         console[logLevel] = function () {
             oldLogLevel.apply(console, arguments);
-            var argsArray = Array.from(arguments);
+            let argsArray = Array.from(arguments);
             window.chrome.webview.postMessage(JSON.stringify({ type: "log", args: { level: logLevel, messages: argsArray } }));
         }
     }
