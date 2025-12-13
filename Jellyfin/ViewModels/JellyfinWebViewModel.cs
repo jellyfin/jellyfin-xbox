@@ -283,7 +283,6 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         WebView.CoreWebView2.Settings.IsStatusBarEnabled = false; // Disable status bar.
         WebView.CoreWebView2.Settings.IsZoomControlEnabled = false; // Disable zoom control.
         WebView.CoreWebView2.Settings.IsScriptEnabled = true; // Enable JavaScript.
-        WebView.CoreWebView2.Settings.IsIndexedDBEnabled = true; // Enable IndexedDB.        
         WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
         WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
     }
