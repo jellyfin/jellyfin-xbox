@@ -50,7 +50,6 @@ public class MessageHandler : IMessageHandler
 
         if (eventType == "enableFullscreen")
         {
-            Central.Settings.JellyfinServer = null;
             _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);

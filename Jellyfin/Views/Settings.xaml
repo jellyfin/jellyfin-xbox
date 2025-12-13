@@ -71,7 +71,7 @@
                     </Grid.RowDefinitions>
 
                     <CheckBox
-                        IsChecked="{Binding AutoRefreshRate}"
+                        IsChecked="{Binding AutoRefreshRate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
                         Grid.Row="0"
                         Name="checkBoxAutoRefreshRate"
@@ -88,7 +88,7 @@
                     </TextBlock>
 
                     <CheckBox
-                        IsChecked="{Binding AutoResolution}"
+                        IsChecked="{Binding AutoResolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
                         Content="Set the display resolution to the media resolution"
                         Foreground="White" FontSize="{StaticResource FontL}"
@@ -101,7 +101,7 @@
                     </TextBlock>
 
                     <CheckBox
-                        IsChecked="{Binding ForceEnableTvMode}"
+                        IsChecked="{Binding ForceEnableTvMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"                        
                         Content="Force TV mode"
                         Foreground="White" FontSize="{StaticResource FontL}"
                         Grid.Row="4" />
