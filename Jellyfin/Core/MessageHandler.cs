@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core.Contract;
 using Jellyfin.Views;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Data.Json;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -19,6 +21,7 @@ public class MessageHandler : IMessageHandler
     private readonly Frame _frame;
     private readonly IFullScreenManager _fullScreenManager;
     private readonly IMessenger _messenger;
+    private readonly ILogger<WebView2> _webviewLogger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageHandler"/> class.
@@ -26,11 +29,13 @@ public class MessageHandler : IMessageHandler
     /// <param name="frame">Frame.</param>
     /// <param name="fullScreenManager">The service responsible for managing HDMI and fullscreen states.</param>
     /// <param name="messenger">The Messenger service.</param>
-    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager, IMessenger messenger)
+    /// <param name="webviewLogger">The webview logger.</param>
+    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager, IMessenger messenger, ILogger<WebView2> webviewLogger)
     {
         _frame = frame;
         _fullScreenManager = fullScreenManager;
         _messenger = messenger;
+        _webviewLogger = webviewLogger;
     }
 
     /// <summary>
@@ -90,6 +95,30 @@ public class MessageHandler : IMessageHandler
         else if (eventType == "loaded")
         {
             _messenger.Send(new WebMessage(eventType, args));
+        }
+        else if (eventType == "log")
+        {
+            var level = args.GetNamedString("level");
+            switch (level)
+            {
+                case "debug":
+                    _webviewLogger.LogDebug(args.GetNamedValue("messages").ToString());
+                    break;
+                case "info":
+                    _webviewLogger.LogInformation(args.GetNamedValue("messages").ToString());
+                    break;
+                case "error":
+                    _webviewLogger.LogError(args.GetNamedValue("messages").ToString());
+                    break;
+                case "warn":
+                    _webviewLogger.LogWarning(args.GetNamedValue("messages").ToString());
+                    break;
+                case "info" or "log":
+                    _webviewLogger.LogInformation(args.GetNamedValue("messages").ToString());
+                    break;
+                default:
+                    break;
+            }
         }
         else
         {

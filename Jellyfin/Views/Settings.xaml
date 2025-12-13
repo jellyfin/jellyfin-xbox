@@ -120,6 +120,10 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
                     <Button
                         Grid.Column="0"
                         Style="{StaticResource SecondaryButton}"
@@ -132,6 +136,14 @@
                         Margin="6,0,0,0"
                         Content="Save"
                         Command="{Binding SaveCommand}" />
+                    <Button
+                        Grid.Column="0"                        
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1"
+                        Style="{StaticResource SecondaryButton}"
+                        Margin="0,6,0,0"
+                        Content="Upload Logfile"
+                        Command="{Binding UploadLogfileCommand}" />
                 </Grid>
             </Grid>
 

@@ -140,7 +140,11 @@ public sealed partial class App : Application
         });
     }
 
-    private async Task<bool> UploadClientLog()
+    /// <summary>
+    /// Uploads the current client log to the Jellyfin server.
+    /// </summary>
+    /// <returns>A task that completes once the logfile has been uploaded.</returns>
+    public async Task<bool> UploadClientLog()
     {
         try
         {
