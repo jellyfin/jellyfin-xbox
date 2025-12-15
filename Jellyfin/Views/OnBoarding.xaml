@@ -10,7 +10,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
-    xmlns:models="using:Jellyfin.Models" 
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
