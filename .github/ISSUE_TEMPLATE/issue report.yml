@@ -82,8 +82,12 @@ body:
       label: Jellyfin for Xbox version
       description: What version of Jellyfin for Xbox are you using?
       options:
-        - 0.9.0+
+        - 0.8.5
+        - 0.9.0
+        - 0.9.2
+        - 0.9.4
         - Master
+        - Other
     validations:
       required: true
   - type: input
@@ -99,9 +103,14 @@ body:
       label: Jellyfin Server version
       description: What version of Jellyfin Server are you using?
       options:
-        - 10.10.7+
+        - 10.11.1
+        - 10.11.2
+        - 10.11.3
+        - 10.11.4
+        - 10.11.5
         - Master
         - Unstable
+        - Other
     validations:
       required: true
   - type: input
