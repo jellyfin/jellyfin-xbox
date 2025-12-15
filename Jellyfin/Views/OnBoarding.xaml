@@ -10,7 +10,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
-    xmlns:converers="using:Jellyfin.Converter"
     xmlns:models="using:Jellyfin.Models" 
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
@@ -31,7 +30,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
+            <RowDefinition Height="250" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -41,30 +40,45 @@
 
         <Grid Background="{StaticResource Color10}" Grid.ColumnSpan="2">
             <Image 
-                Source="/Assets/OnBoardingLogo.png" 
-                Stretch="Uniform" 
-                HorizontalAlignment="Center" 
-                Height="80" />
+                    Source="/Assets/OnBoardingLogo.png" 
+                    Stretch="Uniform" 
+                    HorizontalAlignment="Center" 
+                    Height="80" />
         </Grid>
 
         <Grid Grid.Row="1"
-              Padding="0 40 0 0">
-            <StackPanel
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Width="640">
+                    Padding="0 40 0 0">
+            <Grid
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Width="640"
+                    Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <TextBlock
-                    Text="Connect to Jellyfin Server"
-                    Foreground="White"
-                    FontSize="{StaticResource FontL}"
-                    Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
-                    HorizontalAlignment="Center" />
+                        Text="Connect to Jellyfin Server"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Foreground="White"
+                        FontSize="{StaticResource FontL}"
+                        Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
+                        HorizontalAlignment="Center" />
                 <TextBox
-                    Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{StaticResource PrimaryTextBox}"
-                    Margin="0 8 0 8"
-                    IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
-                    PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org">
+                        Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource PrimaryTextBox}"
+                        Margin="0 8 0 8"
+                        IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
+                        PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org"
+                        Grid.Column="1"
+                        Grid.Row="1">
                     <interactivity:Interaction.Behaviors>
                         <interactivity:BehaviorCollection>
                             <behaviors:AutoFocusBehavior FocusOnEnable="True" />
@@ -78,59 +92,92 @@
                     </interactivity:Interaction.Behaviors>
                 </TextBox>
                 <TextBlock
-                    FontFamily="{StaticResource JellyfinFamilyFont}"
-                    Text="{Binding ErrorMessage}"
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center"
-                    TextWrapping="Wrap"
-                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
-                    FontSize="{StaticResource FontM}"
-                    Margin="1 1 1 20"
-                    Foreground="{StaticResource DangerColor}" />
+                        FontFamily="{StaticResource JellyfinFamilyFont}"
+                        Text="{Binding ErrorMessage}"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
+                        FontSize="{StaticResource FontM}"
+                        Margin="1 1 1 20"
+                        Foreground="{StaticResource DangerColor}" />
                 <Button
-                    Style="{StaticResource PrimaryButton}"
-                    Content="Connect"
-                    Command="{Binding ConnectCommand}" />
-            </StackPanel>
+                        Style="{StaticResource PrimaryButton}"
+                        Content="Connect"
+                        Command="{Binding ConnectCommand}"
+                        Grid.Column="1"
+                        Grid.Row="2" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1">
             <ListView ItemsSource="{Binding DiscoveredServers}"
-                      IsItemClickEnabled="True"
-                      ItemClick="ListView_ItemClick"
-                      IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" FontSize="{StaticResource FontM}"/>
-                                <TextBlock Text="{Binding Address}" FontSize="{StaticResource FontS}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                            IsItemClickEnabled="True"
+                            ItemClick="ListView_ItemClick"
+                            IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="{StaticResource FontM}"/>
+                            <TextBlock Text="{Binding Address}" FontSize="{StaticResource FontS}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
                 <ListView.Header>
                     <StackPanel>
                         <TextBlock
-                            Text="Discover Server" 
-                            Foreground="White" FontSize="{StaticResource FontL}"
-                            Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
-                            Padding="0 40 0 0"
-                            HorizontalAlignment="Center" />
+                                Text="Discover Server" 
+                                Foreground="White" FontSize="{StaticResource FontL}"
+                                Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
+                                Padding="0 40 0 0"
+                                HorizontalAlignment="Center" />
                         <TextBlock x:Name="EmptyServersMessage" FontSize="{StaticResource FontM}" 
-                                   HorizontalAlignment="Center"
-                                   TextWrapping="WrapWholeWords"
-                                   Visibility="Collapsed">
-                            No servers found, searching.
+                                        HorizontalAlignment="Center"
+                                        TextWrapping="WrapWholeWords"
+                                        Visibility="Collapsed">
+                                No servers found, searching.
                         </TextBlock>
                     </StackPanel>
                 </ListView.Header>
             </ListView>
-        </Grid>
 
+            <StackPanel
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                <TextBlock
+                            FontFamily="{StaticResource JellyfinFamilyFont}"
+                            Text="{Binding ErrorMessage}"
+                            HorizontalAlignment="Center"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap"
+                            FontSize="{StaticResource FontM}"
+                            Margin="1 1 1 20"
+                            Foreground="{StaticResource DangerColor}" />
+
+                <TextBlock Text="Attempted to connect to:"
+                                    Foreground="{StaticResource DangerColor}"/>
+                <ItemsControl ItemsSource="{Binding TestedUris}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:Key="UriDataTemplate">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="- "
+                                                    Margin="0,0,8,0"
+                                                    Foreground="{StaticResource DangerColor}"/>
+                                <TextBlock Text="{Binding }"
+                                                    Foreground="{StaticResource DangerColor}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+  
         <Grid Grid.Row="0"
-              Grid.RowSpan="2"
-              Grid.ColumnSpan="2"
-              Background="{StaticResource OverlayColorBG}"
-              Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
+                    Grid.RowSpan="2"
+                    Grid.ColumnSpan="2"
+                    Background="{StaticResource OverlayColorBG}"
+                    Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
             <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
         </Grid>
     </Grid>

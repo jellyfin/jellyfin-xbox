@@ -1,3 +1,4 @@
+using System;
 using Jellyfin.Core.Contract;
 using Windows.Storage;
 
@@ -10,8 +11,10 @@ public class SettingsManager : ISettingsManager
 {
     private string _containerSettings = "APPSETTINGS";
     private string _settingsServer = "SERVER";
+    private string _settingsServerVersion = "SERVER_VERSION";
     private string _autoResolution = "AUTO_RESOLUTION";
     private string _autoRefreshRate = "AUTO_REFRESH_RATE";
+    private string _forceEnableTvMode = "FORCE_TV_MODE";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -43,9 +46,32 @@ public class SettingsManager : ISettingsManager
     }
 
     /// <summary>
+    /// Gets or sets the configured Jellyfin server address.
+    /// </summary>
+    public Version? JellyfinServerVersion
+    {
+        get
+        {
+            var versionString = GetProperty<string>(_settingsServerVersion);
+            if (Version.TryParse(versionString, out var version))
+            {
+                return version;
+            }
+
+            return null;
+        }
+        set => SetProperty(_settingsServerVersion, value.ToString());
+    }
+
+    /// <summary>
     /// Gets a value indicating whether the state of the <see cref="JellyfinServer"/>s validation state.
     /// </summary>
     public bool JellyfinServerValidated { get; internal set; }
+
+    /// <summary>
+    /// Gets a value representing the last access token used to communicating with the jellyfin server.
+    /// </summary>
+    public string JellyfinServerAccessToken { get; internal set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the display resolution should be set to match the video resolution.
@@ -63,6 +89,15 @@ public class SettingsManager : ISettingsManager
     {
         get => GetProperty<bool>(_autoRefreshRate);
         set => SetProperty(_autoRefreshRate, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force enable TV mode, which may adjust UI elements for better TV compatibility.
+    /// </summary>
+    public bool ForceEnableTvMode
+    {
+        get => GetProperty<bool>(_forceEnableTvMode);
+        set => SetProperty(_forceEnableTvMode, value);
     }
 
     private void SetProperty(string propertyName, object value)

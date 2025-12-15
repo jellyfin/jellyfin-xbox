@@ -23,6 +23,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
+    private ObservableCollection<string> _testedUris;
     private ServerDiscovery _serverDiscovery = new ServerDiscovery();
     private bool _disposed;
 
@@ -34,9 +35,11 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame)
     {
         ConnectCommand = new RelayCommand(ConnectToServerAsync, CanExecuteConnectToServer);
-        ServerUrl = Central.Settings.JellyfinServer ?? string.Empty;
+        ServerUrl = Central.Settings.JellyfinServer;
         _dispatcher = dispatcher;
         _frame = frame;
+
+        TestedUris = new();
         _serverDiscovery.OnDiscover += ServerDiscovery_OnDiscover;
     }
 
@@ -53,6 +56,15 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
                 ConnectCommand.NotifyCanExecuteChanged();
             }
         }
+    }
+
+    /// <summary>
+    /// Gets or sets the collection of URIs that have been tested.
+    /// </summary>
+    public ObservableCollection<string> TestedUris
+    {
+        get => _testedUris;
+        set => SetProperty(ref _testedUris, value);
     }
 
     /// <summary>
@@ -98,6 +110,8 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     {
         IsInProgress = true;
         ErrorMessage = null;
+        TestedUris.Clear();
+
         var (isValid, parsedUri, errorMessage) = UrlValidator.ParseServerUri(ServerUrl);
         if (!isValid)
         {
@@ -109,31 +123,52 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         {
             try
             {
-                var jellyfinServerCheck = await ServerCheckUtil.IsJellyfinServerUrlValidAsync(parsedUri).ConfigureAwait(true);
+                JellyfinServerValidationResult jellyfinServerCheck = null;
+
+                foreach (var uriVarient in parsedUri)
+                {
+                    jellyfinServerCheck = await ServerCheckUtil.IsJellyfinServerUrlValidAsync(uriVarient).ConfigureAwait(true);
+
+                    if (!jellyfinServerCheck.IsValid)
+                    {
+                        continue;
+                    }
+
+                    _ = _dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal,
+                        () =>
+                        {
+                            // Save validated URL and navigate to page containing the web view.
+                            Central.Settings.JellyfinServer = uriVarient.ToString();
+                            Central.Settings.JellyfinServerValidated = true;
+
+                            Dispose();
+                            _frame.Navigate(typeof(MainPage));
+                        });
+                    return;
+                }
 
                 _ = _dispatcher.RunAsync(
-                    Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    CoreDispatcherPriority.Normal,
                     () =>
                     {
                         // Check if the parsed URI is pointing to a Jellyfin server.
-                        if (!jellyfinServerCheck.IsValid)
+                        if (jellyfinServerCheck?.IsValid == false)
                         {
                             ErrorMessage = jellyfinServerCheck.ErrorMessage;
-                            return;
                         }
 
-                        // Save validated URL and navigate to page containing the web view.
-                        Central.Settings.JellyfinServer = parsedUri.ToString();
-                        Central.Settings.JellyfinServerValidated = true;
-
-                        Dispose();
-                        _frame.Navigate(typeof(MainPage));
+                        TestedUris.Clear();
+                        foreach (var uri in parsedUri)
+                        {
+                            TestedUris.Add(uri.ToString());
+                        }
                     });
             }
             finally
             {
                 _ = _dispatcher.RunAsync(
-                    Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    CoreDispatcherPriority.Normal,
                     () =>
                     {
                         IsInProgress = false;

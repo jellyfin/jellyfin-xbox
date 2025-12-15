@@ -11,11 +11,15 @@
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />    
     <PackageVersion Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3351.48"/>
-    <PackageVersion Include="System.Text.Json" Version="9.0.8" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3650.58"/>
+    <PackageVersion Include="System.Text.Json" Version="10.0.1" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="CommunityToolkit.Uwp.Triggers" Version="8.2.250402" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
+    <PackageVersion Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
   </ItemGroup>
 </Project>

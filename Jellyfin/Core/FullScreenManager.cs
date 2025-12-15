@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Data.Json;
+using Windows.Devices.Display;
+using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
+using Windows.System.Display;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace Jellyfin.Core;
 
@@ -17,36 +24,51 @@ namespace Jellyfin.Core;
 public sealed class FullScreenManager : IFullScreenManager
 {
     private readonly ApplicationView _applicationView;
+    private readonly Frame _frame;
+    private readonly DisplayRequest _displayRequest;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
     /// </summary>
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
-    public FullScreenManager(ApplicationView applicationView)
+    /// <param name="frame">The root frame.</param>
+    /// <param name="displayRequest">The display Request.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest)
     {
         _applicationView = applicationView;
+        _frame = frame;
+        _displayRequest = displayRequest;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
     {
+        var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+
         var bestDisplayMode =
-            GetBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption);
-        if (bestDisplayMode != null)
+            GetBestDisplayMode(hdmiDisplayInformation, videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption);
+        if (bestDisplayMode != null && bestDisplayMode.Any())
         {
-            await HdmiDisplayInformation.GetForCurrentView()
-                ?.RequestSetCurrentDisplayModeAsync(bestDisplayMode, hdmiDisplayHdrOption);
+            foreach (var item in bestDisplayMode)
+            {
+                if (await hdmiDisplayInformation
+                    ?.RequestSetCurrentDisplayModeAsync(item))
+                {
+                    return;
+                }
+            }
+
+            await SetDefaultDisplayModeAsync().ConfigureAwait(true);
         }
     }
 
-    private HdmiDisplayHdrOption GetHdmiDisplayHdrOption(string videoRangeType)
+    private HdmiDisplayHdrOption GetHdmiDisplayHdrOption(HdmiDisplayInformation hdmiDisplayInformation, string videoRangeType)
     {
-        var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
         if (hdmiDisplayInformation == null)
         {
             return HdmiDisplayHdrOption.None;
         }
 
-        var supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes();
+        var supportedDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes().Where(e => !e.StereoEnabled);
         var displaySupportsDoVi = supportedDisplayModes.Any(mode => mode.IsDolbyVisionLowLatencySupported);
         var displaySupportsHdr = supportedDisplayModes.Any(mode => mode.IsSmpte2084Supported);
 
@@ -80,9 +102,19 @@ public sealed class FullScreenManager : IFullScreenManager
         return mode => Math.Abs(refreshRate - mode.RefreshRate) <= 0.5;
     }
 
+    private static Func<HdmiDisplayMode, bool> MinRefreshRateMatches(double refreshRate)
+    {
+        return mode => refreshRate > mode.RefreshRate;
+    }
+
     private static Func<HdmiDisplayMode, bool> ResolutionMatches(uint width, uint height)
     {
         return mode => mode.ResolutionWidthInRawPixels == width || mode.ResolutionHeightInRawPixels == height;
+    }
+
+    private static Func<HdmiDisplayMode, bool> MinResolutionMatches(uint width, uint height)
+    {
+        return mode => mode.ResolutionWidthInRawPixels >= width || mode.ResolutionHeightInRawPixels >= height;
     }
 
     private static Func<HdmiDisplayMode, bool> HdmiDisplayHdrOptionMatches(HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -93,32 +125,20 @@ public sealed class FullScreenManager : IFullScreenManager
             (hdmiDisplayHdrOption == HdmiDisplayHdrOption.Eotf2084 && mode.IsSmpte2084Supported);
     }
 
-    private HdmiDisplayMode GetBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
+    private IEnumerable<HdmiDisplayMode> GetBestDisplayMode(HdmiDisplayInformation hdmiDisplayInformation, uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
     {
-        var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
-        var supportedHdmiDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes();
+        var supportedHdmiDisplayModes = hdmiDisplayInformation.GetSupportedDisplayModes().Where(e => !e.StereoEnabled);
 
         // `GetHdmiDisplayHdrOption(...)` ensures the HdmiDisplayHdrOption is always a mode the display supports
         var hdmiDisplayModes = supportedHdmiDisplayModes.Where(HdmiDisplayHdrOptionMatches(hdmiDisplayHdrOption)).ToArray();
 
-        var filteredToVideoResolution = false;
         if (Central.Settings.AutoResolution)
         {
             var matchingResolution = hdmiDisplayModes.Where(ResolutionMatches(videoWidth, videoHeight)).ToArray();
             if (matchingResolution.Any())
             {
                 hdmiDisplayModes = matchingResolution;
-                filteredToVideoResolution = true;
             }
-        }
-
-        var currentHdmiDisplayMode = hdmiDisplayInformation.GetCurrentDisplayMode();
-
-        if (!filteredToVideoResolution)
-        {
-            hdmiDisplayModes = hdmiDisplayModes.Where(ResolutionMatches(
-                currentHdmiDisplayMode.ResolutionWidthInRawPixels,
-                currentHdmiDisplayMode.ResolutionHeightInRawPixels)).ToArray();
         }
 
         if (Central.Settings.AutoRefreshRate)
@@ -126,19 +146,18 @@ public sealed class FullScreenManager : IFullScreenManager
             var matchingRefreshRates = hdmiDisplayModes.Where(RefreshRateMatches(videoFrameRate)).ToArray();
             if (matchingRefreshRates.Any())
             {
-                return matchingRefreshRates.First();
+                return matchingRefreshRates;
             }
         }
 
         return hdmiDisplayModes
-            .Where(ResolutionMatches(
-                currentHdmiDisplayMode.ResolutionWidthInRawPixels,
-                currentHdmiDisplayMode.ResolutionHeightInRawPixels))
-            .Where(RefreshRateMatches(currentHdmiDisplayMode.RefreshRate))
-            .FirstOrDefault();
+            .Where(MinResolutionMatches(videoWidth, videoHeight))
+            .Where(MinRefreshRateMatches(videoHeight - 3))
+            .OrderBy(e => e.ResolutionHeightInRawPixels * e.ResolutionWidthInRawPixels)
+            .ThenBy(e => e.RefreshRate);
     }
 
-    private static async Task SetDefaultDisplayModeAsync()
+    private async Task SetDefaultDisplayModeAsync()
     {
         await HdmiDisplayInformation.GetForCurrentView()?.SetDefaultDisplayModeAsync();
     }
@@ -160,8 +179,11 @@ public sealed class FullScreenManager : IFullScreenManager
                     var videoHeight = (uint)args.GetNamedNumber("videoHeight");
                     var videoFrameRate = args.GetNamedNumber("videoFrameRate");
                     var videoRangeType = args.GetNamedString("videoRangeType");
-                    var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(videoRangeType);
-                    await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption);
+
+                    var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
+                    var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(hdmiDisplayInformation, videoRangeType);
+                    await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(false);
+                    _displayRequest.RequestActive();
                 }
                 catch (Exception ex)
                 {
@@ -193,5 +215,7 @@ public sealed class FullScreenManager : IFullScreenManager
         {
             _applicationView.ExitFullScreenMode();
         }
+
+        _displayRequest.RequestRelease();
     }
 }

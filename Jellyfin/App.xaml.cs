@@ -1,17 +1,32 @@
 using System;
+using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Graphics.Display;
+using Windows.Graphics.Display.Core;
+using Windows.Storage;
+using Windows.System.Display;
+using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace Jellyfin;
 
@@ -20,6 +35,8 @@ namespace Jellyfin;
 /// </summary>
 public sealed partial class App : Application
 {
+    private static bool _layoutScalingDisabled;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -28,11 +45,22 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
+        _layoutScalingDisabled = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
+
+        DisplayRequest = new();
+
         Suspending += OnSuspending;
-        // RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+        RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
         Services = ConfigureServices();
+
+        UnhandledException += OnUnhandledException;
     }
+
+    /// <summary>
+    /// Gets the Display request object for handling screen activation.
+    /// </summary>
+    public static DisplayRequest DisplayRequest { get; private set; }
 
     /// <summary>
     /// Gets the current <see cref="App"/> instance in use.
@@ -54,7 +82,7 @@ public sealed partial class App : Application
         var services = new ServiceCollection();
 
         // ViewModels
-        services.AddSingleton<JellyfinWebViewModel>();
+        services.AddTransient<JellyfinWebViewModel>();
         services.AddTransient<OnBoardingViewModel>();
         services.AddTransient<SettingsViewModel>();
 
@@ -62,6 +90,7 @@ public sealed partial class App : Application
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
         services.AddTransient<CoreDispatcher>(_ => Window.Current.Dispatcher);
         services.AddTransient<ApplicationView>(_ => ApplicationView.GetForCurrentView());
+        services.AddSingleton<IMessenger>(_ => WeakReferenceMessenger.Default);
 
         // Services
         services.AddSingleton<IFullScreenManager, FullScreenManager>();
@@ -69,10 +98,94 @@ public sealed partial class App : Application
         services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
+        services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
+
+        services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
 
 #pragma warning disable IDISP005
         return services.BuildServiceProvider();
 #pragma warning restore IDISP005
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        Services.GetRequiredService<ILogger<App>>().LogCritical(e.Exception, "Unhandled exception occurred");
+        e.Handled = true;
+
+        _ = App.Current.Services.GetRequiredService<CoreDispatcher>().RunAsync(CoreDispatcherPriority.High, async () =>
+        {
+            if (Central.Settings.HasJellyfinServer && Central.Settings.JellyfinServerValidated && !string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
+            {
+                var md = new MessageDialog($"The Application has encountered an unexpected issue. Do you want to attempt to upload the logfiles to your Jellyfin server?", "Unexpected error.");
+                md.Commands.Add(new UICommand("Yes", command =>
+                {
+                    Task.Run(async () =>
+                    {
+                        await UploadClientLog().ConfigureAwait(false);
+                        Exit();
+                    });
+                }));
+                md.Commands.Add(new UICommand("No", command =>
+                {
+                    Exit();
+                }));
+                await md.ShowAsync();
+            }
+            else
+            {
+                var md = new MessageDialog($"The Application has encountered an unexpected issue and will now close.", "Unexpected error.");
+                md.Commands.Add(new UICommand("Ok", command => Exit()));
+                await md.ShowAsync();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Uploads the current client log to the Jellyfin server.
+    /// </summary>
+    /// <returns>A task that completes once the logfile has been uploaded.</returns>
+    public async Task<bool> UploadClientLog()
+    {
+        try
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+            httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
+            httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
+            var loggerProvider = (RollingAppLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
+            var logBuilder = new StringBuilder();
+            logBuilder.AppendLine($"Jellyfin for Xbox Client version {Assembly.GetCallingAssembly().GetName().Version}");
+            logBuilder.AppendLine($"UWP version: {AnalyticsInfo.VersionInfo.DeviceFamily} {AnalyticsInfo.VersionInfo.DeviceFamilyVersion}");
+            logBuilder.AppendLine($"Device info: {AnalyticsInfo.DeviceForm}");
+
+            foreach (var deviceInfo in await AnalyticsInfo.GetSystemPropertiesAsync([
+                         "App",
+                         "AppVer",
+                         "DeviceFamily",
+                         "FlightRing",
+                         "OSVersionFull",
+                     ]))
+            {
+                logBuilder.AppendLine($"{deviceInfo.Key}: {deviceInfo.Value}");
+            }
+
+            foreach (var loggerProviderLog in loggerProvider.Logs)
+            {
+                logBuilder.AppendLine($"[{loggerProviderLog.Timestamp:u}] [{loggerProviderLog.Level}] {loggerProviderLog.Message}");
+                if (loggerProviderLog.Exception != null)
+                {
+                    logBuilder.AppendLine(loggerProviderLog.Exception.ToString());
+                }
+            }
+
+            using var response = await httpClient.PostAsync("/ClientLog/Document", new StringContent(logBuilder.ToString())).ConfigureAwait(false);
+            return response.StatusCode == System.Net.HttpStatusCode.OK;
+        }
+        catch
+        {
+            // really no point in logging here, the log will never show up anywhere.
+            return false;
+        }
     }
 
     /// <summary>
@@ -95,7 +208,6 @@ public sealed partial class App : Application
             if (AppUtils.IsXbox)
             {
                 ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                ApplicationViewScaling.TrySetDisableLayoutScaling(true);
             }
             else
             {
@@ -113,6 +225,14 @@ public sealed partial class App : Application
 
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
+
+            if (!_layoutScalingDisabled)
+            {
+                var dialog = new MessageDialog("Could not disable layout scaling. " +
+                    "This application is not designed to run on a desktop PC but only on an xbox device. " +
+                    "You might encounter bugs when running on a PC.");
+                _ = dialog.ShowAsync();
+            }
         }
 
         if (e.PrelaunchActivated == false)
