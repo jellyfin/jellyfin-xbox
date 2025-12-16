@@ -27,7 +27,6 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     private bool _isInProgress;
     private ObservableCollection<string> _testedUris;
     private bool _disposed;
-    private bool _discoveryInProgress;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OnBoardingViewModel"/> class.
@@ -120,12 +119,12 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     {
         get
         {
-            return _discoveryInProgress;
+            return field;
         }
 
         set
         {
-            SetProperty(ref _discoveryInProgress, value);
+            SetProperty(ref field, value);
         }
     }
 
