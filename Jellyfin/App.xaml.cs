@@ -98,6 +98,7 @@ public sealed partial class App : Application
         services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
+        services.AddSingleton<IServerDiscovery, ServerDiscovery>();
         services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
 
         services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));

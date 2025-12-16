@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
+using Jellyfin.Core.Contract;
 using Jellyfin.Helpers;
 using Jellyfin.Models;
 using Jellyfin.Utils;
@@ -20,11 +21,11 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
 {
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
+    private readonly IServerDiscovery _serverDiscoveryService;
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
     private ObservableCollection<string> _testedUris;
-    private ServerDiscovery _serverDiscovery = new ServerDiscovery();
     private bool _disposed;
 
     /// <summary>
@@ -32,15 +33,20 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// </summary>
     /// <param name="dispatcher">UI Dispatcher.</param>
     /// <param name="frame">Frame for navigation.</param>
-    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame)
+    /// <param name="serverDiscoveryService">Server discovery service.</param>
+    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame, IServerDiscovery serverDiscoveryService)
     {
-        ConnectCommand = new RelayCommand(ConnectToServerAsync, CanExecuteConnectToServer);
+        ConnectCommand = new RelayCommand(ConnectToServerAsyncExecute, CanExecuteConnectToServer);
+        ConnectToCommand = new RelayCommand<DiscoveredServer>(ConnectToDiscoveredServerExecute);
         ServerUrl = Central.Settings.JellyfinServer;
         _dispatcher = dispatcher;
         _frame = frame;
-
         TestedUris = new();
-        _serverDiscovery.OnDiscover += ServerDiscovery_OnDiscover;
+        _serverDiscoveryService = serverDiscoveryService;
+        _serverDiscoveryService.OnDiscover += ServerDiscovery_OnDiscover;
+        _serverDiscoveryService.OnServerDiscoveryEnded += ServerDiscovery_OnDiscoveryEnded;
+        _serverDiscoveryService.StartServerDiscovery();
+        DiscoveryInProgress = true;
     }
 
     /// <summary>
@@ -101,12 +107,41 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// </summary>
     public IRelayCommand ConnectCommand { get; private set; }
 
+    /// <summary>
+    /// Gets the command to connect to the discovered server.
+    /// </summary>
+    public IRelayCommand<DiscoveredServer> ConnectToCommand { get; private set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether server discovery is in progress.
+    /// </summary>
+    public bool DiscoveryInProgress
+    {
+        get
+        {
+            return field;
+        }
+
+        set
+        {
+            SetProperty(ref field, value);
+        }
+    }
+
+    private void ServerDiscovery_OnDiscoveryEnded()
+    {
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            DiscoveryInProgress = false;
+        });
+    }
+
     private bool CanExecuteConnectToServer()
     {
         return !string.IsNullOrWhiteSpace(ServerUrl) && !IsInProgress;
     }
 
-    private void ConnectToServerAsync()
+    private void ConnectToServerAsyncExecute()
     {
         IsInProgress = true;
         ErrorMessage = null;
@@ -177,14 +212,13 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         });
     }
 
-    private void ServerDiscovery_OnDiscover()
+    private void ServerDiscovery_OnDiscover(DiscoveredServer discoveredServer)
     {
-        var currentServer = _serverDiscovery.DiscoveredServers.Dequeue();
-        if (!DiscoveredServers.Contains(currentServer))
+        if (!DiscoveredServers.Contains(discoveredServer))
         {
             _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                DiscoveredServers.Add(currentServer);
+                DiscoveredServers.Add(discoveredServer);
             });
         }
     }
@@ -193,12 +227,12 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// Connects to a server from the discovery list.
     /// </summary>
     /// <param name="server">A network discovered server.</param>
-    public void ConnectToDiscoveredServer(DiscoveredServer server)
+    public void ConnectToDiscoveredServerExecute(DiscoveredServer? server)
     {
         ServerUrl = server.Address.ToString();
         if (CanExecuteConnectToServer())
         {
-            ConnectToServerAsync();
+            ConnectToServerAsyncExecute();
         }
     }
 
@@ -212,7 +246,9 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
             return;
         }
 
-        _serverDiscovery.Dispose();
+        _serverDiscoveryService.OnDiscover -= ServerDiscovery_OnDiscover;
+        _serverDiscoveryService.OnServerDiscoveryEnded -= ServerDiscovery_OnDiscoveryEnded;
+        _serverDiscoveryService.StopServerDiscovery();
         _disposed = true;
     }
 

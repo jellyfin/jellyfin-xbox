@@ -18,19 +18,12 @@ namespace Jellyfin.Views;
 /// </summary>
 public sealed partial class OnBoarding : Page
 {
-    private readonly OnBoardingViewModel _viewModel;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="OnBoarding"/> class.
     /// </summary>
     public OnBoarding()
     {
         InitializeComponent();
-        DataContext = _viewModel = App.Current.Services.GetRequiredService<OnBoardingViewModel>();
-    }
-
-    private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-    {
-        _viewModel.ConnectToDiscoveredServer((DiscoveredServer)e.ClickedItem);
+        DataContext = App.Current.Services.GetRequiredService<OnBoardingViewModel>();
     }
 }
