@@ -163,6 +163,47 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ListViewItemDefault" TargetType="ListViewItem">
+        <Setter Property="Margin" Value="0 0 0 8"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Background" Value="{StaticResource Color10}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Color10}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border 
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter
+                            Padding="2"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                            Content="{TemplateBinding Content}" 
+                            ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="PrimaryListView" TargetType="ListView">
+        <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />
+        <Setter Property="Foreground" Value="{StaticResource Color100}" />
+        <Setter Property="Background" Value="{ThemeResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}" />
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}" />
+        <Setter Property="FontSize" Value="{StaticResource FontM}" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewItemDefault}" />
+    </Style>  
+
     <Style x:Key="PrimaryTextBox"  TargetType="TextBox">
         <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
         <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />

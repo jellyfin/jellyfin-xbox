@@ -1,3 +1,4 @@
+using System;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml.Controls;

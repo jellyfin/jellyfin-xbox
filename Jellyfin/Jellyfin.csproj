@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -152,6 +152,7 @@
     <Compile Include="Core\Contract\IMessageHandler.cs" />
     <Compile Include="Core\Contract\INativeShellScriptLoader.cs" />
     <Compile Include="Core\Contract\ISettingsManager.cs" />
+    <Compile Include="Core\Contract\IServerDiscovery.cs" />
     <Compile Include="Core\MessageHandler.cs" />
     <Compile Include="Core\NativeShellScriptLoader.cs" />
     <Compile Include="Core\RollingAppLoggerProvider.cs" />
@@ -161,10 +162,12 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DiscoveredServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
     <Compile Include="Core\GamepadManager.cs" />
+    <Compile Include="Core\ServerDiscovery.cs" />
     <Compile Include="Core\Contract\IGamepadManager.cs" />
     <Compile Include="Utils\JellyfinServerValidationResult.cs" />
     <Compile Include="Utils\ServerCheckUtil.cs" />
@@ -277,6 +280,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="CommunityToolkit.Uwp.Triggers" />
+    <PackageReference Include="Microsoft.Bcl.Memory" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" />
     <PackageReference Include="Microsoft.UI.Xaml" />
