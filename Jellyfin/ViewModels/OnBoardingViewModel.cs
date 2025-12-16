@@ -117,15 +117,8 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// </summary>
     public bool DiscoveryInProgress
     {
-        get
-        {
-            return field;
-        }
-
-        set
-        {
-            SetProperty(ref field, value);
-        }
+        get => field;
+        set => SetProperty(ref field, value);
     }
 
     private void ServerDiscoveryOnDiscoveryEnded()
