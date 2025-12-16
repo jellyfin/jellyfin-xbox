@@ -133,12 +133,12 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
-                                Margin="0 0 0 28">
+                                Margin="0 0 0 25">
                         <TextBlock Text="Discover Server" 
                                 Foreground="White"
                                 FontSize="{StaticResource FontL}"
                                 FontFamily="{StaticResource JellyfinFamilyFont}"
-                                Margin="14 0 0 0"
+                                Margin="0 0 0 0"
                                 HorizontalAlignment="Center" />
                         <ProgressRing Margin="5 0 0 0"
                                       x:Name="TopBarDiscoveryProgress"
@@ -159,8 +159,6 @@
                             No servers found.
                         </TextBlock>
                     </Grid>
-
-
                 </StackPanel>
                 <ListView ItemsSource="{Binding DiscoveredServers}"
                          Margin="10"
