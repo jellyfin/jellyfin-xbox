@@ -10,7 +10,7 @@ namespace Jellyfin.Models;
 /// <summary>
 /// Reperesents the server metadata provided by JellyfinServer after autodiscover.
 /// </summary>
-public class DiscoveredServer : IComparable<DiscoveredServer>
+public class DiscoveredServer : IComparable<DiscoveredServer>, IEquatable<DiscoveredServer>
 {
     /// <summary>
     /// Gets or sets the name of the server.
@@ -36,5 +36,11 @@ public class DiscoveredServer : IComparable<DiscoveredServer>
     public int CompareTo(DiscoveredServer other)
     {
         return Id.CompareTo(other.Id);
+    }
+
+    /// <inheritdoc/>
+    public bool Equals(DiscoveredServer other)
+    {
+        return Id.Equals(other.Id);
     }
 }
