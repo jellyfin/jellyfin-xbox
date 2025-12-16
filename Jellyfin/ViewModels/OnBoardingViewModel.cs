@@ -215,13 +215,13 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
 
     private void ServerDiscovery_OnDiscover(DiscoveredServer discoveredServer)
     {
-        if (!DiscoveredServers.Contains(discoveredServer))
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            if (!DiscoveredServers.Contains(discoveredServer))
             {
                 DiscoveredServers.Add(discoveredServer);
-            });
-        }
+            }
+        });
     }
 
     /// <summary>
