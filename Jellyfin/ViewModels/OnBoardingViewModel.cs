@@ -44,8 +44,8 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         _frame = frame;
         TestedUris = new();
         _serverDiscoveryService = serverDiscoveryService;
-        _serverDiscoveryService.OnDiscover += ServerDiscovery_OnDiscover;
-        _serverDiscoveryService.OnServerDiscoveryEnded += ServerDiscovery_OnDiscoveryEnded;
+        _serverDiscoveryService.OnDiscover += ServerDiscoveryOnDiscover;
+        _serverDiscoveryService.OnServerDiscoveryEnded += ServerDiscoveryOnDiscoveryEnded;
         _serverDiscoveryService.StartServerDiscovery();
         DiscoveryInProgress = true;
     }
@@ -129,7 +129,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         }
     }
 
-    private void ServerDiscovery_OnDiscoveryEnded()
+    private void ServerDiscoveryOnDiscoveryEnded()
     {
         _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
@@ -213,7 +213,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         });
     }
 
-    private void ServerDiscovery_OnDiscover(DiscoveredServer discoveredServer)
+    private void ServerDiscoveryOnDiscover(DiscoveredServer discoveredServer)
     {
         _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
@@ -247,8 +247,8 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
             return;
         }
 
-        _serverDiscoveryService.OnDiscover -= ServerDiscovery_OnDiscover;
-        _serverDiscoveryService.OnServerDiscoveryEnded -= ServerDiscovery_OnDiscoveryEnded;
+        _serverDiscoveryService.OnDiscover -= ServerDiscoveryOnDiscover;
+        _serverDiscoveryService.OnServerDiscoveryEnded -= ServerDiscoveryOnDiscoveryEnded;
         _serverDiscoveryService.StopServerDiscovery();
         _disposed = true;
     }

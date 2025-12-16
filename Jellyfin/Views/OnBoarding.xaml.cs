@@ -1,14 +1,6 @@
 using System;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Jellyfin.Core;
-using Jellyfin.Helpers;
-using Jellyfin.Models;
-using Jellyfin.Utils;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.Views;
