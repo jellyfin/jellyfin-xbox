@@ -83,12 +83,12 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
     {
         ThrowIfDisposed();
         _logger.LogInformation("Stopping server discovery");
-        _stopServerDiscovery.Cancel();
-        _stopServerDiscovery.Dispose();
+        _stopServerDiscovery?.Cancel();
+        _stopServerDiscovery?.Dispose();
         _stopServerDiscovery = new();
-        _discoveryTimer.Cancel();
+        _discoveryTimer?.Cancel();
         _discoveryTimer = null;
-        _udpSocket.Close();
+        _udpSocket?.Close();
         _serverDiscoveryInvocations = 0;
         OnServerDiscoveryEnded?.Invoke();
     }
