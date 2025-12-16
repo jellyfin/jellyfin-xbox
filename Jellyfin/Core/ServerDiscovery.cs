@@ -25,8 +25,8 @@ namespace Jellyfin.Core;
 public sealed class ServerDiscovery : IDisposable, IServerDiscovery
 {
     private readonly byte[] _sendBuffer = Encoding.ASCII.GetBytes("Who is JellyfinServer?");
-    private readonly UdpClient _udpSocket = new UdpClient(7359);
     private readonly ILogger<ServerDiscovery> _logger;
+    private UdpClient _udpSocket;
     private CancellationTokenSource _stopServerDiscovery = new CancellationTokenSource();
     private ThreadPoolTimer _discoveryTimer;
     private bool _disposed = false;
@@ -38,7 +38,6 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
     /// <param name="logger">Logger instance.</param>
     public ServerDiscovery(ILogger<ServerDiscovery> logger)
     {
-        _udpSocket.EnableBroadcast = true;
         _logger = logger;
     }
 
@@ -59,6 +58,9 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
         }
 
         _logger.LogInformation("Start server discovery");
+        _udpSocket = new UdpClient();
+        _udpSocket.EnableBroadcast = true;
+        _udpSocket.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
         Task.Run(() =>
         {
             ReceiveDiscoveryMessages(_stopServerDiscovery.Token);
@@ -89,6 +91,7 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
         _discoveryTimer?.Cancel();
         _discoveryTimer = null;
         _udpSocket?.Close();
+        _udpSocket = null;
         _serverDiscoveryInvocations = 0;
         OnServerDiscoveryEnded?.Invoke();
     }
@@ -98,10 +101,7 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
         try
         {
             _logger.LogInformation("Sending discovery message");
-            lock (_udpSocket)
-            {
-                _udpSocket.Send(_sendBuffer, _sendBuffer.Length, new IPEndPoint(IPAddress.Broadcast, 7359));
-            }
+            _udpSocket.Send(_sendBuffer, _sendBuffer.Length, new IPEndPoint(IPAddress.Broadcast, 7359));
 
             _logger.LogInformation("Server Discovery message send.");
         }
