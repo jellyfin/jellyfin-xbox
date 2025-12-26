@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Core;
+using Jellyfin.Helpers.Localization;
 
 namespace Jellyfin.Utils;
 
@@ -54,7 +55,7 @@ public static class ServerCheckUtil
             {
                 return new JellyfinServerValidationResult(
                     false,
-                    $"Failed to connect to the server at \"{serverUri}\". Status code: {(int)response.StatusCode} - {response.ReasonPhrase}");
+                    new LocalizableString("ServerValidation.Error.Rejected.Text", serverUri, response.StatusCode, response.ReasonPhrase));
             }
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -66,19 +67,19 @@ public static class ServerCheckUtil
         {
             return new JellyfinServerValidationResult(
                 false,
-                $"Could not connect to the server at \"{serverUri}\". Error: {ex.Message}");
+                new($"UrlValidation.Error.General.Text", serverUri, ex.Message));
         }
         catch (OperationCanceledException)
         {
             return new JellyfinServerValidationResult(
                 false,
-                "The request timed out. Please check your network connection and try again.");
+                "UrlValidation.Error.Timeout.Text");
         }
         catch (Exception ex) // Catch any other unexpected exceptions.
         {
             return new JellyfinServerValidationResult(
                 false,
-                $"An unexpected error occurred while validating the server: {ex.Message}");
+                new($"UrlValidation.Error.General.Text", serverUri, ex.Message));
         }
     }
 
@@ -99,7 +100,7 @@ public static class ServerCheckUtil
                 var productName = productNameProperty.GetString();
                 if (!string.Equals(productName, ValidProductName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return new JellyfinServerValidationResult(false, $"ProductName '{productName}' does not match '{ValidProductName}'.");
+                    return new JellyfinServerValidationResult(false, new("ServerLookupValidation.Error.ProductName.Text", productName, ValidProductName));
                 }
             }
 
@@ -109,7 +110,7 @@ public static class ServerCheckUtil
                 string versionString = versionProperty.GetString();
                 if (!Version.TryParse(versionString, out var serverVersion))
                 {
-                    return new JellyfinServerValidationResult(false, $"Invalid server version format: '{versionString}'.");
+                    return new JellyfinServerValidationResult(false, new("ServerLookupValidation.Error.ServerVersion.Invalid.Text", versionString));
                 }
 
                 IsFutureUnsupportedVersion = serverVersion < Central.MinimumFutureSupportedServerVersion;
@@ -117,7 +118,7 @@ public static class ServerCheckUtil
 
                 if (serverVersion < Central.MinimumSupportedServerVersion)
                 {
-                    return new JellyfinServerValidationResult(false, $"The minimum supported server version is {Central.MinimumSupportedServerVersion}, but the server is running {serverVersion}.");
+                    return new JellyfinServerValidationResult(false, new("ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text", Central.MinimumSupportedServerVersion, serverVersion));
                 }
 
                 return new JellyfinServerValidationResult(true);
@@ -125,13 +126,13 @@ public static class ServerCheckUtil
         }
         catch (Exception) when (serverInfoResponse.StartsWith("<"))
         {
-            return new JellyfinServerValidationResult(false, $"It does not seem that the requested url runs a Jellyfin server.");
+            return new JellyfinServerValidationResult(false, "ServerLookupValidation.Error.NoServerDetected.Text");
         }
         catch (Exception ex)
         {
-            return new JellyfinServerValidationResult(false, $"Exception parsing server response: {ex.Message}");
+            return new JellyfinServerValidationResult(false, new("ServerLookupValidation.Error.General.Text", ex.Message));
         }
 
-        return new JellyfinServerValidationResult(false, "Unknown error validating server response.");
+        return new JellyfinServerValidationResult(false, "ServerLookupValidation.Error.Fallback.Text");
     }
 }

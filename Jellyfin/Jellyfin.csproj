@@ -158,16 +158,18 @@
     <Compile Include="Core\RollingAppLoggerProvider.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Core\WebMessage.cs" />
+    <Compile Include="Helpers\Localization\LocalizableString.cs" />
+    <Compile Include="Helpers\MarkupExtensions\LocalizeExtension.cs" />
     <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DiscoveredServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Localisations\Strings.Designer.cs">
+    <Compile Include="Resources\Localisations\Strings1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resw</DependentUpon>
+      <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppUtils.cs" />
     <Compile Include="Utils\DeviceFormFactorType.cs" />
@@ -248,13 +250,16 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <PRIResource Include="Resources\Localisations\Strings.en.resw">
+    <EmbeddedResource Include="Resources\Localisations\Strings.resx">
       <SubType>Designer</SubType>
-    </PRIResource>
-    <PRIResource Include="Resources\Localisations\Strings.resw">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </PRIResource>
+      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Localisations\Strings.de.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.de1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -304,6 +309,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
+    <PackageReference Include="Microsoft.Extensions.Localization" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Quicksand-Regular.ttf" />

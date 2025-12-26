@@ -9,6 +9,7 @@
     xmlns:behaviors="using:Jellyfin.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:core="using:Windows.Graphics.Display.Core"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
     Background="{StaticResource Color0}"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
@@ -75,7 +76,7 @@
                         IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
                         Grid.Row="0"
                         Name="checkBoxAutoRefreshRate"
-                        Content="Set the display refresh rate to the media refresh rate">
+                        Content="{localize:Localize Key=Settings.Values.AutoRefresh.Text}">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:AutoFocusBehavior FocusOnEnable="True" />
                         </interactivity:Interaction.Behaviors>
@@ -83,34 +84,21 @@
                     <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                                Grid.Row="1"
                                FontSize="{StaticResource FontM}"
-                               Foreground="{StaticResource DangerColor}">
-                        Auto display refresh rate is not supported on this device.
-                    </TextBlock>
+                               Foreground="{StaticResource DangerColor}"
+                               Text="{localize:Localize Key=Settings.Values.AutoRefresh.Unsupported.Text}"/>
+
 
                     <CheckBox
                         IsChecked="{Binding AutoResolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
-                        Content="Set the display resolution to the media resolution"
+                        Content="{localize:Localize Key=Settings.Values.AutoResolution.Text}"
                         Foreground="White" FontSize="{StaticResource FontL}"
                         Grid.Row="2" />
                     <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                                Grid.Row="3"
                                FontSize="{StaticResource FontM}"
-                               Foreground="{StaticResource DangerColor}">
-                        Display resolution is not supported on this device.
-                    </TextBlock>
-
-                    <CheckBox
-                        IsChecked="{Binding ForceEnableTvMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"                        
-                        Content="Force TV mode"
-                        Foreground="White" FontSize="{StaticResource FontL}"
-                        Grid.Row="4" />
-                    <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
-                               Grid.Row="5"
-                               FontSize="{StaticResource FontM}"
-                               Foreground="{StaticResource Color100}">
-                        Overrides the device detection and sets it to "Xbox" to force the WebUI to operate in TV mode.
-                    </TextBlock>
+                               Text="{localize:Localize Key=Settings.Values.AutoResolution.Unsupported.Text}"
+                               Foreground="{StaticResource DangerColor}"/>
                 </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
@@ -127,14 +115,14 @@
                     <Button
                         Grid.Column="0"
                         Style="{StaticResource SecondaryButton}"
-                        Content="Abort"
+                        Content="{localize:Localize Key=Common.Abort}"
                         Margin="0,0,6,0"
                         Command="{Binding AbortCommand}" />
                     <Button
                         Grid.Column="1"
                         Style="{StaticResource PrimaryButton}"
                         Margin="6,0,0,0"
-                        Content="Save"
+                        Content="{localize:Localize Key=Common.Save}"
                         Command="{Binding SaveCommand}" />
                     <Button
                         Grid.Column="0"                        
@@ -142,7 +130,7 @@
                         Grid.Row="1"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,6,0,0"
-                        Content="Upload Logfile"
+                        Content="{localize:Localize Key=Settings.UploadLogfile}"
                         Command="{Binding UploadLogfileCommand}" />
                 </Grid>
             </Grid>
@@ -155,14 +143,14 @@
                 Visibility="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToVisibilityConverter}}">
                 <Grid.Resources>
                     <DataTemplate x:DataType="core:HdmiDisplayMode" x:Key="ResolutionDisplay">
-                       <StackPanel Orientation="Horizontal">
-                           <TextBlock Text="{Binding ResolutionHeightInRawPixels}" />
-                           <TextBlock Text="x" Margin="5,0,5,0" />
-                           <TextBlock Text="{Binding ResolutionWidthInRawPixels}" />
-                           <TextBlock Text="-" Margin="5,0,5,0" />
-                           <TextBlock Text="{Binding RefreshRate}" />
-                           <TextBlock Text="Fps" Margin="5,0,5,0" />
-                       </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ResolutionHeightInRawPixels}" />
+                            <TextBlock Text="x" Margin="5,0,5,0" />
+                            <TextBlock Text="{Binding ResolutionWidthInRawPixels}" />
+                            <TextBlock Text="-" Margin="5,0,5,0" />
+                            <TextBlock Text="{Binding RefreshRate}" />
+                            <TextBlock Text="Fps" Margin="5,0,5,0" />
+                        </StackPanel>
                     </DataTemplate>
                 </Grid.Resources>
                 <Grid.RowDefinitions>

@@ -118,6 +118,119 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App.Name" xml:space="preserve">
-    <value>Jellyfin-For-Xbox</value>
+    <value>Jellyfin-Für-Xbox</value>
+  </data>
+  <data name="Common.Abort" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="Dialog.Crash.Body" xml:space="preserve">
+    <value>Die App hat einen nicht erwarteten Fehler. Soll versucht werden die Logfiles auf den Jellyfin server hochzuladen?</value>
+  </data>
+  <data name="Dialog.Crash.Only.Body" xml:space="preserve">
+    <value>The Application has encountered an unexpected issue</value>
+  </data>
+  <data name="Dialog.Crash.Title" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür gebaut auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Verbinden mit Jellyfin Server</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>Keine Server gefunden.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>Lokale Server</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>Getestete Server Urls:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>ex: 192.168.1.100:8096 oder demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>Unbekannter Fehler beim lesen der Serverantwort.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Fehler beim verbindungsaufbau und lesen der Antwort.
+
+{0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>Es konnte kein Jellyfin server bei der angegebenen Addresse gefunden werden.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>ProductName '{0}' ist nicht vom erwarteten Wert '{1}'.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>Die Serverversion '{0}' ist kein gültiges Format.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>Diese App unterstützt nur Jellyfin Server mit der Version {0} oder neuer. Der verbundene Server ist jedoch auf version {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>Fehler bei dem Verbindungsversuch "{0}". Status code: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile" xml:space="preserve">
+    <value>Logs Hochladen</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>Fehler beim Hochladen des Logfiles. Bitter erneut versuchen.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>Das logfile wurde erfolgreich auf den Jellyfin Server hochgeladen.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Suche und Setze die Bildwiederholrate Automatisch</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>Diese Funktion ist nicht auf diesem System verfügbar.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>Automatische Erkennung der Auflösung</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>Diese Funktion ist nicht auf diesem System verfügbar.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>Fehler bei dem Verbindungsversuch "{0}". Error:
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>Bitte eine gültige URL eingeben.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>Die Anfrage wurde wegen Zeitüberschritung abgebrochen.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>Fehler beim starten des internen WebBrowsers.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Navigation fehlgeschlagen. Fehler:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Der Jellyfin Server {0} ist zur Zeit nicht verfügbar:
+
+{1}</value>
   </data>
 </root>

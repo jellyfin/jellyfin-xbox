@@ -7,8 +7,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
+using Jellyfin.Resources.Localisations;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
@@ -36,6 +38,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     private readonly Frame _frame;
     private readonly ApplicationView _applicationView;
     private readonly ILogger<JellyfinWebViewModel> _logger;
+    private readonly IStringLocalizer<Strings> _stringLocalizer;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
@@ -51,6 +54,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// <param name="applicationView">Application view for managing the app's view state.</param>
     /// <param name="logger">The logger instance.</param>
     /// <param name="messenger">The Messenger service.</param>
+    /// <param name="stringLocalizer">The localizer service.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
@@ -59,7 +63,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         Frame frame,
         ApplicationView applicationView,
         ILogger<JellyfinWebViewModel> logger,
-        IMessenger messenger) : base(messenger)
+        IMessenger messenger,
+        IStringLocalizer<Strings> stringLocalizer) : base(messenger)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
@@ -68,6 +73,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         _frame = frame;
         _applicationView = applicationView;
         _logger = logger;
+        _stringLocalizer = stringLocalizer;
         _logger.LogInformation("JellyfinWebViewModel Initialising.");
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
@@ -133,8 +139,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             if (!jellyfinServerCheck.IsValid)
             {
                 _logger.LogInformation("Server cannot be validated because: {ValidationError}.", jellyfinServerCheck.ErrorMessage);
-                var md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
-                                           $" {jellyfinServerCheck.ErrorMessage}");
+                var md = new MessageDialog(_stringLocalizer.GetString("WebView.Error.ValidationFailed.Text", Central.Settings.JellyfinServer, jellyfinServerCheck.ErrorMessage));
                 await md.ShowAsync();
                 _frame.Navigate(typeof(OnBoarding));
                 return;
@@ -191,7 +196,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             if (WebView.CoreWebView2 == null || ex != null)
             {
                 _logger.LogError(ex, "WebView2 initialization failed.");
-                await new MessageDialog("Could not initialise WebView.").ShowAsync();
+
+                await new MessageDialog(_stringLocalizer.GetString("WebView.Error.InitializationFailed.Text")).ShowAsync();
                 Application.Current.Exit();
             }
         }
@@ -319,9 +325,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         {
             if (!args.IsSuccess)
             {
-                _logger.LogError("Failed to process navigation {Status}.", args.WebErrorStatus);
-                var errorStatus = args.WebErrorStatus;
-                var md = new MessageDialog($"Navigation failed: {errorStatus}");
+                var md = new MessageDialog(_stringLocalizer.GetString("WebView.Error.NavigationFailed.Text", args.WebErrorStatus));
                 await md.ShowAsync();
             }
             else if (string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
