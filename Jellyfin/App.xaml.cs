@@ -101,7 +101,6 @@ public sealed partial class App : Application
         services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
         services.AddLocalization(options =>
         {
-            // options.ResourcesPath = $"Resources{Path.DirectorySeparatorChar}Localisations";
         });
 
         services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
@@ -233,9 +232,7 @@ public sealed partial class App : Application
 
             if (!_layoutScalingDisabled)
             {
-                var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
-                var result = localizer.GetString("Dialog.Warning.LayoutScaling");
-                var dialog = new MessageDialog(result);
+                var dialog = new MessageDialog(Services.GetRequiredService<IStringLocalizer<Strings>>().GetString("Dialog.Warning.LayoutScaling"));
                 _ = dialog.ShowAsync();
             }
         }

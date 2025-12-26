@@ -55,7 +55,7 @@ public static class ServerCheckUtil
             {
                 return new JellyfinServerValidationResult(
                     false,
-                    new LocalizableString("ServerValidation.Error.Rejected.Text", serverUri, response.StatusCode, response.ReasonPhrase));
+                    new("ServerValidation.Error.Rejected.Text", serverUri, response.StatusCode, response.ReasonPhrase));
             }
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
