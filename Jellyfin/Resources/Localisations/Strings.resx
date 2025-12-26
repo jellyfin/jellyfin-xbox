@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App.Name" xml:space="preserve">
-    <value>Jellyfin-Für-Xbox</value>
+    <value>Jellyfin-For-Xbox</value>
   </data>
   <data name="Common.Abort" xml:space="preserve">
     <value>Abort</value>
@@ -133,37 +133,42 @@
     <value>Save</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
-    <value>Ja</value>
+    <value>Yes</value>
   </data>
   <data name="Dialog.Crash.Body" xml:space="preserve">
-    <value>Die App hat einen nicht erwarteten Fehler. Soll versucht werden die Logfiles auf den Jellyfin server hochzuladen?</value>
+    <value>The app encountered an unexpected Error. Do you want to attempt to upload the Logfile to the server?</value>
   </data>
   <data name="Dialog.Crash.Only.Body" xml:space="preserve">
     <value>The Application has encountered an unexpected issue</value>
   </data>
   <data name="Dialog.Crash.Title" xml:space="preserve">
-    <value>Fehler</value>
+    <value>Error</value>
   </data>
   <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
-    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür gebaut auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
+    <value>Could not disable layout scaling. This application is not designed to run on a desktop PC but only on an Xbox device. 
+
+You might encounter bugs when running on a PC.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
     <value>Connect</value>
   </data>
   <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
-    <value>Verbinden mit Jellyfin Server</value>
+    <value>Connect to Jellyfin Server.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
-    <value>Keine Server gefunden.</value>
+    <value>No local servers found.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
-    <value>Lokale Server</value>
+    <value>Local Servers.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Attempted to connect to:</value>
   </data>
   <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
-    <value>Getestete Server Urls:</value>
+    <value>Attempted to connect to:</value>
   </data>
   <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
-    <value>ex: 192.168.1.100:8096 oder demo.jellyfin.org</value>
+    <value>ex: 192.168.1.100:8096 or demo.jellyfin.org</value>
   </data>
   <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
     <value>Unknown error validating server response.</value>

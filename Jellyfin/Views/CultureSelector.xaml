@@ -1,0 +1,42 @@
+<UserControl
+    x:Class="Jellyfin.Views.CultureSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Jellyfin.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:CommunityToolkit.WinUI"
+    xmlns:viewmodels="using:Jellyfin.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CultureSelectorViewModel}"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    Height="45"
+    Width="330"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="Select Culture:"
+                   Margin="5,0,15,0" 
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="{StaticResource FontM}" 
+                   FontFamily="{StaticResource JellyfinFamilyFont}"/>
+        <ComboBox Width="200" Height="30"
+                  Style="{StaticResource PrimaryComboBox}"
+                  ItemsSource="{Binding SupportedCultures}"
+                  SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding NativeName}"
+                               FontSize="{StaticResource FontM}" 
+                               FontFamily="{StaticResource JellyfinFamilyFont}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+    </StackPanel>
+</UserControl>

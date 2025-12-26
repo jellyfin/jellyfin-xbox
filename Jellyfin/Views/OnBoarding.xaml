@@ -51,7 +51,7 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="640" />
                 <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>           
             <Grid HorizontalAlignment="Center"
                   VerticalAlignment="Top"
                   Grid.Column="1"
@@ -65,6 +65,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock
                         Text="{localize:Localize Key=OnBoarding.ConnectTo.Text}"
@@ -74,6 +75,11 @@
                         FontSize="{StaticResource FontL}"
                         Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
                         HorizontalAlignment="Center" />
+                <local:CultureSelector Grid.Column="0"
+                                       Grid.Row="1"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Top"
+                                       Margin="0,0,0,0"/>
                 <TextBox
                         Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PrimaryTextBox}"
@@ -81,7 +87,7 @@
                         IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
                         PlaceholderText="{localize:Localize Key=OnBoarding.ServerUri.Placeholder}"
                         Grid.Column="1"
-                        Grid.Row="1">
+                        Grid.Row="2">
                     <interactivity:Interaction.Behaviors>
                         <interactivity:BehaviorCollection>
                             <behaviors:AutoFocusBehavior FocusOnEnable="True" />
@@ -99,10 +105,10 @@
                         Content="{localize:Localize Key=OnBoarding.Connect.Text}"
                         Command="{Binding ConnectCommand}"
                         Grid.Column="1"
-                        Grid.Row="2" />
+                        Grid.Row="3" />
 
                 <StackPanel Grid.Column="1"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <TextBlock  FontFamily="{StaticResource JellyfinFamilyFont}"
                                 Text="{Binding ErrorMessage}"
@@ -113,7 +119,7 @@
                                 FontSize="{StaticResource FontM}"
                                 Margin="1 1 1 20" />
 
-                    <TextBlock Text="{localize:Localize Key=OnBoarding.ServerLookup.Header.Text}" Foreground="White"/>
+                    <TextBlock Text="{localize:Localize Key=OnBoarding.ServerList.Error.Text}" Foreground="White"/>
                     <ItemsControl ItemsSource="{Binding TestedUris}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -135,7 +141,7 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0 0 0 25">
-                        <TextBlock Text="{localize:Localize Key=OnBoarding.ServerLookup.Header.Text}" 
+                        <TextBlock Text="{localize:Localize Key=OnBoarding.ServerDiscovery.Header.Text}" 
                                 Foreground="White"
                                 FontSize="{StaticResource FontL}"
                                 FontFamily="{StaticResource JellyfinFamilyFont}"

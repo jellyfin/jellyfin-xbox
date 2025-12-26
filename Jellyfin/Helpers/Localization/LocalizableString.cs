@@ -39,7 +39,7 @@ public class LocalizableString
     /// <summary>
     /// Gets the array of arguments associated with the current operation or context.
     /// </summary>
-    public object[] Arguments { get; }
+    public object[] Arguments { get; } = Array.Empty<object>();
 
     /// <summary>
     /// Defines an implicit conversion from a string to a LocalizableString instance.

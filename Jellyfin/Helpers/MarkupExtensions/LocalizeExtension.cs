@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Jellyfin.Resources.Localisations;
+using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
 namespace Jellyfin.Helpers.MarkupExtensions;
@@ -41,12 +46,51 @@ internal class LocalizeExtension : MarkupExtension
 
         try
         {
-            string localizedText = _localizer[Key];
-            return localizedText;
+            var binding = new Binding()
+            {
+                Source = new LocBindingSource(_localizer, Key),
+                Path = new PropertyPath(nameof(LocBindingSource.Text)),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            };
+            return binding;
         }
         catch (Exception)
         {
             return Key;
+        }
+    }
+
+    private class LocBindingSource : ObservableObject
+    {
+        private readonly IStringLocalizer _localizer;
+        private readonly string _key;
+
+        public LocBindingSource(IStringLocalizer localizer, string key)
+        {
+            _localizer = localizer;
+            _key = key;
+            CultureSelectorViewModel.CultureChanged += OnCultureChanged;
+        }
+
+        ~LocBindingSource()
+        {
+#pragma warning disable IDISP023
+            CultureSelectorViewModel.CultureChanged -= OnCultureChanged;
+        }
+
+        public string Text
+        {
+            get
+            {
+                var text = _localizer.GetString(_key);
+                return text;
+            }
+        }
+
+        private void OnCultureChanged(object sender, CultureInfo e)
+        {
+            OnPropertyChanged(nameof(Text));
         }
     }
 }

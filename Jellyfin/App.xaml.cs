@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Globalization;
 using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
@@ -54,6 +56,19 @@ public sealed partial class App : Application
         Services = ConfigureServices();
 
         UnhandledException += OnUnhandledException;
+
+        var culture = CultureInfo.CreateSpecificCulture("de-de");
+
+        var set = Strings.ResourceManager.GetResourceSet(culture, true, false);
+        var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
+        var text = localizer.GetString("Common.Yes");
+
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.CurrentCulture = culture;
+
+        text = localizer.GetString("Common.Yes");
+        localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
+        text = localizer.GetString("Common.Yes");
     }
 
     /// <summary>
@@ -84,6 +99,7 @@ public sealed partial class App : Application
         services.AddTransient<JellyfinWebViewModel>();
         services.AddTransient<OnBoardingViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<CultureSelectorViewModel>();
 
         // Core
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
@@ -232,7 +248,8 @@ public sealed partial class App : Application
 
             if (!_layoutScalingDisabled)
             {
-                var dialog = new MessageDialog(Services.GetRequiredService<IStringLocalizer<Strings>>().GetString("Dialog.Warning.LayoutScaling"));
+                var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
+                var dialog = new MessageDialog(localizer.GetString("Dialog.Warning.LayoutScaling"));
                 _ = dialog.ShowAsync();
             }
         }

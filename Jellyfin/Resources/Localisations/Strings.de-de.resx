@@ -159,6 +159,9 @@
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
     <value>Lokale Server</value>
   </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Getestete Server Urls:</value>
+  </data>
   <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
     <value>Getestete Server Urls:</value>
   </data>
