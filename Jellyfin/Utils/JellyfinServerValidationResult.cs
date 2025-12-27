@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Jellyfin.Core;
+using Jellyfin.Helpers.Localization;
 
 namespace Jellyfin.Utils;
 
@@ -19,7 +12,7 @@ public record JellyfinServerValidationResult
     /// </summary>
     /// <param name="isValid">True if the validation succeded, otherwise false.</param>
     /// <param name="errorMessage">The error message.</param>
-    public JellyfinServerValidationResult(bool isValid, string errorMessage = null)
+    public JellyfinServerValidationResult(bool isValid, LocalizableString errorMessage = null)
     {
         IsValid = isValid;
         ErrorMessage = errorMessage;
@@ -33,5 +26,5 @@ public record JellyfinServerValidationResult
     /// <summary>
     /// Gets the error message if the validation failed.
     /// </summary>
-    public string ErrorMessage { get; private set; }
+    public LocalizableString ErrorMessage { get; private set; }
 }

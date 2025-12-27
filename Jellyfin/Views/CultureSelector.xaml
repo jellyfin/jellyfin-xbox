@@ -1,0 +1,45 @@
+<UserControl
+    x:Class="Jellyfin.Views.CultureSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Jellyfin.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:viewmodels="using:Jellyfin.ViewModels"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
+    d:DataContext="{d:DesignInstance Type=viewmodels:CultureSelectorViewModel}"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    Height="45"
+    Width="360"
+    mc:Ignorable="d">
+
+    <controls:DockPanel LastChildFill="True">
+        <TextBlock Text="{localize:Localize Key=CultureSelector.Selector.Header.Text}"
+                   Margin="5,0,15,0" 
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="{StaticResource FontM}" 
+                   FontFamily="{StaticResource JellyfinFamilyFont}"/>
+        <ComboBox Height="30"
+                  controls:DockPanel.Dock="{x:Bind Orientation}"
+                  Style="{StaticResource PrimaryComboBox}"
+                  ItemsSource="{Binding SupportedCultures}"
+                  SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding NativeName}"
+                               FontSize="{StaticResource FontM}" 
+                               FontFamily="{StaticResource JellyfinFamilyFont}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+    </controls:DockPanel>
+</UserControl>

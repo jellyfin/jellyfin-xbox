@@ -191,7 +191,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="PrimaryListView" TargetType="ListView">
         <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
         <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />
@@ -202,7 +202,25 @@
         <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}" />
         <Setter Property="FontSize" Value="{StaticResource FontM}" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewItemDefault}" />
-    </Style>  
+    </Style>
+
+    <Style TargetType="ComboBox" x:Key="PrimaryComboBox">
+        <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />
+        <Setter Property="Foreground" Value="{StaticResource Color100}" />
+        <Setter Property="Background" Value="{ThemeResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}" />
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}" />
+        <Setter Property="FontSize" Value="{StaticResource FontM}" />
+        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
+        <Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}" />
+    </Style>
+
 
     <Style x:Key="PrimaryTextBox"  TargetType="TextBox">
         <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -12,10 +9,7 @@ using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Models;
 using Microsoft.Extensions.Logging;
-using Windows.ApplicationModel.Core;
-using Windows.System;
 using Windows.System.Threading;
-using Windows.UI.Xaml;
 
 namespace Jellyfin.Core;
 
