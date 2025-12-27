@@ -130,7 +130,7 @@
                         Grid.Row="1"
                         Style="{StaticResource SecondaryButton}"
                         Margin="0,6,0,0"
-                        Content="{localize:Localize Key=Settings.UploadLogfile}"
+                        Content="{localize:Localize Key=Settings.UploadLogfile.Text}"
                         Command="{Binding UploadLogfileCommand}" />
                 </Grid>
             </Grid>

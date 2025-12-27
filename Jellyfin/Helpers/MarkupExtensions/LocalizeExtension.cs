@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Jellyfin.Resources.Localisations;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -26,7 +22,7 @@ internal class LocalizeExtension : MarkupExtension
     {
         if (App.Current is App) // check to avoid design time errors
         {
-            _localizer = App.Current.Services.GetRequiredService<IStringLocalizer<Strings>>();
+            _localizer = App.Current.Services.GetRequiredService<IStringLocalizer<Translations>>();
         }
     }
 
@@ -70,13 +66,14 @@ internal class LocalizeExtension : MarkupExtension
         {
             _localizer = localizer;
             _key = key;
-            CultureSelectorViewModel.CultureChanged += OnCultureChanged;
-        }
 
-        ~LocBindingSource()
-        {
-#pragma warning disable IDISP023
-            CultureSelectorViewModel.CultureChanged -= OnCultureChanged;
+            var weakPropertyChangedListener = new CommunityToolkit.WinUI.Helpers.WeakEventListener<LocBindingSource, object, CultureInfo>(this)
+            {
+                OnEventAction = static (instance, source, eventArgs) => instance.OnCultureChanged(source, eventArgs),
+                OnDetachAction = (weakEventListener) => CultureSelectorViewModel.CultureChanged -= weakEventListener.OnEvent // Use Local References Only
+            };
+
+            CultureSelectorViewModel.CultureChanged += weakPropertyChangedListener.OnEvent;
         }
 
         public string Text

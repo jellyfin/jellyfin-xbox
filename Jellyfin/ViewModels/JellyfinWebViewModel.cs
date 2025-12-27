@@ -1,13 +1,10 @@
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
-using Jellyfin.Resources.Localisations;
 using Jellyfin.Utils;
 using Jellyfin.Views;
 using Microsoft.Extensions.Localization;
@@ -38,7 +35,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     private readonly Frame _frame;
     private readonly ApplicationView _applicationView;
     private readonly ILogger<JellyfinWebViewModel> _logger;
-    private readonly IStringLocalizer<Strings> _stringLocalizer;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WebView2 _webView;
@@ -64,7 +61,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         ApplicationView applicationView,
         ILogger<JellyfinWebViewModel> logger,
         IMessenger messenger,
-        IStringLocalizer<Strings> stringLocalizer) : base(messenger)
+        IStringLocalizer<Translations> stringLocalizer) : base(messenger)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;

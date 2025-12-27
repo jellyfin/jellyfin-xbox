@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,11 +8,10 @@ using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Helpers;
 using Jellyfin.Models;
-using Jellyfin.Resources.Localisations;
 using Jellyfin.Utils;
 using Microsoft.Extensions.Localization;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.ViewModels;
@@ -24,7 +24,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
     private readonly IServerDiscovery _serverDiscoveryService;
-    private readonly IStringLocalizer<Strings> _stringLocalizer;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
@@ -38,7 +38,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// <param name="frame">Frame for navigation.</param>
     /// <param name="serverDiscoveryService">Server discovery service.</param>
     /// <param name="stringLocalizer">The localization service.</param>
-    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame, IServerDiscovery serverDiscoveryService, IStringLocalizer<Strings> stringLocalizer)
+    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame, IServerDiscovery serverDiscoveryService, IStringLocalizer<Translations> stringLocalizer)
     {
         ConnectCommand = new RelayCommand(ConnectToServerAsyncExecute, CanExecuteConnectToServer);
         ConnectToCommand = new RelayCommand<DiscoveredServer>(ConnectToDiscoveredServerExecute);

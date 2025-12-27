@@ -27,12 +27,4 @@ public static class Central
     /// Gets or sets the current connected Jellyfin server version.
     /// </summary>
     public static Version ServerVersion { get; set; }
-
-    /// <summary>
-    /// Gets the list of supported cultures for localization.
-    /// </summary>
-    public static IEnumerable<string> SupportedCultures => [
-        "en-US",
-        "de-DE",
-        ];
 }

@@ -1,22 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
-using Jellyfin.Resources.Localisations;
-using Windows.ApplicationModel.Resources.Core;
+using Jellyfin.Helpers.Localization;
 using Windows.Globalization;
 
 namespace Jellyfin.ViewModels;
@@ -43,21 +34,9 @@ public class CultureSelectorViewModel : ObservableObject
         SetCultureCommand = new RelayCommand(SetCultureExecute, CanSetCultureExecute);
         SupportedCultures = new();
 
-        foreach (var item in Central.SupportedCultures)
+        foreach (var item in ResourceManagerStringLocalizerFactory.GetCultures())
         {
             var culture = CultureInfo.CreateSpecificCulture(item);
-            try
-            {
-                if (Strings.ResourceManager.GetResourceSet(culture, true, true) == null && item != "en-US")
-                {
-                    continue;
-                }
-            }
-            catch (Exception)
-            {
-                continue;
-            }
-
             SupportedCultures.Add(CultureInfo.GetCultureInfo(item));
         }
 

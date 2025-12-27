@@ -1,23 +1,19 @@
 using System;
-using System.Globalization;
-using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
-using Jellyfin.Resources.Localisations;
 using Jellyfin.Utils;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Globalization;
 using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
@@ -56,19 +52,6 @@ public sealed partial class App : Application
         Services = ConfigureServices();
 
         UnhandledException += OnUnhandledException;
-
-        var culture = CultureInfo.CreateSpecificCulture("de-de");
-
-        var set = Strings.ResourceManager.GetResourceSet(culture, true, false);
-        var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
-        var text = localizer.GetString("Common.Yes");
-
-        CultureInfo.CurrentUICulture = culture;
-        CultureInfo.CurrentCulture = culture;
-
-        text = localizer.GetString("Common.Yes");
-        localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
-        text = localizer.GetString("Common.Yes");
     }
 
     /// <summary>
@@ -115,9 +98,9 @@ public sealed partial class App : Application
         services.AddSingleton<IGamepadManager, GamepadManager>();
         services.AddSingleton<IServerDiscovery, ServerDiscovery>();
         services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
-        services.AddLocalization(options =>
-        {
-        });
+
+        services.TryAddSingleton<IStringLocalizerFactory, Jellyfin.Helpers.Localization.ResourceManagerStringLocalizerFactory>();
+        services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
 
         services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
 
@@ -128,7 +111,7 @@ public sealed partial class App : Application
 
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
+        var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
         Services.GetRequiredService<ILogger<App>>().LogCritical(e.Exception, "Unhandled exception occurred");
         e.Handled = true;
 
@@ -248,7 +231,7 @@ public sealed partial class App : Application
 
             if (!_layoutScalingDisabled)
             {
-                var localizer = Services.GetRequiredService<IStringLocalizer<Strings>>();
+                var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
                 var dialog = new MessageDialog(localizer.GetString("Dialog.Warning.LayoutScaling"));
                 _ = dialog.ShowAsync();
             }

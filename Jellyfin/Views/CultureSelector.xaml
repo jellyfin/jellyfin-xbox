@@ -7,26 +7,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:viewmodels="using:Jellyfin.ViewModels"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
     d:DataContext="{d:DesignInstance Type=viewmodels:CultureSelectorViewModel}"
     HorizontalAlignment="Stretch"
     VerticalAlignment="Stretch"
     Height="45"
-    Width="330"
+    Width="360"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="Select Culture:"
+        <TextBlock Text="{localize:Localize Key=CultureSelector.Selector.Header.Text}"
                    Margin="5,0,15,0" 
                    Foreground="White"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="{StaticResource FontM}" 
                    FontFamily="{StaticResource JellyfinFamilyFont}"/>
-        <ComboBox Width="200" Height="30"
+        <ComboBox Height="30"
                   Style="{StaticResource PrimaryComboBox}"
                   ItemsSource="{Binding SupportedCultures}"
                   SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
-                  HorizontalAlignment="Center"
+                  HorizontalAlignment="Stretch"
                   VerticalAlignment="Center">
             <ComboBox.ItemTemplate>
                 <DataTemplate>

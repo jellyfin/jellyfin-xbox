@@ -191,7 +191,7 @@
   <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
     <value>Fehler bei dem Verbindungsversuch "{0}". Status code: {1} - {2}</value>
   </data>
-  <data name="Settings.UploadLogfile" xml:space="preserve">
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
     <value>Logs Hochladen</value>
   </data>
   <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
@@ -235,5 +235,8 @@
     <value>Der Jellyfin Server {0} ist zur Zeit nicht verfügbar:
 
 {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Sprache: </value>
   </data>
 </root>

@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
-using Jellyfin.Resources.Localisations;
 using Microsoft.Extensions.Localization;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
@@ -21,7 +20,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 {
     private readonly IGamepadManager _gamepadManager;
     private readonly CoreDispatcher _coreDispatcher;
-    private readonly IStringLocalizer<Strings> _stringLocalizer;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private readonly IDisposable _navigationHandler;
     private HdmiDisplayInformation _currentHdmiDisplayInformation;
     private bool _autoRefreshRate;
@@ -35,7 +34,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// <param name="gamepadManager">The <see cref="IGamepadManager"/> instance used to handle gamepad-related events.</param>
     /// <param name="coreDispatcher">The Dispatcher.</param>
     /// <param name="stringLocalizer">The localizer service.</param>
-    public SettingsViewModel(IGamepadManager gamepadManager, CoreDispatcher coreDispatcher, IStringLocalizer<Strings> stringLocalizer)
+    public SettingsViewModel(IGamepadManager gamepadManager, CoreDispatcher coreDispatcher, IStringLocalizer<Translations> stringLocalizer)
     {
         _gamepadManager = gamepadManager;
         _coreDispatcher = coreDispatcher;

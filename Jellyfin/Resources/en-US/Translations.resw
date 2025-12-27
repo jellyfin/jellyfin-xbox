@@ -191,7 +191,7 @@ You might encounter bugs when running on a PC.</value>
   <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
     <value>Failed to connect to the server at "{0}". Status code: {1} - {2}</value>
   </data>
-  <data name="Settings.UploadLogfile" xml:space="preserve">
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
     <value>Upload Logfile</value>
   </data>
   <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
@@ -235,5 +235,8 @@ You might encounter bugs when running on a PC.</value>
     <value>The Jellyfin server {0}  is currently not available: 
 
  {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Language: </value>
   </data>
 </root>
