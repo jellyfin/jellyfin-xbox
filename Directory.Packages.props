@@ -16,6 +16,7 @@
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="CommunityToolkit.Uwp.Triggers" Version="8.2.251219" />
     <PackageVersion Include="CommunityToolkit.Uwp.Helpers" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.251219" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />

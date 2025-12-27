@@ -301,6 +301,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="CommunityToolkit.Uwp.Triggers" />
     <PackageReference Include="CommunityToolkit.Uwp.Helpers" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" />
     <PackageReference Include="Microsoft.Bcl.Memory" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" />

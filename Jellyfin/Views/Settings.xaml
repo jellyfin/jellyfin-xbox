@@ -9,7 +9,7 @@
     xmlns:behaviors="using:Jellyfin.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:core="using:Windows.Graphics.Display.Core"
-    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions" xmlns:local="using:Jellyfin.Views"
     Background="{StaticResource Color0}"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
@@ -99,6 +99,13 @@
                                FontSize="{StaticResource FontM}"
                                Text="{localize:Localize Key=Settings.Values.AutoResolution.Unsupported.Text}"
                                Foreground="{StaticResource DangerColor}"/>
+
+                    <local:CultureSelector Grid.Column="0"
+                                           Grid.Row="4"
+                                           Orientation="Left"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Top"
+                                           Margin="0,0,0,0"/>
                 </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
