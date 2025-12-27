@@ -36,12 +36,45 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Grid Background="{StaticResource Color10}">
+        <Grid Background="{StaticResource Color10}" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
             <Image 
                     Source="/Assets/OnBoardingLogo.png" 
                     Stretch="Uniform" 
-                    HorizontalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
                     Height="80" />
+            <StackPanel
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top">
+                <TextBlock
+                    Grid.Row="0"
+                    Text="Jellyfin for Xbox App Version: " 
+                    Foreground="White" 
+                    FontSize="{StaticResource FontS}" 
+                    FontFamily="{StaticResource JellyfinFamilyFont}"
+                    Margin="0 0 0 30" />
+                <TextBlock
+                    Grid.Row="0"
+                    Text="{Binding AppVersion}" 
+                    Foreground="White" 
+                    FontSize="{StaticResource FontS}" 
+                    FontFamily="{StaticResource JellyfinFamilyFont}"
+                    Margin="0 0 0 30" />
+            </StackPanel>
+            <TextBlock
+                    Grid.Row="1"
+                    Text="Welcome to Jellyfin" 
+                    Foreground="White" 
+                    FontSize="{StaticResource FontL}" 
+                    FontFamily="{StaticResource JellyfinFamilyFont}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="0 0 0 0" />
         </Grid>
 
         <Grid Grid.Row="1"

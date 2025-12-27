@@ -59,9 +59,10 @@
                 </Grid.RowDefinitions>
 
                 <Grid
-                    Grid.Row="0"
+                    Grid.Row="0"                    
                     HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
+                        <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
@@ -173,19 +174,30 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
+
                 <TextBlock
                     Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Version: " />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding AppVersion}" />
+
+                <TextBlock
+                    Grid.Row="1"
                     Grid.Column="0"
                     Text="Display: " />
                 <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Grid.Column="1">
                     <ContentPresenter Content="{Binding CurrentDisplayMode}"
                                       ContentTemplate="{StaticResource ResolutionDisplay}"/>
