@@ -101,8 +101,7 @@ public sealed partial class App : Application
 
         services.TryAddSingleton<IStringLocalizerFactory, Jellyfin.Helpers.Localization.ResourceManagerStringLocalizerFactory>();
         services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
-
-        services.AddLogging(e => e.AddConsole().AddProvider(new RollingAppLoggerProvider()));
+        services.AddLogging(e => e.AddConsole().AddProvider(new FileBackedLoggerProvider()));
 
 #pragma warning disable IDISP005
         return services.BuildServiceProvider();
@@ -155,33 +154,9 @@ public sealed partial class App : Application
             httpClient.Timeout = TimeSpan.FromSeconds(30);
             httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
             httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
-            var loggerProvider = (RollingAppLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
-            var logBuilder = new StringBuilder();
-            logBuilder.AppendLine($"Jellyfin for Xbox Client version {Assembly.GetCallingAssembly().GetName().Version}");
-            logBuilder.AppendLine($"UWP version: {AnalyticsInfo.VersionInfo.DeviceFamily} {AnalyticsInfo.VersionInfo.DeviceFamilyVersion}");
-            logBuilder.AppendLine($"Device info: {AnalyticsInfo.DeviceForm}");
-
-            foreach (var deviceInfo in await AnalyticsInfo.GetSystemPropertiesAsync([
-                         "App",
-                         "AppVer",
-                         "DeviceFamily",
-                         "FlightRing",
-                         "OSVersionFull",
-                     ]))
-            {
-                logBuilder.AppendLine($"{deviceInfo.Key}: {deviceInfo.Value}");
-            }
-
-            foreach (var loggerProviderLog in loggerProvider.Logs)
-            {
-                logBuilder.AppendLine($"[{loggerProviderLog.Timestamp:u}] [{loggerProviderLog.Level}] {loggerProviderLog.Message}");
-                if (loggerProviderLog.Exception != null)
-                {
-                    logBuilder.AppendLine(loggerProviderLog.Exception.ToString());
-                }
-            }
-
-            using var response = await httpClient.PostAsync("/ClientLog/Document", new StringContent(logBuilder.ToString())).ConfigureAwait(false);
+            var loggerProvider = (FileBackedLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
+            using var logStream = await loggerProvider.ReadLogfile().ConfigureAwait(false);
+            using var response = await httpClient.PostAsync("/ClientLog/Document", new StreamContent(logStream)).ConfigureAwait(false);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
         catch

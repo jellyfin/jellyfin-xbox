@@ -155,7 +155,7 @@
     <Compile Include="Core\Contract\IServerDiscovery.cs" />
     <Compile Include="Core\MessageHandler.cs" />
     <Compile Include="Core\NativeShellScriptLoader.cs" />
-    <Compile Include="Core\RollingAppLoggerProvider.cs" />
+    <Compile Include="Core\FileBackedLoggerProvider.cs" />
     <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Core\WebMessage.cs" />
     <Compile Include="Helpers\Localization\LocalizableString.cs" />
