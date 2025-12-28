@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
@@ -11,12 +9,11 @@ using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Graphics.Display;
-using Windows.Graphics.Display.Core;
-using Windows.Storage;
 using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
@@ -65,7 +62,7 @@ public sealed partial class App : Application
     /// <summary>
     /// Gets the current <see cref="App"/> instance in use.
     /// </summary>
-    public static new App Current => (App)Application.Current;
+    public static new App Current => Application.Current as App;
 
     /// <summary>
     /// Gets the <see cref="IServiceProvider"/> instance to resolve application services.
@@ -85,6 +82,7 @@ public sealed partial class App : Application
         services.AddTransient<JellyfinWebViewModel>();
         services.AddTransient<OnBoardingViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<CultureSelectorViewModel>();
 
         // Core
         services.AddTransient<Frame>(_ => Window.Current.Content as Frame);
@@ -101,6 +99,8 @@ public sealed partial class App : Application
         services.AddSingleton<IServerDiscovery, ServerDiscovery>();
         services.AddSingleton<DisplayRequest>(_ => App.DisplayRequest);
 
+        services.TryAddSingleton<IStringLocalizerFactory, Jellyfin.Helpers.Localization.ResourceManagerStringLocalizerFactory>();
+        services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
         services.AddLogging(e => e.AddConsole().AddProvider(new FileBackedLoggerProvider()));
 
 #pragma warning disable IDISP005
@@ -110,6 +110,7 @@ public sealed partial class App : Application
 
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
+        var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
         Services.GetRequiredService<ILogger<App>>().LogCritical(e.Exception, "Unhandled exception occurred");
         e.Handled = true;
 
@@ -117,8 +118,8 @@ public sealed partial class App : Application
         {
             if (Central.Settings.HasJellyfinServer && Central.Settings.JellyfinServerValidated && !string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
             {
-                var md = new MessageDialog($"The Application has encountered an unexpected issue. Do you want to attempt to upload the logfiles to your Jellyfin server?", "Unexpected error.");
-                md.Commands.Add(new UICommand("Yes", command =>
+                var md = new MessageDialog(localizer.GetString("Dialog.Crash.Body"), localizer.GetString("Dialog.Crash.Title"));
+                md.Commands.Add(new UICommand(localizer.GetString("Common.Yes"), command =>
                 {
                     Task.Run(async () =>
                     {
@@ -126,7 +127,7 @@ public sealed partial class App : Application
                         Exit();
                     });
                 }));
-                md.Commands.Add(new UICommand("No", command =>
+                md.Commands.Add(new UICommand(localizer.GetString("Common.No"), command =>
                 {
                     Exit();
                 }));
@@ -134,8 +135,8 @@ public sealed partial class App : Application
             }
             else
             {
-                var md = new MessageDialog($"The Application has encountered an unexpected issue and will now close.", "Unexpected error.");
-                md.Commands.Add(new UICommand("Ok", command => Exit()));
+                var md = new MessageDialog(localizer.GetString("Dialog.Crash.Only.Body"), localizer.GetString("Dialog.Crash.Title"));
+                md.Commands.Add(new UICommand(localizer.GetString("Common.Ok"), command => Exit()));
                 await md.ShowAsync();
             }
         });
@@ -205,9 +206,8 @@ public sealed partial class App : Application
 
             if (!_layoutScalingDisabled)
             {
-                var dialog = new MessageDialog("Could not disable layout scaling. " +
-                    "This application is not designed to run on a desktop PC but only on an xbox device. " +
-                    "You might encounter bugs when running on a PC.");
+                var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
+                var dialog = new MessageDialog(localizer.GetString("Dialog.Warning.LayoutScaling"));
                 _ = dialog.ShowAsync();
             }
         }

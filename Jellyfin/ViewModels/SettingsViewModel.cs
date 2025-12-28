@@ -1,11 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
+using Microsoft.Extensions.Localization;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -19,6 +21,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 {
     private readonly IGamepadManager _gamepadManager;
     private readonly CoreDispatcher _coreDispatcher;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private readonly IDisposable _navigationHandler;
     private HdmiDisplayInformation _currentHdmiDisplayInformation;
     private bool _autoRefreshRate;
@@ -31,10 +34,12 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// </summary>
     /// <param name="gamepadManager">The <see cref="IGamepadManager"/> instance used to handle gamepad-related events.</param>
     /// <param name="coreDispatcher">The Dispatcher.</param>
-    public SettingsViewModel(IGamepadManager gamepadManager, CoreDispatcher coreDispatcher)
+    /// <param name="stringLocalizer">The localizer service.</param>
+    public SettingsViewModel(IGamepadManager gamepadManager, CoreDispatcher coreDispatcher, IStringLocalizer<Translations> stringLocalizer)
     {
         _gamepadManager = gamepadManager;
         _coreDispatcher = coreDispatcher;
+        _stringLocalizer = stringLocalizer;
         AutoRefreshRate = Central.Settings.AutoRefreshRate;
         AutoResolution = Central.Settings.AutoResolution;
         ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
@@ -55,6 +60,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         AbortCommand = new RelayCommand(OnAbortExecute);
         UploadLogfileCommand = new AsyncRelayCommand(OnUploadLogfileExecute);
     }
+
+    /// <summary>
+    /// Gets the version number of the currently executing application assembly.
+    /// </summary>
+    public string AppVersion { get => Assembly.GetCallingAssembly().GetName().Version.ToString(); }
 
     /// <summary>
     /// Gets or sets a value indicating whether to force enable TV mode.
@@ -135,11 +145,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
             {
                 if (result)
                 {
-                    await new MessageDialog("The current logfile has been uploaded to your jellyfin server.").ShowAsync();
+                    await new MessageDialog(_stringLocalizer.GetString("Settings.UploadLogfile.Success.Text")).ShowAsync();
                 }
                 else
                 {
-                    await new MessageDialog("Error while uploading the current logfile. Please try again.").ShowAsync();
+                    await new MessageDialog(_stringLocalizer.GetString("Settings.UploadLogfile.Failure.Text")).ShowAsync();
                 }
             });
         }
