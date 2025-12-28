@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -53,6 +54,11 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         _serverDiscoveryService.StartServerDiscovery();
         DiscoveryInProgress = true;
     }
+
+    /// <summary>
+    /// Gets the version number of the currently executing application assembly.
+    /// </summary>
+    public string AppVersion { get => Assembly.GetCallingAssembly().GetName().Version.ToString(); }
 
     /// <summary>
     /// Gets or Sets a value indicating whether the connection to the server is in progress.

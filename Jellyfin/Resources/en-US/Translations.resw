@@ -239,4 +239,13 @@ You might encounter bugs when running on a PC.</value>
   <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
     <value>Language: </value>
   </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Jellyfin Für Xbox App Version:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Willkommen in der Jellyfin App</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Version</value>
+  </data>
 </root>

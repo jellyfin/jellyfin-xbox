@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -59,6 +60,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         AbortCommand = new RelayCommand(OnAbortExecute);
         UploadLogfileCommand = new AsyncRelayCommand(OnUploadLogfileExecute);
     }
+
+    /// <summary>
+    /// Gets the version number of the currently executing application assembly.
+    /// </summary>
+    public string AppVersion { get => Assembly.GetCallingAssembly().GetName().Version.ToString(); }
 
     /// <summary>
     /// Gets or sets a value indicating whether to force enable TV mode.

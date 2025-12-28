@@ -239,4 +239,13 @@
   <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
     <value>Sprache: </value>
   </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Jellyfin for Xbox App Version:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Welcome to Jellyfin</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Version</value>
+  </data>
 </root>
