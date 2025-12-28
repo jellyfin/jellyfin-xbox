@@ -42,8 +42,8 @@
               VerticalAlignment="Stretch">
             <ContentPresenter HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
-                              Content="{Binding  WebView}">
-            </ContentPresenter>
+                              Content="{Binding WebView, UpdateSourceTrigger=PropertyChanged}" />
+
             <!-- WebView2 is created programatically otherwise it won't gain focus -->
             <Grid Grid.Row="0"
                   Background="{StaticResource OverlayColorBG}"

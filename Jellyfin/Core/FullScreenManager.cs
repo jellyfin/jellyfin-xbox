@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Data.Json;
-using Windows.Devices.Display;
-using Windows.Graphics.Display;
 using Windows.Graphics.Display.Core;
 using Windows.System.Display;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace Jellyfin.Core;
 

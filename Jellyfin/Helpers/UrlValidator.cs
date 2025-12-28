@@ -20,7 +20,7 @@ public static class UrlValidator
     {
         if (string.IsNullOrWhiteSpace(input))
         {
-            return (false, null, "Please enter a server address.");
+            return (false, null, "UrlValidation.Error.NoInput.Text");
         }
 
         input = input.Trim();
@@ -31,7 +31,7 @@ public static class UrlValidator
 
         if (!Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out var uri))
         {
-            return (false, null, "Please enter a valid server URL.");
+            return (false, null, "UrlValidation.Error.NoInput.Text");
         }
 
         uriCandidates.Add(uri);

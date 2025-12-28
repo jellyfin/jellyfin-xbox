@@ -1,14 +1,15 @@
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Jellyfin.Views;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
@@ -36,9 +37,10 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     private readonly Frame _frame;
     private readonly ApplicationView _applicationView;
     private readonly ILogger<JellyfinWebViewModel> _logger;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
-    private WebView2 _webView;
+    private WeakEventListener<JellyfinWebViewModel, object, CultureInfo> _weakPropertyChangedListener;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JellyfinWebViewModel"/> class.
@@ -51,6 +53,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// <param name="applicationView">Application view for managing the app's view state.</param>
     /// <param name="logger">The logger instance.</param>
     /// <param name="messenger">The Messenger service.</param>
+    /// <param name="stringLocalizer">The localizer service.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
@@ -59,7 +62,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         Frame frame,
         ApplicationView applicationView,
         ILogger<JellyfinWebViewModel> logger,
-        IMessenger messenger) : base(messenger)
+        IMessenger messenger,
+        IStringLocalizer<Translations> stringLocalizer) : base(messenger)
     {
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
@@ -68,6 +72,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         _frame = frame;
         _applicationView = applicationView;
         _logger = logger;
+        _stringLocalizer = stringLocalizer;
         _logger.LogInformation("JellyfinWebViewModel Initialising.");
         _navigationHandler = _gamepadManager.ObserveBackEvent(WebView_BackRequested, 0);
 
@@ -120,8 +125,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// this property will update the internal reference to the web view.</remarks>
     public WebView2 WebView
     {
-        get => _webView;
-        set => SetProperty(ref _webView, value);
+        get => field;
+        set => SetProperty(ref field, value);
     }
 
     private void BeginServerValidation()
@@ -132,9 +137,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             // Check if the parsed URI is pointing to a Jellyfin server.
             if (!jellyfinServerCheck.IsValid)
             {
-                _logger.LogInformation("Server cannot be validated because: {ValidationError}.", jellyfinServerCheck.ErrorMessage);
-                var md = new MessageDialog($"The jellyfin server '{Central.Settings.JellyfinServer}' is currently not available: \r\n" +
-                                           $" {jellyfinServerCheck.ErrorMessage}");
+                _logger.LogInformation("Server cannot be validated because: {ValidationError}.", _stringLocalizer.GetString(jellyfinServerCheck.ErrorMessage.Key, jellyfinServerCheck.ErrorMessage.Arguments));
+                var md = new MessageDialog(_stringLocalizer.GetString("WebView.Error.ValidationFailed.Text", Central.Settings.JellyfinServer, _stringLocalizer.GetString(jellyfinServerCheck.ErrorMessage.Key, jellyfinServerCheck.ErrorMessage.Arguments)));
                 await md.ShowAsync();
                 _frame.Navigate(typeof(OnBoarding));
                 return;
@@ -146,7 +150,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         });
     }
 
-    private async Task InitialiseWebView()
+    private async Task InitialiseWebView(Uri targetUrl = null)
     {
         if (ServerCheckUtil.IsFutureUnsupportedVersion)
         {
@@ -165,7 +169,26 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             hdmiInfo.DisplayModesChanged += OnDisplayModeChanged;
         }
 
-        await InitializeWebViewAndNavigateTo(new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
+        await InitializeWebViewAndNavigateTo(targetUrl ?? new Uri(Central.Settings.JellyfinServer)).ConfigureAwait(true);
+    }
+
+    private void UninitializeWebView()
+    {
+        if (WebView != null)
+        {
+            WebView.CoreWebView2Initialized -= WView_CoreWebView2Initialized;
+            WebView.NavigationCompleted -= JellyfinWebView_NavigationCompleted;
+            WebView.WebMessageReceived -= OnWebMessageReceived;
+            WebView.CoreWebView2.ContainsFullScreenElementChanged -= JellyfinWebView_ContainsFullScreenElementChanged;
+            WebView.Close();
+            WebView = null;
+        }
+
+        var hdmiInfo = HdmiDisplayInformation.GetForCurrentView();
+        if (hdmiInfo != null)
+        {
+            hdmiInfo.DisplayModesChanged -= OnDisplayModeChanged;
+        }
     }
 
     private void WebView_BackRequested(BackRequestedEventArgs e)
@@ -191,7 +214,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             if (WebView.CoreWebView2 == null || ex != null)
             {
                 _logger.LogError(ex, "WebView2 initialization failed.");
-                await new MessageDialog("Could not initialise WebView.").ShowAsync();
+
+                await new MessageDialog(_stringLocalizer.GetString("WebView.Error.InitializationFailed.Text")).ShowAsync();
                 Application.Current.Exit();
             }
         }
@@ -206,7 +230,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             return;
         }
 
-        await ValidateWebView();
+        await ValidateWebView().ConfigureAwait(true);
 
         if (Central.ServerVersion != Central.Settings.JellyfinServerVersion)
         {
@@ -275,16 +299,60 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
     private void WView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
     {
-        // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
-        WebView.Focus(FocusState.Programmatic);
+        if (args.Exception != null)
+        {
+            _logger.LogError(args.Exception, "WebView2 initialization failed.");
+            throw args.Exception;
+        }
 
-        WebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false; // Disable right click context menu.
-        WebView.CoreWebView2.Settings.AreDevToolsEnabled = false; // Disable dev tools
-        WebView.CoreWebView2.Settings.IsStatusBarEnabled = false; // Disable status bar.
-        WebView.CoreWebView2.Settings.IsZoomControlEnabled = false; // Disable zoom control.
-        WebView.CoreWebView2.Settings.IsScriptEnabled = true; // Enable JavaScript.
-        WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
-        WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+        // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            try
+            {
+                WebView.Focus(FocusState.Programmatic);
+
+                WebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false; // Disable right click context menu.
+                WebView.CoreWebView2.Settings.AreDevToolsEnabled = false; // Disable dev tools
+                WebView.CoreWebView2.Settings.IsStatusBarEnabled = false; // Disable status bar.
+                WebView.CoreWebView2.Settings.IsZoomControlEnabled = false; // Disable zoom control.
+                WebView.CoreWebView2.Settings.IsScriptEnabled = true; // Enable JavaScript.
+                WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
+                WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+                WebView.Language = CultureInfo.CurrentUICulture.Name;
+                _weakPropertyChangedListener = new(this)
+                {
+                    OnEventAction = static (instance, source, eventArgs) =>
+                    {
+                        _ = instance._dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            var oldUrl = instance.WebView.Source;
+
+                            instance.UninitializeWebView();
+                            instance._weakPropertyChangedListener.Detach();
+                            instance.IsInProgress = true;
+                            _ = instance._dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                            {
+                                GC.Collect();
+                                GC.WaitForPendingFinalizers();
+                                GC.Collect();
+
+                                // https://github.com/microsoft/microsoft-ui-xaml/issues/4752#issuecomment-819687363
+                                await Task.Delay(1000).ConfigureAwait(true); // somewhere is a race condition that causes the webview not to initialise properly without a delay when clearing the old instance from the tree.
+                                await instance.InitialiseWebView(oldUrl).ConfigureAwait(true);
+                            });
+                        });
+                    },
+                    OnDetachAction = (weakEventListener) => CultureSelectorViewModel.CultureChanged -= weakEventListener.OnEvent // Use Local References Only
+                };
+
+                CultureSelectorViewModel.CultureChanged += _weakPropertyChangedListener.OnEvent;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to focus WebView2 after initialization.");
+            }
+        });
     }
 
     private void AddDeviceFormToUserAgent()
@@ -319,9 +387,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         {
             if (!args.IsSuccess)
             {
-                _logger.LogError("Failed to process navigation {Status}.", args.WebErrorStatus);
-                var errorStatus = args.WebErrorStatus;
-                var md = new MessageDialog($"Navigation failed: {errorStatus}");
+                var md = new MessageDialog(_stringLocalizer.GetString("WebView.Error.NavigationFailed.Text", args.WebErrorStatus));
                 await md.ShowAsync();
             }
             else if (string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
@@ -379,6 +445,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     public void Dispose()
     {
         _navigationHandler.Dispose();
+        _weakPropertyChangedListener.Detach();
+        UninitializeWebView();
     }
 
     /// <inheritdoc />

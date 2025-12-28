@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,8 +10,9 @@ using Jellyfin.Core.Contract;
 using Jellyfin.Helpers;
 using Jellyfin.Models;
 using Jellyfin.Utils;
+using Microsoft.Extensions.Localization;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Jellyfin.ViewModels;
@@ -23,6 +25,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     private readonly CoreDispatcher _dispatcher;
     private readonly Frame _frame;
     private readonly IServerDiscovery _serverDiscoveryService;
+    private readonly IStringLocalizer<Translations> _stringLocalizer;
     private string _serverUrl;
     private string _errorMessage;
     private bool _isInProgress;
@@ -35,7 +38,8 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// <param name="dispatcher">UI Dispatcher.</param>
     /// <param name="frame">Frame for navigation.</param>
     /// <param name="serverDiscoveryService">Server discovery service.</param>
-    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame, IServerDiscovery serverDiscoveryService)
+    /// <param name="stringLocalizer">The localization service.</param>
+    public OnBoardingViewModel(CoreDispatcher dispatcher, Frame frame, IServerDiscovery serverDiscoveryService, IStringLocalizer<Translations> stringLocalizer)
     {
         ConnectCommand = new RelayCommand(ConnectToServerAsyncExecute, CanExecuteConnectToServer);
         ConnectToCommand = new RelayCommand<DiscoveredServer>(ConnectToDiscoveredServerExecute);
@@ -44,6 +48,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         _frame = frame;
         TestedUris = new();
         _serverDiscoveryService = serverDiscoveryService;
+        _stringLocalizer = stringLocalizer;
         _serverDiscoveryService.OnDiscover += ServerDiscoveryOnDiscover;
         _serverDiscoveryService.OnServerDiscoveryEnded += ServerDiscoveryOnDiscoveryEnded;
         _serverDiscoveryService.StartServerDiscovery();
@@ -149,7 +154,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
         var (isValid, parsedUri, errorMessage) = UrlValidator.ParseServerUri(ServerUrl);
         if (!isValid)
         {
-            ErrorMessage = errorMessage;
+            ErrorMessage = _stringLocalizer.GetString(errorMessage);
             return;
         }
 
@@ -189,7 +194,7 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
                         // Check if the parsed URI is pointing to a Jellyfin server.
                         if (jellyfinServerCheck?.IsValid == false)
                         {
-                            ErrorMessage = jellyfinServerCheck.ErrorMessage;
+                            ErrorMessage = _stringLocalizer.GetString(jellyfinServerCheck.ErrorMessage.Key, jellyfinServerCheck.ErrorMessage.Arguments);
                         }
 
                         TestedUris.Clear();

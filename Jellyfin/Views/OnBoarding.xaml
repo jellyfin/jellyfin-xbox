@@ -10,6 +10,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
@@ -53,7 +54,7 @@
                     VerticalAlignment="Top">
                 <TextBlock
                     Grid.Row="0"
-                    Text="Jellyfin for Xbox App Version: " 
+                    Text="{localize:Localize Key=OnBoarding.VersionHeader.Text}" 
                     Foreground="White" 
                     FontSize="{StaticResource FontS}" 
                     FontFamily="{StaticResource JellyfinFamilyFont}"
@@ -68,7 +69,7 @@
             </StackPanel>
             <TextBlock
                     Grid.Row="1"
-                    Text="Welcome to Jellyfin" 
+                    Text="{localize:Localize Key=OnBoarding.TitleHeader.Text}" 
                     Foreground="White" 
                     FontSize="{StaticResource FontL}" 
                     FontFamily="{StaticResource JellyfinFamilyFont}"
@@ -83,7 +84,7 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="640" />
                 <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>           
             <Grid HorizontalAlignment="Center"
                   VerticalAlignment="Top"
                   Grid.Column="1"
@@ -97,23 +98,29 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock
-                        Text="Connect to Jellyfin Server"
+                        Text="{localize:Localize Key=OnBoarding.ConnectTo.Text}"
                         Grid.Column="1"
                         Grid.Row="0"
                         Foreground="White"
                         FontSize="{StaticResource FontL}"
                         Margin="0 0 0 28" FontFamily="{StaticResource JellyfinFamilyFont}"
                         HorizontalAlignment="Center" />
+                <local:CultureSelector Grid.Column="0"
+                                       Grid.Row="1"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Top"
+                                       Margin="0,0,0,0"/>
                 <TextBox
                         Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PrimaryTextBox}"
                         Margin="0 8 0 8"
                         IsEnabled="{Binding IsInProgress, Converter={StaticResource BooleanInverseConverter}}"
-                        PlaceholderText="ex: 192.168.1.100:8096 or demo.jellyfin.org"
+                        PlaceholderText="{localize:Localize Key=OnBoarding.ServerUri.Placeholder}"
                         Grid.Column="1"
-                        Grid.Row="1">
+                        Grid.Row="2">
                     <interactivity:Interaction.Behaviors>
                         <interactivity:BehaviorCollection>
                             <behaviors:AutoFocusBehavior FocusOnEnable="True" />
@@ -128,13 +135,13 @@
                 </TextBox>
                 <Button
                         Style="{StaticResource PrimaryButton}"
-                        Content="Connect"
+                        Content="{localize:Localize Key=OnBoarding.Connect.Text}"
                         Command="{Binding ConnectCommand}"
                         Grid.Column="1"
-                        Grid.Row="2" />
+                        Grid.Row="3" />
 
                 <StackPanel Grid.Column="1"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
                     <TextBlock  FontFamily="{StaticResource JellyfinFamilyFont}"
                                 Text="{Binding ErrorMessage}"
@@ -145,7 +152,7 @@
                                 FontSize="{StaticResource FontM}"
                                 Margin="1 1 1 20" />
 
-                    <TextBlock Text="Attempted to connect to:" Foreground="White"/>
+                    <TextBlock Text="{localize:Localize Key=OnBoarding.ServerList.Error.Text}" Foreground="White"/>
                     <ItemsControl ItemsSource="{Binding TestedUris}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -167,7 +174,7 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0 0 0 25">
-                        <TextBlock Text="Discover Server" 
+                        <TextBlock Text="{localize:Localize Key=OnBoarding.ServerDiscovery.Header.Text}" 
                                 Foreground="White"
                                 FontSize="{StaticResource FontL}"
                                 FontFamily="{StaticResource JellyfinFamilyFont}"
@@ -188,9 +195,9 @@
                                     Foreground="White"                               
                                     HorizontalAlignment="Center"
                                     TextWrapping="WrapWholeWords"
-                                    Visibility="{Binding DiscoveryInProgress, Converter={StaticResource BooleanInverseConverter}}">
-                            No servers found.
-                        </TextBlock>
+                                    Text="{localize:Localize Key=OnBoarding.ServerDiscovery.Empty.Text}"
+                                    Visibility="{Binding DiscoveryInProgress, Converter={StaticResource BooleanInverseConverter}}"/>
+
                     </Grid>
                 </StackPanel>
                 <ListView ItemsSource="{Binding DiscoveredServers}"
