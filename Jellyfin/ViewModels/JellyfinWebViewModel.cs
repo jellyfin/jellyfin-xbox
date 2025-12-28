@@ -444,6 +444,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     public void Dispose()
     {
         _navigationHandler.Dispose();
+        _weakPropertyChangedListener.Detach();
         UninitializeWebView();
     }
 
