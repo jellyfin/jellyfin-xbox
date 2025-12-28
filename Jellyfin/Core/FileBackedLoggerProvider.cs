@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Windows.System.Profile;
@@ -103,6 +104,11 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
             var message = formatter(state, exception);
             var logEntry = Encoding.UTF8.GetBytes($"{DateTime.Now:s} [{logLevel}] {message}\n");
+            while (_appLoggerProvider.LogStream is null)
+            {
+                Thread.Sleep(100);
+            }
+
             _appLoggerProvider.LogStream.Write(logEntry, 0, logEntry.Length);
         }
 
