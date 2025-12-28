@@ -54,7 +54,7 @@
                     VerticalAlignment="Top">
                 <TextBlock
                     Grid.Row="0"
-                    Text="{localize:Localize Key=OnBoarding.VersionHeader.Text} " 
+                    Text="{localize:Localize Key=OnBoarding.VersionHeader.Text}" 
                     Foreground="White" 
                     FontSize="{StaticResource FontS}" 
                     FontFamily="{StaticResource JellyfinFamilyFont}"
