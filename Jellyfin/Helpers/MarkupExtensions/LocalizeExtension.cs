@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI.Helpers;
 using Jellyfin.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -67,7 +68,7 @@ internal class LocalizeExtension : MarkupExtension
             _localizer = localizer;
             _key = key;
 
-            var weakPropertyChangedListener = new CommunityToolkit.WinUI.Helpers.WeakEventListener<LocBindingSource, object, CultureInfo>(this)
+            var weakPropertyChangedListener = new WeakEventListener<LocBindingSource, object, CultureInfo>(this)
             {
                 OnEventAction = static (instance, source, eventArgs) => instance.OnCultureChanged(source, eventArgs),
                 OnDetachAction = (weakEventListener) => CultureSelectorViewModel.CultureChanged -= weakEventListener.OnEvent // Use Local References Only

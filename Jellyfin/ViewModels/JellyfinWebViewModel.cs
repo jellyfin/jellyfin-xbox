@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
@@ -39,7 +40,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     private readonly IStringLocalizer<Translations> _stringLocalizer;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
-    private CommunityToolkit.WinUI.Helpers.WeakEventListener<JellyfinWebViewModel, object, CultureInfo> _weakPropertyChangedListener;
+    private WeakEventListener<JellyfinWebViewModel, object, CultureInfo> _weakPropertyChangedListener;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JellyfinWebViewModel"/> class.
