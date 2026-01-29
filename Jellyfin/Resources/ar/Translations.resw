@@ -105,4 +105,10 @@
   <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
     <value>محاولة التوصيل لـ:</value>
   </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>محاولة التواصل مع:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>مثل: 192.168.1.100:8096 أو demo.jellyfin.org</value>
+  </data>
 </root>
