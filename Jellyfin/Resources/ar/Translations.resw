@@ -111,4 +111,35 @@
   <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
     <value>مثل: 192.168.1.100:8096 أو demo.jellyfin.org</value>
   </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>خطأ مجهول في تقدير استجابة الخادم.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>استثناء تحليل استجابة الخادم: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>لا يبدو أن الصفحة المطلوبة تعمل مع خادم Jellyfin.</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>اصدار</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>مرحبا بكم في تطبيق Jellyfin</value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>اصدار تطبيق Jellyfin لـXbox:</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>لغة: </value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>خادم Jellyfin {0} غير متوفر حاليا: 
+
+ {1}</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>فشل الابحار. السبب:
+
+{0}</value>
+  </data>
 </root>
