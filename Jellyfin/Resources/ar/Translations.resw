@@ -142,4 +142,7 @@
 
 {0}</value>
   </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>تعذر اطلاق WebView.</value>
+  </data>
 </root>
