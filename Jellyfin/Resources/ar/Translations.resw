@@ -145,4 +145,24 @@
   <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
     <value>تعذر اطلاق WebView.</value>
   </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>انتهى وقت الطلب. يٌرجى التأكد من وصلة الشبكة لديك و إعادة المحاولة.</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>يُرجى ادخال عنوان خادم.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>تعذر التوصيل للخادم عند "{0}". خطأ:
+
+{1}</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>دقة العرض غير مدعومة على هذا الجهاز.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>تعيين دقة العرض لدقة عرض هذه الوسائط</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>تنشيط معدل العرض التلقائي غير مدعوم لهذا الجهاز.</value>
+  </data>
 </root>
