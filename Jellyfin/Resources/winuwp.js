@@ -193,7 +193,7 @@ class UwpXboxHdmiSetupPlugin {
                     'videoWidth': stream.Width,
                     'videoHeight': stream.Height,
                     'videoFrameRate': (stream.AverageFrameRate || stream.RealFrameRate),
-                    'videoRangeType': stream.VideoRange
+                    'videoRangeType': stream.VideoRangeType
                 }
             };
 
