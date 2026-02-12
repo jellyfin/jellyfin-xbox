@@ -216,6 +216,8 @@ if (!window.consoleXboxOverride)
             window.chrome.webview.postMessage(JSON.stringify({ type: "log", args: { level: logLevel, messages: argsArray } }));
         }
     }
+    // debug is intentionally commented out as it can overwhelm the interopt layer. Uncomment for troubleshooting if needed.
+    //logOverride("debug");
     logOverride("error");
     logOverride("log");
     logOverride("warn");
