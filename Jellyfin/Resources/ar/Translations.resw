@@ -165,4 +165,28 @@
   <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
     <value>تنشيط معدل العرض التلقائي غير مدعوم لهذا الجهاز.</value>
   </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>ProductName '{0}' لا يطابق المتوقع '{1}'.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>تهيئة اصدار خادم خاطئة: '{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>اقل اصدار مدعوم للخادم هو {0}, لكن يمكن تشغيل الخادم.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>فشل التوصيل للخادم عند "{0}". رمز الحالة: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>رفع ملف السجل</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>خطأ اثناء رفع ملف السجل الحالي. يٌرجى المحاولة مجددا.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>تم رفع ملف السجل الحالي إلى خادم Jellyfin الخاص بك.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>حدد معدل تنشيط العرض لمعدل تنشيط هذه الوسائط</value>
+  </data>
 </root>
