@@ -124,7 +124,7 @@
     <value>Abbrechen</value>
   </data>
   <data name="Common.No" xml:space="preserve">
-    <value>No</value>
+    <value>Nein</value>
   </data>
   <data name="Common.Ok" xml:space="preserve">
     <value>Ok</value>
@@ -136,28 +136,30 @@
     <value>Ja</value>
   </data>
   <data name="Dialog.Crash.Body" xml:space="preserve">
-    <value>Die App hat einen nicht erwarteten Fehler. Soll versucht werden die Logfiles auf den Jellyfin server hochzuladen?</value>
+    <value>Die App stieß auf einen unerwarteten Fehler. Willst du versuchen die Logfiles auf den Jellyfin Server hochzuladen?</value>
   </data>
   <data name="Dialog.Crash.Only.Body" xml:space="preserve">
-    <value>The Application has encountered an unexpected issue</value>
+    <value>Die App stieß auf ein unerwartetes Problem</value>
   </data>
   <data name="Dialog.Crash.Title" xml:space="preserve">
     <value>Fehler</value>
   </data>
   <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
-    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür gebaut auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
+    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht geeignet auf einem PC ausgeführt zu werden, sondern nur auf einem XBox Gerät.
+
+Es werden möglicherweise Bugs auftreten wenn es auf dem PC läuft.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
     <value>Verbinden</value>
   </data>
   <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
-    <value>Verbinden mit Jellyfin Server</value>
+    <value>Verbinden mit Jellyfin Server.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
     <value>Keine Server gefunden.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
-    <value>Lokale Server</value>
+    <value>Lokale Server.</value>
   </data>
   <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
     <value>Getestete Server Urls:</value>
@@ -172,9 +174,7 @@
     <value>Unbekannter Fehler beim lesen der Serverantwort.</value>
   </data>
   <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
-    <value>Fehler beim verbindungsaufbau und lesen der Antwort.
-
-{0}</value>
+    <value>Fehler beim Lesen der Antwort vom Server: {0}</value>
   </data>
   <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
     <value>Es konnte kein Jellyfin server bei der angegebenen Addresse gefunden werden.</value>
@@ -183,7 +183,7 @@
     <value>ProductName '{0}' ist nicht vom erwarteten Wert '{1}'.</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
-    <value>Die Serverversion '{0}' ist kein gültiges Format.</value>
+    <value>Ungültiges Format der Serverversion: '{0}'</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
     <value>Diese App unterstützt nur Jellyfin Server mit der Version {0} oder neuer. Der verbundene Server ist jedoch auf version {1}.</value>
@@ -204,13 +204,13 @@
     <value>Suche und Setze die Bildwiederholrate Automatisch</value>
   </data>
   <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
-    <value>Diese Funktion ist nicht auf diesem System verfügbar.</value>
+    <value>Automatische Bildwiederholfrequenz wird auf diesem Gerät nicht unterstützt.</value>
   </data>
   <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
     <value>Automatische Erkennung der Auflösung</value>
   </data>
   <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
-    <value>Diese Funktion ist nicht auf diesem System verfügbar.</value>
+    <value>Automatische Bildschirmauflösung wird auf diesem Gerät nicht unterstützt.</value>
   </data>
   <data name="UrlValidation.Error.General.Text" xml:space="preserve">
     <value>Fehler bei dem Verbindungsversuch "{0}". Error:
