@@ -59,10 +59,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App.Name" xml:space="preserve">
-    <value>جيليفن للاكسبوكس</value>
+    <value>Jellyfin للاكس بوكس</value>
   </data>
   <data name="Common.Abort" xml:space="preserve">
-    <value>إسقاط</value>
+    <value>إحباط</value>
   </data>
   <data name="Common.No" xml:space="preserve">
     <value>لا</value>
