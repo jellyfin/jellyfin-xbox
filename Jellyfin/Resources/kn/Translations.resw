@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"></xsd:import>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,4 +58,135 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="App.Name" xml:space="preserve">
+    <value>ಜೆಲ್ಲಿಫಿನ್-ಫಾರ್-ಏಕ್ಸ್‌ಬಾಕ್ಸ್</value>
+  </data>
+  <data name="Common.Abort" xml:space="preserve">
+    <value>ರದ್ದುಮಾಡು</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>ಇಲ್ಲ</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>ಸರಿಗೆ</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>ಸರಕ್ಷಿಸಿ</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>ಹೌದು</value>
+  </data>
+  <data name="Dialog.Crash.Body" xml:space="preserve">
+    <value>ಆ್ಯಪ್ ಅಪ್ರತ್ಯಾಸಿತ ದೋಷವನ್ನು ಎದುರಿಸಿದೆ. ನೀವು ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ಸರ್ವರ್‌ಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಬೇಕೆಂದು ಪ್ರಯತ್ನಿಸಲು ಬಯಸುತ್ತೀರಾ?</value>
+  </data>
+  <data name="Dialog.Crash.Only.Body" xml:space="preserve">
+    <value>ಅಪ್ಲಿಕೇಶನ್ ಅಪ್ರत्यಾಶಿತ ಸಮಸ್ಯೆಯನ್ನು ಎದುರಿಸಿದೆ</value>
+  </data>
+  <data name="Dialog.Crash.Title" xml:space="preserve">
+    <value>ದೋಷ</value>
+  </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>ಲೇಔಟ್ ಮಾಪನವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಈ ಅಪ್ಲಿಕೇಶನ್ ಡೆಸ್ಕ್‌ಟಾಪ್ ಪಿಹೆಸಿಯಲ್ಲಿ ಚಾಲನೆ ಮಾಡಲು ವಿನ್ಯಾಸಗೊಳಿಸಲ್ಪಟ್ಟಿಲ್ಲ, ಅದು ಕೇವಲ ಎಕ್ಸ್ಬಾಕ್ಸ್ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ چلಿಸುತ್ತದೆ.
+
+ನೀವು ಪಿಹೆಸಿಯಲ್ಲಿ ಚಾಲನೆ ಸಮಯದಲ್ಲಿ ಬಗ್ಸ್‌ಗಳನ್ನು ಎದುರಿಸಬಹುದು.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>ಸಂಪರ್ಕಿಸಲು</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಪಡಿಸಿ.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>ಯಾವುದೇ ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗಳು.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>ಇದಕ್ಕೆ ಸಂಪರ್ಕಿಸಲು ಪ್ರಯತ್ನಿಸಲಾಗಿದೆ:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>ಇದಕ್ಕೆ ಸಂಪರ್ಕಿಸಲು ಪ್ರಯತ್ನಿಸಲಾಗಿದೆ:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>ಉದಾ: 192.168.1.100:8096 ಅಥವಾ demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಮೌಲ್ಯೀಕರಿಸುವಾಗ ಅಪರಿಚಿತ ದೋಷ ಸಂಭವಿಸಿದೆ.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>ಎಕ್ಸೆಪ್ಶನ್ ಪಾರ್ಸಿಂಗ್ ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯೆ: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>ವಿನಂತಿಸಿದ URL ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್ ಅನ್ನು ರನ್ ಮಾಡುತ್ತದೆ ಎಂದು ತೋರುತ್ತಿಲ್ಲ.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>ಉತ್ಪನ್ನದ ಹೆಸರು '{0}' ನಿರೀಕ್ಷಿತ '{1}' ಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>ಅಮಾನ್ಯ ಸರ್ವರ್ ಆವೃತ್ತಿ ಸ್ವರೂಪ: '{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>ಕನಿಷ್ಠ ಬೆಂಬಲಿತ ಸರ್ವರ್ ಆವೃತ್ತಿ {0}, ಆದರೆ ಸರ್ವರ್ {1} ಚಾಲನೆಯಲ್ಲಿದೆ.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>"{0}" ನಲ್ಲಿ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ವಿಫಲವಾಗಿದೆ. ಸ್ಥಿತಿ ಕೋಡ್: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>ಲಾಗ್‌ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>ಪ್ರಸ್ತುತ ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡುವಾಗ ದೋಷ ಕಂಡುಬಂದಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>ಪ್ರಸ್ತುತ ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ನಿಮ್ಮ ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>ಪ್ರದರ್ಶನ ರಿಫ್ರೆಶ್ ದರವನ್ನು ಮಾಧ್ಯಮ ರಿಫ್ರೆಶ್ ದರಕ್ಕೆ ಹೊಂದಿಸಿ</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>ಈ ಸಾಧನದಲ್ಲಿ ಸ್ವಯಂ ಪ್ರದರ್ಶನ ರಿಫ್ರೆಶ್ ದರವು ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>ಪ್ರದರ್ಶನ ರೆಸಲ್ಯೂಶನ್ ಅನ್ನು ಮಾಧ್ಯಮ ರೆಸಲ್ಯೂಶನ್‌ಗೆ ಹೊಂದಿಸಿ</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>ಈ ಸಾಧನದಲ್ಲಿ ಡಿಸ್‌ಪ್ಲೇ ರೆಸಲ್ಯೂಶನ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>"{0}" ನಲ್ಲಿ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದೋಷ:
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>ದಯವಿಟ್ಟು ಸರ್ವರ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>ವಿನಂತಿಯ ಸಮಯ ಮೀರಿದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>ವೆಬ್‌ವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>ನ್ಯಾವಿಗೇಷನ್ ವಿಫಲವಾಗಿದೆ. ಕಾರಣ:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್ {0} ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ:
+
+{1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>ಭಾಷೆ: </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಫರ್ ಎಕ್ಸ್ ಬಾಕ್ಸ್ ಅಪ್ಲಿಕೇಶನ್ ಆವೃತ್ತಿ:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>ವಿಲ್ಕೊಮೆನ್ ಡೆರ್ ಜೆಲ್ಲಿಫಿನ್ ಅಪ್ಲಿಕೇಶನ್</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>ಆವೃತ್ತಿ</value>
+  </data>
 </root>
