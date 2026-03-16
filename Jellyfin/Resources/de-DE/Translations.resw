@@ -145,9 +145,7 @@
     <value>Fehler</value>
   </data>
   <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
-    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht geeignet auf einem PC ausgeführt zu werden, sondern nur auf einem XBox Gerät.
-
-Es werden möglicherweise Bugs auftreten wenn es auf dem PC läuft.</value>
+    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür entwickelt auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
     <value>Verbinden</value>
