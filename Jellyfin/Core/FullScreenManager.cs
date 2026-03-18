@@ -99,7 +99,7 @@ public sealed class FullScreenManager : IFullScreenManager
 
     private static Func<HdmiDisplayMode, bool> MinRefreshRateMatches(double refreshRate)
     {
-        return mode => refreshRate > mode.RefreshRate;
+        return mode => mode.RefreshRate >= refreshRate;
     }
 
     private static Func<HdmiDisplayMode, bool> ResolutionMatches(uint width, uint height)
@@ -147,7 +147,7 @@ public sealed class FullScreenManager : IFullScreenManager
 
         return hdmiDisplayModes
             .Where(MinResolutionMatches(videoWidth, videoHeight))
-            .Where(MinRefreshRateMatches(videoHeight - 3))
+            .Where(MinRefreshRateMatches(videoFrameRate))
             .OrderBy(e => e.ResolutionHeightInRawPixels * e.ResolutionWidthInRawPixels)
             .ThenBy(e => e.RefreshRate);
     }

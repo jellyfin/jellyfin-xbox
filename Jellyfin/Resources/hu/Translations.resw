@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"></xsd:import>
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -118,132 +59,134 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App.Name" xml:space="preserve">
-    <value>Jellyfin-Für-Xbox</value>
+    <value>Jellyfin-az-Xboxra</value>
   </data>
   <data name="Common.Abort" xml:space="preserve">
-    <value>Abbrechen</value>
+    <value>Mégsem</value>
   </data>
   <data name="Common.No" xml:space="preserve">
-    <value>Nein</value>
+    <value>Nem</value>
   </data>
   <data name="Common.Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>Oké</value>
   </data>
   <data name="Common.Save" xml:space="preserve">
-    <value>Speichern</value>
+    <value>Mentés</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
-    <value>Ja</value>
+    <value>Igen</value>
   </data>
   <data name="Dialog.Crash.Body" xml:space="preserve">
-    <value>Die App stieß auf einen unerwarteten Fehler. Willst du versuchen die Logfiles auf den Jellyfin Server hochzuladen?</value>
+    <value>Váratlan hiba történt. Szeretnéd hogy a naplófájl feltöltésre kerüljön a szerverre?</value>
   </data>
   <data name="Dialog.Crash.Only.Body" xml:space="preserve">
-    <value>Die App stieß auf ein unerwartetes Problem</value>
+    <value>Váratlan hiba történt</value>
   </data>
   <data name="Dialog.Crash.Title" xml:space="preserve">
-    <value>Fehler</value>
+    <value>Hiba</value>
   </data>
   <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
-    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür entwickelt auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
+    <value>Nem sikerült letiltani az elrendezés méretezését. Ez az alkalmazás Xbox eszközön való futtatásra készült.
+
+PC-n futtatva hibákba ütközhet.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
-    <value>Verbinden</value>
+    <value>Csatlakozás</value>
   </data>
   <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
-    <value>Verbinden mit Jellyfin Server.</value>
+    <value>Csatlakozás egy Jellyfin Szerverhez.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
-    <value>Keine Server gefunden.</value>
+    <value>Nem találtunk lokális szervert.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
-    <value>Lokale Server.</value>
+    <value>Lokális szerverek.</value>
   </data>
   <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
-    <value>Getestete Server Urls:</value>
+    <value>Csatlakozási próbálkozás ide:</value>
   </data>
   <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
-    <value>Getestete Server Urls:</value>
+    <value>Csatlakozási próbálkozás ide:</value>
   </data>
   <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
-    <value>ex: 192.168.1.100:8096 oder demo.jellyfin.org</value>
+    <value>például: 192.168.1.100:8096 vagy demo.jellyfin.org</value>
   </data>
   <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
-    <value>Unbekannter Fehler beim lesen der Serverantwort.</value>
-  </data>
-  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
-    <value>Fehler beim Lesen der Antwort vom Server: {0}</value>
+    <value>Ismeretlen hiba a szerver válaszának ellenőrzése közben.</value>
   </data>
   <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
-    <value>Es konnte kein Jellyfin server bei der angegebenen Addresse gefunden werden.</value>
-  </data>
-  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
-    <value>ProductName '{0}' ist nicht vom erwarteten Wert '{1}'.</value>
+    <value>Úgy tűnik hogy a megadott URL nem futtat Jellyfin szervert.</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
-    <value>Ungültiges Format der Serverversion: '{0}'</value>
+    <value>Érvénytelen szerver verzió: '{0}'</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
-    <value>Diese App unterstützt nur Jellyfin Server mit der Version {0} oder neuer. Der verbundene Server ist jedoch auf version {1}.</value>
+    <value>A legkisebb támogatott szerver verzió {0}, de a szerver {1}-t futtat.</value>
   </data>
   <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
-    <value>Fehler bei dem Verbindungsversuch "{0}". Status code: {1} - {2}</value>
+    <value>Nem sikerült ehhez a szerverhez kapcsolódni: "{0}". Hibakód: {1} - {2}</value>
   </data>
   <data name="Settings.UploadLogfile.Text" xml:space="preserve">
-    <value>Logs Hochladen</value>
+    <value>Naplófájl feltöltése</value>
   </data>
   <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
-    <value>Fehler beim Hochladen des Logfiles. Bitter erneut versuchen.</value>
+    <value>Hiba történt a jelenlegi naplófájl feltöltése közben. Próbáld újra.</value>
   </data>
   <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
-    <value>Das logfile wurde erfolgreich auf den Jellyfin Server hochgeladen.</value>
+    <value>A jelenlegi naplófájl feltöltése került a Jellyfin szerverredre.</value>
   </data>
   <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
-    <value>Suche und Setze die Bildwiederholrate Automatisch</value>
+    <value>A kijelző frissítési gyakoriságának a média frissítési gyakoriságára állitása</value>
   </data>
   <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
-    <value>Automatische Bildwiederholfrequenz wird auf diesem Gerät nicht unterstützt.</value>
+    <value>Az automatikus kijelző frissítési gyakoriság nem elérhető ezen az eszközön.</value>
   </data>
   <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
-    <value>Automatische Erkennung der Auflösung</value>
+    <value>Kijelző felbontásának a média felbontásához igazítás</value>
   </data>
   <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
-    <value>Automatische Bildschirmauflösung wird auf diesem Gerät nicht unterstützt.</value>
+    <value>Ez a felbontás nem elérhető ezen az eszközön.</value>
   </data>
   <data name="UrlValidation.Error.General.Text" xml:space="preserve">
-    <value>Fehler bei dem Verbindungsversuch "{0}". Error:
+    <value>Nem lehetett ehhez a szerverhez kapcsolódni: “{0}”. Hiba:
 
 {1}</value>
   </data>
   <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
-    <value>Bitte eine gültige URL eingeben.</value>
+    <value>Add meg a szerver címét.</value>
   </data>
   <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
-    <value>Die Anfrage wurde wegen Zeitüberschritung abgebrochen.</value>
+    <value>A kapcsolat megszakadt. Kérlek ellenőrizd a hálózati csatlakozást, és próbáld újra.</value>
   </data>
   <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
-    <value>Fehler beim starten des internen WebBrowsers.</value>
+    <value>Nem lehetett a WebView-t betölteni.</value>
   </data>
   <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
-    <value>Navigation fehlgeschlagen. Fehler:
+    <value>Navigációs hiba történt. Oka:
 
 {0}</value>
   </data>
   <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
-    <value>Der Jellyfin Server {0} ist zur Zeit nicht verfügbar:
+    <value>A Jellyfin szerver ezen a címen {0} jelenleg nem elérhető:
 
 {1}</value>
   </data>
   <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
-    <value>Sprache: </value>
+    <value>Nyelv: </value>
   </data>
   <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
-    <value>Jellyfin for Xbox App Version:</value>
+    <value>Jellyfin az Xbox-ra verziója:</value>
   </data>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
-    <value>Welcome to Jellyfin</value>
+    <value>Üdvözlet a Jellyfin-ben</value>
   </data>
   <data name="Settings.Version.Text" xml:space="preserve">
-    <value>Version</value>
+    <value>Verzió</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Hiba a szerver válaszának lekérésekor: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>TermékNév ‘{0}’ nem egyezik az elvárttal ‘{1}’.</value>
   </data>
 </root>

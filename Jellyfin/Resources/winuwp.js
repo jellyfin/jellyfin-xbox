@@ -156,7 +156,7 @@ class UwpXboxHdmiSetupPlugin {
             return;
         }
         if ("mediaSourceId" in options) {
-            const mediaSourceid = options.mediaSourceid;
+            const mediaSourceid = options.mediaSourceId;
             var mediaStreams = null;
             var mediaSource = null;
 
@@ -170,7 +170,7 @@ class UwpXboxHdmiSetupPlugin {
                     });
             }
             else {
-                mediaSource = item.MediaSources.find(e => e.id == mediaSourceid);
+                mediaSource = item.MediaSources.find(e => e.Id == mediaSourceid);
                 if (mediaSource == null) {
                     return;
                 }
@@ -193,7 +193,7 @@ class UwpXboxHdmiSetupPlugin {
                     'videoWidth': stream.Width,
                     'videoHeight': stream.Height,
                     'videoFrameRate': (stream.AverageFrameRate || stream.RealFrameRate),
-                    'videoRangeType': stream.VideoRange
+                    'videoRangeType': stream.VideoRangeType
                 }
             };
 
@@ -216,6 +216,8 @@ if (!window.consoleXboxOverride)
             window.chrome.webview.postMessage(JSON.stringify({ type: "log", args: { level: logLevel, messages: argsArray } }));
         }
     }
+    // debug is intentionally commented out as it can overwhelm the interopt layer. Uncomment for troubleshooting if needed.
+    //logOverride("debug");
     logOverride("error");
     logOverride("log");
     logOverride("warn");

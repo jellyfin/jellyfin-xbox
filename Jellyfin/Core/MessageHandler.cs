@@ -104,9 +104,6 @@ public class MessageHandler : IMessageHandler
                 case "debug":
                     _webviewLogger.LogDebug(args.GetNamedValue("messages").ToString());
                     break;
-                case "info":
-                    _webviewLogger.LogInformation(args.GetNamedValue("messages").ToString());
-                    break;
                 case "error":
                     _webviewLogger.LogError(args.GetNamedValue("messages").ToString());
                     break;

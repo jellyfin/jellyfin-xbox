@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"></xsd:import>
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -118,132 +59,134 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App.Name" xml:space="preserve">
-    <value>Jellyfin-Für-Xbox</value>
+    <value>ಜೆಲ್ಲಿಫಿನ್-ಫಾರ್-ಏಕ್ಸ್‌ಬಾಕ್ಸ್</value>
   </data>
   <data name="Common.Abort" xml:space="preserve">
-    <value>Abbrechen</value>
+    <value>ರದ್ದುಮಾಡು</value>
   </data>
   <data name="Common.No" xml:space="preserve">
-    <value>Nein</value>
+    <value>ಇಲ್ಲ</value>
   </data>
   <data name="Common.Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>ಸರಿಗೆ</value>
   </data>
   <data name="Common.Save" xml:space="preserve">
-    <value>Speichern</value>
+    <value>ಸರಕ್ಷಿಸಿ</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
-    <value>Ja</value>
+    <value>ಹೌದು</value>
   </data>
   <data name="Dialog.Crash.Body" xml:space="preserve">
-    <value>Die App stieß auf einen unerwarteten Fehler. Willst du versuchen die Logfiles auf den Jellyfin Server hochzuladen?</value>
+    <value>ಆ್ಯಪ್ ಅಪ್ರತ್ಯಾಸಿತ ದೋಷವನ್ನು ಎದುರಿಸಿದೆ. ನೀವು ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ಸರ್ವರ್‌ಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಬೇಕೆಂದು ಪ್ರಯತ್ನಿಸಲು ಬಯಸುತ್ತೀರಾ?</value>
   </data>
   <data name="Dialog.Crash.Only.Body" xml:space="preserve">
-    <value>Die App stieß auf ein unerwartetes Problem</value>
+    <value>ಅಪ್ಲಿಕೇಶನ್ ಅಪ್ರत्यಾಶಿತ ಸಮಸ್ಯೆಯನ್ನು ಎದುರಿಸಿದೆ</value>
   </data>
   <data name="Dialog.Crash.Title" xml:space="preserve">
-    <value>Fehler</value>
+    <value>ದೋಷ</value>
   </data>
   <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
-    <value>Es ist nicht möglich das automatische Layout Scaling zu Deaktivieren. Diese App ist nicht dafür entwickelt auf einem PC ausgeführt zu werden. Es werden möglicherweise Bugs auftreten.</value>
+    <value>ಲೇಔಟ್ ಮಾಪನವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಈ ಅಪ್ಲಿಕೇಶನ್ ಡೆಸ್ಕ್‌ಟಾಪ್ ಪಿಹೆಸಿಯಲ್ಲಿ ಚಾಲನೆ ಮಾಡಲು ವಿನ್ಯಾಸಗೊಳಿಸಲ್ಪಟ್ಟಿಲ್ಲ, ಅದು ಕೇವಲ ಎಕ್ಸ್ಬಾಕ್ಸ್ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ چلಿಸುತ್ತದೆ.
+
+ನೀವು ಪಿಹೆಸಿಯಲ್ಲಿ ಚಾಲನೆ ಸಮಯದಲ್ಲಿ ಬಗ್ಸ್‌ಗಳನ್ನು ಎದುರಿಸಬಹುದು.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
-    <value>Verbinden</value>
+    <value>ಸಂಪರ್ಕಿಸಲು</value>
   </data>
   <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
-    <value>Verbinden mit Jellyfin Server.</value>
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಪಡಿಸಿ.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
-    <value>Keine Server gefunden.</value>
+    <value>ಯಾವುದೇ ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
-    <value>Lokale Server.</value>
+    <value>ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗಳು.</value>
   </data>
   <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
-    <value>Getestete Server Urls:</value>
+    <value>ಇದಕ್ಕೆ ಸಂಪರ್ಕಿಸಲು ಪ್ರಯತ್ನಿಸಲಾಗಿದೆ:</value>
   </data>
   <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
-    <value>Getestete Server Urls:</value>
+    <value>ಇದಕ್ಕೆ ಸಂಪರ್ಕಿಸಲು ಪ್ರಯತ್ನಿಸಲಾಗಿದೆ:</value>
   </data>
   <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
-    <value>ex: 192.168.1.100:8096 oder demo.jellyfin.org</value>
+    <value>ಉದಾ: 192.168.1.100:8096 ಅಥವಾ demo.jellyfin.org</value>
   </data>
   <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
-    <value>Unbekannter Fehler beim lesen der Serverantwort.</value>
+    <value>ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಮೌಲ್ಯೀಕರಿಸುವಾಗ ಅಪರಿಚಿತ ದೋಷ ಸಂಭವಿಸಿದೆ.</value>
   </data>
   <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
-    <value>Fehler beim Lesen der Antwort vom Server: {0}</value>
+    <value>ಎಕ್ಸೆಪ್ಶನ್ ಪಾರ್ಸಿಂಗ್ ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯೆ: {0}</value>
   </data>
   <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
-    <value>Es konnte kein Jellyfin server bei der angegebenen Addresse gefunden werden.</value>
+    <value>ವಿನಂತಿಸಿದ URL ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್ ಅನ್ನು ರನ್ ಮಾಡುತ್ತದೆ ಎಂದು ತೋರುತ್ತಿಲ್ಲ.</value>
   </data>
   <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
-    <value>ProductName '{0}' ist nicht vom erwarteten Wert '{1}'.</value>
+    <value>ಉತ್ಪನ್ನದ ಹೆಸರು '{0}' ನಿರೀಕ್ಷಿತ '{1}' ಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ.</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
-    <value>Ungültiges Format der Serverversion: '{0}'</value>
+    <value>ಅಮಾನ್ಯ ಸರ್ವರ್ ಆವೃತ್ತಿ ಸ್ವರೂಪ: '{0}'</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
-    <value>Diese App unterstützt nur Jellyfin Server mit der Version {0} oder neuer. Der verbundene Server ist jedoch auf version {1}.</value>
+    <value>ಕನಿಷ್ಠ ಬೆಂಬಲಿತ ಸರ್ವರ್ ಆವೃತ್ತಿ {0}, ಆದರೆ ಸರ್ವರ್ {1} ಚಾಲನೆಯಲ್ಲಿದೆ.</value>
   </data>
   <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
-    <value>Fehler bei dem Verbindungsversuch "{0}". Status code: {1} - {2}</value>
+    <value>"{0}" ನಲ್ಲಿ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ವಿಫಲವಾಗಿದೆ. ಸ್ಥಿತಿ ಕೋಡ್: {1} - {2}</value>
   </data>
   <data name="Settings.UploadLogfile.Text" xml:space="preserve">
-    <value>Logs Hochladen</value>
+    <value>ಲಾಗ್‌ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</value>
   </data>
   <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
-    <value>Fehler beim Hochladen des Logfiles. Bitter erneut versuchen.</value>
+    <value>ಪ್ರಸ್ತುತ ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡುವಾಗ ದೋಷ ಕಂಡುಬಂದಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</value>
   </data>
   <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
-    <value>Das logfile wurde erfolgreich auf den Jellyfin Server hochgeladen.</value>
+    <value>ಪ್ರಸ್ತುತ ಲಾಗ್‌ಫೈಲ್ ಅನ್ನು ನಿಮ್ಮ ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ.</value>
   </data>
   <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
-    <value>Suche und Setze die Bildwiederholrate Automatisch</value>
+    <value>ಪ್ರದರ್ಶನ ರಿಫ್ರೆಶ್ ದರವನ್ನು ಮಾಧ್ಯಮ ರಿಫ್ರೆಶ್ ದರಕ್ಕೆ ಹೊಂದಿಸಿ</value>
   </data>
   <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
-    <value>Automatische Bildwiederholfrequenz wird auf diesem Gerät nicht unterstützt.</value>
+    <value>ಈ ಸಾಧನದಲ್ಲಿ ಸ್ವಯಂ ಪ್ರದರ್ಶನ ರಿಫ್ರೆಶ್ ದರವು ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</value>
   </data>
   <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
-    <value>Automatische Erkennung der Auflösung</value>
+    <value>ಪ್ರದರ್ಶನ ರೆಸಲ್ಯೂಶನ್ ಅನ್ನು ಮಾಧ್ಯಮ ರೆಸಲ್ಯೂಶನ್‌ಗೆ ಹೊಂದಿಸಿ</value>
   </data>
   <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
-    <value>Automatische Bildschirmauflösung wird auf diesem Gerät nicht unterstützt.</value>
+    <value>ಈ ಸಾಧನದಲ್ಲಿ ಡಿಸ್‌ಪ್ಲೇ ರೆಸಲ್ಯೂಶನ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</value>
   </data>
   <data name="UrlValidation.Error.General.Text" xml:space="preserve">
-    <value>Fehler bei dem Verbindungsversuch "{0}". Error:
+    <value>"{0}" ನಲ್ಲಿ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದೋಷ:
 
 {1}</value>
   </data>
   <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
-    <value>Bitte eine gültige URL eingeben.</value>
+    <value>ದಯವಿಟ್ಟು ಸರ್ವರ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ.</value>
   </data>
   <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
-    <value>Die Anfrage wurde wegen Zeitüberschritung abgebrochen.</value>
+    <value>ವಿನಂತಿಯ ಸಮಯ ಮೀರಿದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</value>
   </data>
   <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
-    <value>Fehler beim starten des internen WebBrowsers.</value>
+    <value>ವೆಬ್‌ವೀಕ್ಷಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.</value>
   </data>
   <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
-    <value>Navigation fehlgeschlagen. Fehler:
+    <value>ನ್ಯಾವಿಗೇಷನ್ ವಿಫಲವಾಗಿದೆ. ಕಾರಣ:
 
 {0}</value>
   </data>
   <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
-    <value>Der Jellyfin Server {0} ist zur Zeit nicht verfügbar:
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಸರ್ವರ್ {0} ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ:
 
 {1}</value>
   </data>
   <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
-    <value>Sprache: </value>
+    <value>ಭಾಷೆ: </value>
   </data>
   <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
-    <value>Jellyfin for Xbox App Version:</value>
+    <value>ಜೆಲ್ಲಿಫಿನ್ ಫರ್ ಎಕ್ಸ್ ಬಾಕ್ಸ್ ಅಪ್ಲಿಕೇಶನ್ ಆವೃತ್ತಿ:</value>
   </data>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
-    <value>Welcome to Jellyfin</value>
+    <value>ವಿಲ್ಕೊಮೆನ್ ಡೆರ್ ಜೆಲ್ಲಿಫಿನ್ ಅಪ್ಲಿಕೇಶನ್</value>
   </data>
   <data name="Settings.Version.Text" xml:space="preserve">
-    <value>Version</value>
+    <value>ಆವೃತ್ತಿ</value>
   </data>
 </root>
