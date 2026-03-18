@@ -38,6 +38,8 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
             deviceForm = AppUtils.GetDeviceFormFactorType().ToString();
         }
 
+        deviceForm = DeviceFormFactorType.Xbox.ToString();
+
         nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(deviceForm, '\''));
 
         var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
