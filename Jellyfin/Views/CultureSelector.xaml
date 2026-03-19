@@ -11,9 +11,7 @@
     xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
     d:DataContext="{d:DesignInstance Type=viewmodels:CultureSelectorViewModel}"
     HorizontalAlignment="Stretch"
-    VerticalAlignment="Stretch"
-    Height="45"
-    Width="360"
+    VerticalAlignment="Stretch"    
     mc:Ignorable="d">
 
     <controls:DockPanel LastChildFill="True">
@@ -24,9 +22,9 @@
                    VerticalAlignment="Center"
                    FontSize="{StaticResource FontM}" 
                    FontFamily="{StaticResource JellyfinFamilyFont}"/>
-        <ComboBox Height="30"
+        <ComboBox 
                   controls:DockPanel.Dock="{x:Bind Orientation}"
-                  Style="{StaticResource PrimaryComboBox}"
+                  Style="{StaticResource ComboBox}"
                   ItemsSource="{Binding SupportedCultures}"
                   SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
                   HorizontalAlignment="Stretch"

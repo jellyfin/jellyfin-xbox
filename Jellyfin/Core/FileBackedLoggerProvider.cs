@@ -1,14 +1,13 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.ServiceModel.Channels;
 using System.Text;
-using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Windows.Storage;
 using Windows.System.Profile;
 
 namespace Jellyfin.Core;
@@ -16,18 +15,39 @@ namespace Jellyfin.Core;
 internal sealed class FileBackedLoggerProvider : ILoggerProvider
 {
     private readonly string _localLogFilePath;
+    private Channel<string> _logPipe;
 
     public FileBackedLoggerProvider()
     {
         _localLogFilePath = $"jellyfin-for-xbox-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+        _logPipe = Channel.CreateUnbounded<string>(
+            new UnboundedChannelOptions
+            {
+                SingleWriter = false,
+                SingleReader = false,
+                AllowSynchronousContinuations = true
+            });
         Task.Run(async () =>
         {
             await CleanupOldLogfiles();
             await CreateLogfile().ConfigureAwait(false);
+
+            await foreach (var item in _logPipe.Reader.ReadAllAsync())
+            {
+                var logEntry = Encoding.UTF8.GetBytes(item);
+                await LogStream.WriteAsync(logEntry, 0, logEntry.Length).ConfigureAwait(false);
+            }
         });
     }
 
     private Stream LogStream { get; set; }
+
+    internal async Task<IEnumerable<StorageFile>> GetLogfiles()
+    {
+        var logs = await Windows.Storage.ApplicationData.Current.TemporaryFolder.CreateFolderAsync("logs", Windows.Storage.CreationCollisionOption.OpenIfExists);
+        var files = await logs.CreateFileQuery().GetFilesAsync();
+        return files.Where(e => e.DisplayName.StartsWith("jellyfin-for-xbox-")).ToArray();
+    }
 
     private async Task CreateLogfile()
     {
@@ -51,15 +71,19 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             logBuilder.AppendLine($"{deviceInfo.Key}: {deviceInfo.Value}");
         }
 
-        var initialLog = Encoding.UTF8.GetBytes(logBuilder.ToString());
-        LogStream.Write(initialLog, 0, initialLog.Length);
+        await _logPipe.Writer.WriteAsync(logBuilder.ToString()).ConfigureAwait(false);
     }
 
-    public async Task<Stream> ReadLogfile()
+    public async Task<Stream> ReadLogfile(string logfileName)
     {
-        LogStream.Flush();
         var logs = await Windows.Storage.ApplicationData.Current.TemporaryFolder.CreateFolderAsync("logs", Windows.Storage.CreationCollisionOption.OpenIfExists);
-        return await logs.OpenStreamForReadAsync(_localLogFilePath).ConfigureAwait(true);
+        if (logfileName is null)
+        {
+            LogStream.Flush();
+            logfileName = _localLogFilePath;
+        }
+
+        return await logs.OpenStreamForReadAsync(logfileName).ConfigureAwait(true);
     }
 
     private async Task CleanupOldLogfiles()
@@ -103,13 +127,9 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             }
 
             var message = formatter(state, exception);
-            var logEntry = Encoding.UTF8.GetBytes($"{DateTime.Now:s} [{logLevel}] {message}\n");
-            while (_appLoggerProvider.LogStream is null)
-            {
-                Thread.Sleep(100);
-            }
+            var logEntry = $"{DateTime.Now:s} [{logLevel}] {message}\n";
 
-            _appLoggerProvider.LogStream.Write(logEntry, 0, logEntry.Length);
+            _appLoggerProvider._logPipe.Writer.TryWrite(logEntry);
         }
 
         public bool IsEnabled(LogLevel logLevel)
@@ -117,7 +137,7 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             return true;
         }
 
-        public IDisposable? BeginScope<TState>(TState state)
+        public IDisposable BeginScope<TState>(TState state)
             where TState : notnull
         {
             throw new NotImplementedException();

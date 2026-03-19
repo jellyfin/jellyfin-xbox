@@ -1,13 +1,16 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Windows.Graphics.Display.Core;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -56,9 +59,32 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
             Debug.Write(e);
         }
 
+        Logs = new();
+
+        Task.Run(async () =>
+        {
+            if (App.Current is App currentApp)
+            {
+                var loggerProvider = (FileBackedLoggerProvider)currentApp.Services.GetRequiredService<ILoggerProvider>();
+                var logfiles = await loggerProvider.GetLogfiles().ConfigureAwait(false);
+                _ = _coreDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    var orderedLogs = logfiles.OrderByDescending(e => e.DateCreated).ToArray();
+                    foreach (var log in orderedLogs)
+                    {
+                        Logs.Add(new LogfileViewModel(log)
+                        {
+                            UploadCallback = UploadLogfileCommand.Execute,
+                            IsLatestLogfile = orderedLogs[0] == log
+                        });
+                    }
+                });
+            }
+        });
+
         SaveCommand = new RelayCommand(OnSaveExecute);
         AbortCommand = new RelayCommand(OnAbortExecute);
-        UploadLogfileCommand = new AsyncRelayCommand(OnUploadLogfileExecute);
+        UploadLogfileCommand = new AsyncRelayCommand<LogfileViewModel>(OnUploadLogfileExecute);
     }
 
     /// <summary>
@@ -79,6 +105,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// Gets or sets the collection of possible HDMI display modes.
     /// </summary>
     public ObservableCollection<HdmiDisplayMode> PossibleDisplayModes { get; set; }
+
+    /// <summary>
+    /// Gets or sets the collection of log file view models displayed in the user interface.
+    /// </summary>
+    public ObservableCollection<LogfileViewModel> Logs { get; set; }
 
     /// <summary>
     /// Gets or sets the current HDMI display mode.
@@ -136,11 +167,11 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// </summary>
     public Action CloseAction { get; set; }
 
-    private async Task OnUploadLogfileExecute()
+    private async Task OnUploadLogfileExecute(LogfileViewModel logfileViewModel)
     {
         if (App.Current is App currentApp)
         {
-            var result = await currentApp.UploadClientLog().ConfigureAwait(false);
+            var result = await currentApp.UploadClientLog(logfileViewModel?.Filename).ConfigureAwait(false);
             _ = _coreDispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
             {
                 if (result)

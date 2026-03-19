@@ -245,7 +245,13 @@ You might encounter bugs when running on a PC.</value>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
     <value>Willkommen in der Jellyfin App</value>
   </data>
-  <data name="Settings.Version.Text" xml:space="preserve">
+    <data name="Settings.Version.Text" xml:space="preserve">
     <value>Version</value>
+  </data>
+    <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Current Log</value>
+  </data>
+    <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>Logfiles</value>
   </data>
 </root>
