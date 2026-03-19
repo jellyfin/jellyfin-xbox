@@ -77,10 +77,9 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
     public async Task<Stream> ReadLogfile(string logfileName)
     {
         var logs = await Windows.Storage.ApplicationData.Current.TemporaryFolder.CreateFolderAsync("logs", Windows.Storage.CreationCollisionOption.OpenIfExists);
-        if (logfileName is null)
+        if (logfileName == _localLogFilePath)
         {
             LogStream.Flush();
-            logfileName = _localLogFilePath;
         }
 
         return await logs.OpenStreamForReadAsync(logfileName).ConfigureAwait(true);
