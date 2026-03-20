@@ -42,7 +42,7 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
-        _layoutScalingDisabled = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
+        _layoutScalingDisabled = true;
 
         DisplayRequest = new();
 
@@ -145,8 +145,9 @@ public sealed partial class App : Application
     /// <summary>
     /// Uploads the current client log to the Jellyfin server.
     /// </summary>
+    /// <param name="logfileName">The name of the logfile to upload. This should be obtained from the list of logfiles provided by the logger provider. Null for current logfile.</param>
     /// <returns>A task that completes once the logfile has been uploaded.</returns>
-    public async Task<bool> UploadClientLog()
+    public async Task<bool> UploadClientLog(string logfileName = null)
     {
         try
         {
@@ -155,7 +156,7 @@ public sealed partial class App : Application
             httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
             httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
             var loggerProvider = (FileBackedLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
-            using var logStream = await loggerProvider.ReadLogfile().ConfigureAwait(false);
+            using var logStream = await loggerProvider.ReadLogfile(logfileName).ConfigureAwait(false);
             using var response = await httpClient.PostAsync("/ClientLog/Document", new StreamContent(logStream)).ConfigureAwait(false);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }

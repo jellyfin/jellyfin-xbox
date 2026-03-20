@@ -204,7 +204,11 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewItemDefault}" />
     </Style>
 
-    <Style TargetType="ComboBox" x:Key="PrimaryComboBox">
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <!--<Style TargetType="ComboBox" x:Key="PrimaryComboBox">
         <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
         <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />
         <Setter Property="Foreground" Value="{StaticResource Color100}" />
@@ -219,8 +223,131 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
         <Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}" />
+    </Style>-->
+
+    <Style x:Key="ComboBox" TargetType="ComboBox">
+        <Setter Property="Padding" Value="12,8,0,8"/>
+        <Setter Property="MinWidth" Value="200"/>
+        <Setter Property="FontSize" Value="{StaticResource FontM}"/>
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItem}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#2A2A2A"/>
+        <Setter Property="BorderBrush" Value="#3A3A3A"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="Background"
+                             Grid.Row="0"
+                             Background="{TemplateBinding Background}"
+                             BorderBrush="{TemplateBinding BorderBrush}"
+                             BorderThickness="{TemplateBinding BorderThickness}"
+                             CornerRadius="{TemplateBinding CornerRadius}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ContentPresenter x:Name="ContentPresenter"
+                                             Grid.Column="0"
+                                             Margin="{TemplateBinding Padding}"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center"/>
+
+                                <FontIcon Grid.Column="1"
+                                      Glyph="&#xE70D;"
+                                      FontSize="12"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Margin="0,0,12,0"
+                                      VerticalAlignment="Center"
+                                      Opacity="0.7"/>
+                            </Grid>
+                        </Border>
+
+                        <Popup x:Name="Popup"
+                            Grid.Row="1"
+                            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Border Background="#2A2A2A"
+                                 BorderBrush="#4A4A4A"
+                                 BorderThickness="1"
+                                 CornerRadius="6"
+                                 Padding="0,4">
+                                <ScrollViewer>
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Background.Background" Value="#353535"/>
+                                        <Setter Target="Background.BorderBrush" Value="#5A5A5A"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Background.Background" Value="#404040"/>
+                                        <Setter Target="Background.BorderBrush" Value="#6A6A6A"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
+    <Style x:Key="ComboBoxItem" TargetType="ComboBoxItem">
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="{StaticResource FontM}"/>
+        <Setter Property="FontFamily" Value="{StaticResource JellyfinFamilyFont}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Root"
+                         Background="Transparent"
+                         Padding="{TemplateBinding Padding}">
+                        <ContentPresenter/>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Background" Value="#404040"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Background" Value="#4A4A4A"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Background" Value="#5A5A5A"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="PrimaryTextBox"  TargetType="TextBox">
         <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />

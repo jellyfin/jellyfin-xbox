@@ -178,6 +178,7 @@
     <Compile Include="Utils\ServerCheckUtil.cs" />
     <Compile Include="ViewModels\CultureSelectorViewModel.cs" />
     <Compile Include="ViewModels\JellyfinWebViewModel.cs" />
+    <Compile Include="ViewModels\LogfileViewModel.cs" />
     <Compile Include="ViewModels\OnBoardingViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\CultureSelector.xaml.cs">
@@ -252,6 +253,11 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Resources\kn\Translations.resw" />
+    <PRIResource Include="Resources\it\Translations.resw" />
+    <PRIResource Include="Resources\hu\Translations.resw" />
+    <PRIResource Include="Resources\fr\Translations.resw" />
+    <PRIResource Include="Resources\ar\Translations.resw" />
     <PRIResource Include="Resources\en-US\Translations.resw">
       <SubType>Designer</SubType>
     </PRIResource>
@@ -314,6 +320,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.Extensions.Localization" />
+    <PackageReference Include="System.Threading.Channels" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Quicksand-Regular.ttf" />
