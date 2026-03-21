@@ -158,4 +158,35 @@ Podczas uruchamiania na komputerze mogą wystąpić błędy.</value>
   <data name="Common.Yes" xml:space="preserve">
     <value>Tak</value>
   </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>Podaj adres serwera.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>Upłynął limit czasu żądania. Sprawdź połączenie sieciowe i spróbuj ponownie.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>Nie można zainicjować WebView.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Nawigacja nie powiodła się. Powód:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Serwer Jellyfin {0} jest obecnie niedostępny: 
+
+ {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Język: </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Wersja aplikacji Jellyfin dla Xbox:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Witamy w Jellyfin</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Wersja</value>
+  </data>
 </root>
