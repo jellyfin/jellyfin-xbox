@@ -67,4 +67,77 @@
   <data name="Dialog.Crash.Title" xml:space="preserve">
     <value>Błąd</value>
   </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Nie można wyłączyć skalowania układu. Ta aplikacja nie jest przeznaczona do działania na komputerze stacjonarnym, a jedynie na urządzeniu Xbox.
+
+Podczas uruchamiania na komputerze mogą wystąpić błędy.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>Połącz</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Połącz się z serwerem Jellyfin.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>Nie znaleziono serwerów lokalnych.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>Serwery lokalne.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Próbowano połączyć się z:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>Próbowano połączyć się z:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>np. 192.168.1.100:8096 lub demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>Nieznany błąd podczas sprawdzania odpowiedzi serwera.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Wyjątek podczas analizy odpowiedzi serwera: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>Wygląda na to, że żądany adres URL nie obsługuje serwera Jellyfin.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>ProductName „{0}” nie jest zgodna z oczekiwaną nazwą „{1}”.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>Nieprawidłowy format wersji serwera: „{0}”</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>Minimalna obsługiwana wersja serwera to {0}, ale serwer działa na wersji {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>Nie udało się połączyć z serwerem pod adresem „{0}”. Kod statusu: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>Prześlij plik dziennika</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>Wystąpił błąd podczas przesyłania bieżącego pliku dziennika. Spróbuj ponownie.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>Aktualny plik dziennika został przesłany na serwer Jellyfin.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Ustaw częstotliwość odświeżania wyświetlacza na częstotliwość odświeżania multimediów</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>To urządzenie nie obsługuje automatycznej częstotliwości odświeżania wyświetlacza.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>Ustaw rozdzielczość wyświetlania na rozdzielczość multimediów</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>Rozdzielczość wyświetlacza nie jest obsługiwana na tym urządzeniu.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>Nie można połączyć się z serwerem pod adresem „{0}”. Błąd:
+
+{1}</value>
+  </data>
 </root>
