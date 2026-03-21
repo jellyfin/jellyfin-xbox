@@ -189,4 +189,10 @@
   <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
     <value>حدد معدل تنشيط العرض لمعدل تنشيط هذه الوسائط</value>
   </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>السجل الحالي</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>ملفات السجل</value>
+  </data>
 </root>
