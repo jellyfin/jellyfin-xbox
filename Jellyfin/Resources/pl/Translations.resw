@@ -133,11 +133,29 @@ Podczas uruchamiania na komputerze mogą wystąpić błędy.</value>
     <value>Ustaw rozdzielczość wyświetlania na rozdzielczość multimediów</value>
   </data>
   <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
-    <value>Rozdzielczość wyświetlacza nie jest obsługiwana na tym urządzeniu.</value>
+    <value>Rozdzielczość wyświetlania nie jest obsługiwana na tym urządzeniu.</value>
   </data>
   <data name="UrlValidation.Error.General.Text" xml:space="preserve">
     <value>Nie można połączyć się z serwerem pod adresem „{0}”. Błąd:
 
 {1}</value>
+  </data>
+  <data name="App.Name" xml:space="preserve">
+    <value>Jellyfin-Dla-Xbox</value>
+  </data>
+  <data name="Common.Abort" xml:space="preserve">
+    <value>Przerwij</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Tak</value>
   </data>
 </root>
