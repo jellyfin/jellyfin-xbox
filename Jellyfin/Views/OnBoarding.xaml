@@ -11,6 +11,7 @@
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
     xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
+    xmlns:triggers="using:CommunityToolkit.WinUI.Triggers"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 
@@ -24,6 +25,16 @@
                     <VisualState.Setters>
                         <Setter Target="EmptyServersMessage.Visibility" Value="Visible"/>
                         <Setter Target="TopBarDiscoveryProgress.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="ConnectivityStates">
+                <VisualState x:Name="OfflineState">
+                    <VisualState.StateTriggers>
+                        <triggers:NetworkConnectionStateTrigger ConnectionState="Disconnected" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="OfflineBanner.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -218,6 +229,33 @@
                 </ListView>
             </StackPanel>
         </Grid>
+
+        <Border x:Name="OfflineBanner"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                Background="{StaticResource Color0}"
+                Visibility="Collapsed"
+                Padding="0,20,0,0">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="8">
+                <FontIcon Glyph="&#xF384;"
+                          FontSize="48"
+                          Foreground="{StaticResource Color80}"
+                          HorizontalAlignment="Center" />
+                <TextBlock Text="No network connection"
+                           Foreground="{StaticResource Color90}"
+                           FontSize="{StaticResource FontL}"
+                           FontFamily="{StaticResource JellyfinFamilyFont}"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Please check your network settings and try again."
+                           Foreground="{StaticResource Color80}"
+                           FontSize="{StaticResource FontM}"
+                           FontFamily="{StaticResource JellyfinFamilyFont}"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
 
         <Grid Grid.Row="0"
                     Grid.RowSpan="2"

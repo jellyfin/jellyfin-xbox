@@ -79,6 +79,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         Central.Settings.JellyfinServerAccessToken = null;
         IsInProgress = true;
         Messenger.Register(this);
+        NetworkHelper.Instance.NetworkChanged += OnNetworkChanged;
 
         if (Central.Settings.JellyfinServerValidated)
         {
@@ -107,6 +108,15 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     {
         get => _isInProgress;
         set => SetProperty(ref _isInProgress, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the device is offline.
+    /// </summary>
+    public bool IsOffline
+    {
+        get => field;
+        set => SetProperty(ref field, value);
     }
 
     /// <summary>
@@ -433,6 +443,20 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         }
     }
 
+    private void OnNetworkChanged(object sender, EventArgs e)
+    {
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            var wasOffline = IsOffline;
+            IsOffline = !NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
+            if (wasOffline && !IsOffline && WebView?.CoreWebView2 != null)
+            {
+                _logger.LogInformation("Network restored, reloading page.");
+                WebView.CoreWebView2.Reload();
+            }
+        });
+    }
+
     private void OnDisplayModeChanged(HdmiDisplayInformation sender, object args)
     {
         _ = Task.Run(async () =>
@@ -444,6 +468,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// <inheritdoc />
     public void Dispose()
     {
+        NetworkHelper.Instance.NetworkChanged -= OnNetworkChanged;
         _navigationHandler.Dispose();
         _weakPropertyChangedListener.Detach();
         UninitializeWebView();

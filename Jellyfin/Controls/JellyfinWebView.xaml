@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Jellyfin.ViewModels"
+    xmlns:triggers="using:CommunityToolkit.WinUI.Triggers"
     mc:Ignorable="d"
     d:DesignHeight="400"
     d:DesignWidth="800"
@@ -49,6 +50,27 @@
                   Background="{StaticResource OverlayColorBG}"
                   Visibility="{Binding IsInProgress, Converter={StaticResource BooleanVisibilityConverter}}">
                 <ProgressRing Width="250" Height="250" IsActive="True" Visibility="Visible" />
+            </Grid>
+
+            <Grid Grid.Row="0"
+                  Background="{StaticResource Color0}"
+                  Visibility="{Binding IsOffline, Converter={StaticResource BooleanVisibilityConverter}}">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="16">
+                    <FontIcon Glyph="&#xF384;"
+                              FontSize="48"
+                              Foreground="{StaticResource Color80}"
+                              HorizontalAlignment="Center" />
+                    <TextBlock Text="No network connection"
+                               Foreground="{StaticResource Color90}"
+                               FontSize="{StaticResource FontL}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="Waiting for connection to resume..."
+                               Foreground="{StaticResource Color80}"
+                               FontSize="{StaticResource FontM}"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
             </Grid>
         </Grid>
 
