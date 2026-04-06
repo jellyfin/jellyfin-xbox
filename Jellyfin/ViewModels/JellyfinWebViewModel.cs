@@ -180,6 +180,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             WebView.NavigationCompleted -= JellyfinWebView_NavigationCompleted;
             WebView.WebMessageReceived -= OnWebMessageReceived;
             WebView.CoreWebView2.ContainsFullScreenElementChanged -= JellyfinWebView_ContainsFullScreenElementChanged;
+            WebView.CoreWebView2.ProcessFailed -= CoreWebView2_ProcessFailed;
             WebView.Close();
             WebView = null;
         }
@@ -319,6 +320,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
                 WebView.CoreWebView2.Settings.IsScriptEnabled = true; // Enable JavaScript.
                 WebView.CoreWebView2.Settings.IsGeneralAutofillEnabled = false; // Disable autofill on Xbox as it puts down the virtual keyboard.
                 WebView.CoreWebView2.ContainsFullScreenElementChanged += JellyfinWebView_ContainsFullScreenElementChanged;
+                WebView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 WebView.Language = CultureInfo.CurrentUICulture.Name;
                 _weakPropertyChangedListener = new(this)
                 {
@@ -431,6 +433,49 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         {
             _logger.LogError(e, "Failed to process Fullscreen change");
         }
+    }
+
+    private void CoreWebView2_ProcessFailed(CoreWebView2 sender, CoreWebView2ProcessFailedEventArgs args)
+    {
+        _logger.LogError("WebView2 process failed: {Kind}, Reason: {Reason}", args.ProcessFailedKind, args.Reason);
+
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+        {
+            switch (args.ProcessFailedKind)
+            {
+                case CoreWebView2ProcessFailedKind.BrowserProcessExited:
+                    _logger.LogWarning("Browser process exited, reinitializing WebView2.");
+                    var currentUrl = new Uri(Central.Settings.JellyfinServer);
+                    UninitializeWebView();
+                    IsInProgress = true;
+                    await Task.Delay(1000).ConfigureAwait(true);
+                    await InitialiseWebView(currentUrl).ConfigureAwait(true);
+                    break;
+
+                case CoreWebView2ProcessFailedKind.RenderProcessExited:
+                case CoreWebView2ProcessFailedKind.RenderProcessUnresponsive:
+                    _logger.LogWarning("Render process failed, reloading page.");
+                    try
+                    {
+                        WebView.CoreWebView2.Reload();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to reload after render process failure, reinitializing.");
+                        var fallbackUrl = new Uri(Central.Settings.JellyfinServer);
+                        UninitializeWebView();
+                        IsInProgress = true;
+                        await Task.Delay(1000).ConfigureAwait(true);
+                        await InitialiseWebView(fallbackUrl).ConfigureAwait(true);
+                    }
+
+                    break;
+
+                default:
+                    _logger.LogWarning("Unhandled process failure kind: {Kind}", args.ProcessFailedKind);
+                    break;
+            }
+        });
     }
 
     private void OnDisplayModeChanged(HdmiDisplayInformation sender, object args)
