@@ -32,6 +32,11 @@ namespace Jellyfin;
 /// </summary>
 public sealed partial class App : Application
 {
+    private static readonly HttpClient LogUploadHttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(30)
+    };
+
     private static bool _layoutScalingDisabled;
 
     /// <summary>
@@ -151,16 +156,18 @@ public sealed partial class App : Application
     {
         try
         {
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(30);
-            httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
-            httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
             var loggerProvider = (FileBackedLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
             using var logStream = await loggerProvider.ReadLogfile(logfileName).ConfigureAwait(false);
-            using var response = await httpClient.PostAsync("/ClientLog/Document", new StreamContent(logStream)).ConfigureAwait(false);
+            var uploadUri = new Uri(new Uri(Central.Settings.JellyfinServer), "/ClientLog/Document");
+            using var request = new HttpRequestMessage(HttpMethod.Post, uploadUri)
+            {
+                Content = new StreamContent(logStream)
+            };
+            request.Headers.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
+            using var response = await LogUploadHttpClient.SendAsync(request).ConfigureAwait(false);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
-        catch
+        catch (Exception)
         {
             // really no point in logging here, the log will never show up anywhere.
             return false;

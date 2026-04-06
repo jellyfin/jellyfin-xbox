@@ -15,6 +15,11 @@ public static class ServerCheckUtil
     private const string ApiSystemInfoRoute = "/System/Info/Public";
     private const string ValidProductName = "Jellyfin Server";
 
+    private static readonly HttpClient HttpClient = new HttpClient
+    {
+        Timeout = TimeSpan.FromSeconds(10)
+    };
+
     /// <summary>
     /// Gets or sets a value indicating whether the server version is unsupported in the future by this client version.
     /// </summary>
@@ -30,13 +35,8 @@ public static class ServerCheckUtil
     {
         try
         {
-            using var httpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromSeconds(10)
-            };
-
             using var headRequest = new HttpRequestMessage(HttpMethod.Head, serverUri);
-            using var headResponse = await httpClient.SendAsync(headRequest).ConfigureAwait(true);
+            using var headResponse = await HttpClient.SendAsync(headRequest).ConfigureAwait(true);
             var finalUri = headResponse.RequestMessage.RequestUri;
 
             // Jellyfin redirects to a web root path, which is not a valid base path for the API.
@@ -48,7 +48,7 @@ public static class ServerCheckUtil
 
             var infoUri = new Uri(basePath + ApiSystemInfoRoute);
 
-            using var response = await httpClient.GetAsync(infoUri).ConfigureAwait(true);
+            using var response = await HttpClient.GetAsync(infoUri).ConfigureAwait(true);
 
             if (!response.IsSuccessStatusCode)
             {
