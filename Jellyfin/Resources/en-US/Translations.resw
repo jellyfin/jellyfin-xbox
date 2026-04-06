@@ -156,7 +156,10 @@ You might encounter bugs when running on a PC.</value>
     <value>Connect to Jellyfin Server.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
-    <value>No local servers found.</value>
+    <value>No servers found on your local network. You can still connect manually by entering the server address.</value>
+  </data>
+  <data name="OnBoarding.ConnectionError.Hint.Text" xml:space="preserve">
+    <value>Make sure your Jellyfin server is running and reachable on this network.</value>
   </data>
   <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
     <value>Local Servers.</value>
