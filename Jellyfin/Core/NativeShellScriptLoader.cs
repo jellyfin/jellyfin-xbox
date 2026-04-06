@@ -6,7 +6,6 @@ using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
 using Windows.Graphics.Display.Core;
 using Windows.Storage;
-using Windows.System.Profile;
 
 namespace Jellyfin.Core;
 
@@ -32,15 +31,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
             Wrap(assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title, '\''));
         nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(assembly.GetName().Version.ToString(), '\''));
 
-        var deviceForm = AnalyticsInfo.DeviceForm;
-        if (deviceForm == "Unknown")
-        {
-            deviceForm = AppUtils.GetDeviceFormFactorType().ToString();
-        }
-
-        deviceForm = DeviceFormFactorType.Xbox.ToString();
-
-        nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(deviceForm, '\''));
+        nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(DeviceFormFactorType.Xbox.ToString(), '\''));
 
         var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
         if (hdmiDisplayInformation != null)

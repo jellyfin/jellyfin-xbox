@@ -139,7 +139,16 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
         public IDisposable BeginScope<TState>(TState state)
             where TState : notnull
         {
-            throw new NotImplementedException();
+            return NullScope.Instance;
+        }
+
+        private sealed class NullScope : IDisposable
+        {
+            public static NullScope Instance { get; } = new NullScope();
+
+            public void Dispose()
+            {
+            }
         }
     }
 }

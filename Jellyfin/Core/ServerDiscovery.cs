@@ -142,7 +142,7 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
                         return;
                     default:
                         _logger.LogError(ex, $"Socket Error: {ex.Message}");
-                        throw ex;
+                        throw;
                 }
             }
         }
