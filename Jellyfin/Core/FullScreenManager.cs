@@ -46,7 +46,7 @@ public sealed class FullScreenManager : IFullScreenManager
             foreach (var item in bestDisplayMode)
             {
                 if (await hdmiDisplayInformation
-                    ?.RequestSetCurrentDisplayModeAsync(item))
+                    .RequestSetCurrentDisplayModeAsync(item))
                 {
                     return;
                 }
@@ -154,7 +154,11 @@ public sealed class FullScreenManager : IFullScreenManager
 
     private async Task SetDefaultDisplayModeAsync()
     {
-        await HdmiDisplayInformation.GetForCurrentView()?.SetDefaultDisplayModeAsync();
+        var hdmiInfo = HdmiDisplayInformation.GetForCurrentView();
+        if (hdmiInfo != null)
+        {
+            await hdmiInfo.SetDefaultDisplayModeAsync();
+        }
     }
 
     /// <summary>
