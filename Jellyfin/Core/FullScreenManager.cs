@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
+using Microsoft.Extensions.Logging;
 using Windows.Data.Json;
 using Windows.Graphics.Display.Core;
 using Windows.System.Display;
@@ -21,6 +21,7 @@ public sealed class FullScreenManager : IFullScreenManager
     private readonly ApplicationView _applicationView;
     private readonly Frame _frame;
     private readonly DisplayRequest _displayRequest;
+    private readonly ILogger<FullScreenManager> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
@@ -28,11 +29,13 @@ public sealed class FullScreenManager : IFullScreenManager
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
     /// <param name="frame">The root frame.</param>
     /// <param name="displayRequest">The display Request.</param>
-    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest)
+    /// <param name="logger">The logger.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest, ILogger<FullScreenManager> logger)
     {
         _applicationView = applicationView;
         _frame = frame;
         _displayRequest = displayRequest;
+        _logger = logger;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -48,6 +51,8 @@ public sealed class FullScreenManager : IFullScreenManager
                 if (await hdmiDisplayInformation
                     ?.RequestSetCurrentDisplayModeAsync(item))
                 {
+                    _logger.LogInformation("Switched display mode to {Width}x{Height} @ {RefreshRate}Hz, HDR: {HdrOption}",
+                        item.ResolutionWidthInRawPixels, item.ResolutionHeightInRawPixels, item.RefreshRate, hdmiDisplayHdrOption);
                     return;
                 }
             }
@@ -104,7 +109,7 @@ public sealed class FullScreenManager : IFullScreenManager
 
     private static Func<HdmiDisplayMode, bool> ResolutionMatches(uint width, uint height)
     {
-        return mode => mode.ResolutionWidthInRawPixels == width || mode.ResolutionHeightInRawPixels == height;
+        return mode => mode.ResolutionWidthInRawPixels == width && mode.ResolutionHeightInRawPixels == height;
     }
 
     private static Func<HdmiDisplayMode, bool> MinResolutionMatches(uint width, uint height)
@@ -182,12 +187,12 @@ public sealed class FullScreenManager : IFullScreenManager
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Error during SwitchToBestDisplayMode", ex);
+                    _logger.LogError(ex, "Error during SwitchToBestDisplayMode");
                 }
             }
             else
             {
-                Debug.WriteLine("enableFullscreenAsync called with no args");
+                _logger.LogDebug("enableFullscreenAsync called with no args");
             }
         }
         else

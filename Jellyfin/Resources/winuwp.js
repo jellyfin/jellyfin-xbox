@@ -198,7 +198,9 @@ class UwpXboxHdmiSetupPlugin {
             };
 
             window.chrome.webview.postMessage(JSON.stringify(payload));
-            await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec before continuing with playback to setup display
+            // Allow time for TV to complete HDMI display mode switch before starting playback.
+            // Some displays may take longer; ideally this would wait for a completion signal.
+            await new Promise(resolve => setTimeout(resolve, 3000));
         }
     }
 }
