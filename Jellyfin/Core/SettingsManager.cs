@@ -9,12 +9,12 @@ namespace Jellyfin.Core;
 /// </summary>
 public class SettingsManager : ISettingsManager
 {
-    private string _containerSettings = "APPSETTINGS";
-    private string _settingsServer = "SERVER";
-    private string _settingsServerVersion = "SERVER_VERSION";
-    private string _autoResolution = "AUTO_RESOLUTION";
-    private string _autoRefreshRate = "AUTO_REFRESH_RATE";
-    private string _forceEnableTvMode = "FORCE_TV_MODE";
+    private const string ContainerSettingsKey = "APPSETTINGS";
+    private const string SettingsServerKey = "SERVER";
+    private const string SettingsServerVersionKey = "SERVER_VERSION";
+    private const string AutoResolutionKey = "AUTO_RESOLUTION";
+    private const string AutoRefreshRateKey = "AUTO_REFRESH_RATE";
+    private const string ForceEnableTvModeKey = "FORCE_TV_MODE";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -22,12 +22,12 @@ public class SettingsManager : ISettingsManager
     {
         get
         {
-            if (!LocalSettings.Containers.ContainsKey(_containerSettings))
+            if (!LocalSettings.Containers.ContainsKey(ContainerSettingsKey))
             {
-                LocalSettings.CreateContainer(_containerSettings, ApplicationDataCreateDisposition.Always);
+                LocalSettings.CreateContainer(ContainerSettingsKey, ApplicationDataCreateDisposition.Always);
             }
 
-            return LocalSettings.Containers[_containerSettings];
+            return LocalSettings.Containers[ContainerSettingsKey];
         }
     }
 
@@ -41,8 +41,8 @@ public class SettingsManager : ISettingsManager
     /// </summary>
     public string JellyfinServer
     {
-        get => GetProperty<string>(_settingsServer);
-        set => SetProperty(_settingsServer, value);
+        get => GetProperty<string>(SettingsServerKey);
+        set => SetProperty(SettingsServerKey, value);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class SettingsManager : ISettingsManager
     {
         get
         {
-            var versionString = GetProperty<string>(_settingsServerVersion);
+            var versionString = GetProperty<string>(SettingsServerVersionKey);
             if (Version.TryParse(versionString, out var version))
             {
                 return version;
@@ -60,7 +60,7 @@ public class SettingsManager : ISettingsManager
 
             return null;
         }
-        set => SetProperty(_settingsServerVersion, value.ToString());
+        set => SetProperty(SettingsServerVersionKey, value.ToString());
     }
 
     /// <summary>
@@ -78,8 +78,8 @@ public class SettingsManager : ISettingsManager
     /// </summary>
     public bool AutoResolution
     {
-        get => GetProperty<bool>(_autoResolution);
-        set => SetProperty(_autoResolution, value);
+        get => GetProperty<bool>(AutoResolutionKey);
+        set => SetProperty(AutoResolutionKey, value);
     }
 
     /// <summary>
@@ -87,8 +87,8 @@ public class SettingsManager : ISettingsManager
     /// </summary>
     public bool AutoRefreshRate
     {
-        get => GetProperty<bool>(_autoRefreshRate);
-        set => SetProperty(_autoRefreshRate, value);
+        get => GetProperty<bool>(AutoRefreshRateKey);
+        set => SetProperty(AutoRefreshRateKey, value);
     }
 
     /// <summary>
@@ -96,8 +96,8 @@ public class SettingsManager : ISettingsManager
     /// </summary>
     public bool ForceEnableTvMode
     {
-        get => GetProperty<bool>(_forceEnableTvMode);
-        set => SetProperty(_forceEnableTvMode, value);
+        get => GetProperty<bool>(ForceEnableTvModeKey);
+        set => SetProperty(ForceEnableTvModeKey, value);
     }
 
     private void SetProperty(string propertyName, object value)

@@ -23,6 +23,9 @@ public sealed partial class MainPage : Page
     /// <inheritdoc />
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        ((Content as JellyfinWebView).DataContext as IDisposable).Dispose();
+        if (Content is JellyfinWebView webView && webView.DataContext is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }

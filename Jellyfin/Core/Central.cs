@@ -19,7 +19,7 @@ public static class Central
     public static Version MinimumSupportedServerVersion { get; } = new(10, 11, 0);
 
     /// <summary>
-    /// Gets the minimum supported Jellyfin server version supported on this client.
+    /// Gets the minimum Jellyfin server version that will be supported by the next client release.
     /// </summary>
     public static Version MinimumFutureSupportedServerVersion { get; } = new(10, 11, 0);
 

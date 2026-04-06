@@ -114,6 +114,9 @@
         },
 
         enableFullscreen: function (videoInfo) {
+            // Intentionally empty: HDMI display mode switching is handled by
+            // UwpXboxHdmiSetupPlugin.intercept() which sends the enableFullscreen
+            // message directly via postMessage with video stream metadata.
         },
 
         disableFullscreen: function () {

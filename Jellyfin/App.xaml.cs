@@ -160,7 +160,7 @@ public sealed partial class App : Application
             using var response = await httpClient.PostAsync("/ClientLog/Document", new StreamContent(logStream)).ConfigureAwait(false);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
-        catch
+        catch (Exception)
         {
             // really no point in logging here, the log will never show up anywhere.
             return false;
