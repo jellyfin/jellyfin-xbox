@@ -101,7 +101,7 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
         }
         catch (SocketException ex)
         {
-            _logger.LogError(ex, $"Broadcast errored with message: {ex.Message}");
+            _logger.LogError(ex, "Broadcast error.");
         }
     }
 
@@ -119,7 +119,7 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
                 }
 
                 var text = Encoding.ASCII.GetString(dataReceived);
-                _logger.LogDebug($"Server discovery Received: {text}");
+                _logger.LogDebug("Server discovery received: {Text}", text);
 
                 var discoveredServer = JsonSerializer.Deserialize<DiscoveredServer>(text);
                 OnDiscover?.Invoke(discoveredServer);
@@ -134,14 +134,14 @@ public sealed class ServerDiscovery : IDisposable, IServerDiscovery
                 switch (ex.SocketErrorCode)
                 {
                     case SocketError.TimedOut:
-                        _logger.LogDebug(ex, $"Socket Timed out");
+                        _logger.LogDebug(ex, "Socket timed out.");
                         break;
                     case SocketError.Interrupted:
                         // Socket disposed
                         _logger.LogError(ex, "Socket interrupted.");
                         return;
                     default:
-                        _logger.LogError(ex, $"Socket Error: {ex.Message}");
+                        _logger.LogError(ex, "Socket error.");
                         throw ex;
                 }
             }

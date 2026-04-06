@@ -48,81 +48,75 @@ public class MessageHandler : IMessageHandler
         var eventType = json.GetNamedString("type");
         var args = json.GetNamedObject("args");
 
-        if (eventType == "enableFullscreen")
+        switch (eventType)
         {
-            _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);
-            });
-        }
-        else if (eventType == "disableFullscreen")
-        {
-            await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
-        }
-        else if (eventType == "selectServer")
-        {
-            Central.Settings.JellyfinServer = null;
-            _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                _frame.Navigate(typeof(OnBoarding));
-            });
-        }
-        else if (eventType == "openClientSettings")
-        {
-            _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                var settingsPopup = new Popup()
+            case "enableFullscreen":
+                _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    HorizontalOffset = 0,
-                    VerticalOffset = 0,
-                    Width = Window.Current.Bounds.Width,
-                    Height = Window.Current.Bounds.Height,
-                };
-                settingsPopup.Child = new Settings()
+                    await _fullScreenManager.EnableFullscreenAsync(args).ConfigureAwait(true);
+                });
+                break;
+            case "disableFullscreen":
+                await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
+                break;
+            case "selectServer":
+                Central.Settings.JellyfinServer = null;
+                _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    ParentPopup = settingsPopup,
-                    Width = Window.Current.Bounds.Width,
-                    Height = Window.Current.Bounds.Height,
-                };
-                settingsPopup.IsOpen = true;
-                (settingsPopup.Child as Control).Focus(FocusState.Programmatic);
-            });
-        }
-        else if (eventType == "exit")
-        {
-            Exit();
-        }
-        else if (eventType == "loaded")
-        {
-            _messenger.Send(new WebMessage(eventType, args));
-        }
-        else if (eventType == "log")
-        {
-            var level = args.GetNamedString("level");
-            switch (level)
-            {
-                case "debug":
-                    _webviewLogger.LogDebug(args.GetNamedValue("messages").ToString());
-                    break;
-                case "error":
-                    _webviewLogger.LogError(args.GetNamedValue("messages").ToString());
-                    break;
-                case "warn":
-                    _webviewLogger.LogWarning(args.GetNamedValue("messages").ToString());
-                    break;
-                case "info" or "log":
-                    _webviewLogger.LogInformation(args.GetNamedValue("messages").ToString());
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            Debug.WriteLine($"Unexpected JSON message: {eventType}");
-        }
+                    _frame.Navigate(typeof(OnBoarding));
+                });
+                break;
+            case "openClientSettings":
+                _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    var settingsPopup = new Popup()
+                    {
+                        HorizontalOffset = 0,
+                        VerticalOffset = 0,
+                        Width = Window.Current.Bounds.Width,
+                        Height = Window.Current.Bounds.Height,
+                    };
+                    settingsPopup.Child = new Settings()
+                    {
+                        ParentPopup = settingsPopup,
+                        Width = Window.Current.Bounds.Width,
+                        Height = Window.Current.Bounds.Height,
+                    };
+                    settingsPopup.IsOpen = true;
+                    (settingsPopup.Child as Control).Focus(FocusState.Programmatic);
+                });
+                break;
+            case "exit":
+                Exit();
+                break;
+            case "loaded":
+                _messenger.Send(new WebMessage(eventType, args));
+                break;
+            case "log":
+                var level = args.GetNamedString("level");
+                switch (level)
+                {
+                    case "debug":
+                        _webviewLogger.LogDebug(args.GetNamedValue("messages").ToString());
+                        break;
+                    case "error":
+                        _webviewLogger.LogError(args.GetNamedValue("messages").ToString());
+                        break;
+                    case "warn":
+                        _webviewLogger.LogWarning(args.GetNamedValue("messages").ToString());
+                        break;
+                    case "info" or "log":
+                        _webviewLogger.LogInformation(args.GetNamedValue("messages").ToString());
+                        break;
+                    default:
+                        break;
+                }
 
-        await Task.CompletedTask.ConfigureAwait(true);
+                break;
+            default:
+                Debug.WriteLine($"Unexpected JSON message: {eventType}");
+                break;
+        }
     }
 
     private void Exit()

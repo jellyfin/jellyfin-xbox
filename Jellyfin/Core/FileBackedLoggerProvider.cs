@@ -19,7 +19,7 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
     public FileBackedLoggerProvider()
     {
-        _localLogFilePath = $"jellyfin-for-xbox-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+        _localLogFilePath = $"jellyfin-for-xbox-{DateTime.UtcNow:yyyy-MM-dd-HH-mm-ss}";
         _logPipe = Channel.CreateUnbounded<string>(
             new UnboundedChannelOptions
             {
@@ -126,7 +126,7 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             }
 
             var message = formatter(state, exception);
-            var logEntry = $"{DateTime.Now:s} [{logLevel}] {message}\n";
+            var logEntry = $"{DateTime.UtcNow:s} [{logLevel}] {message}\n";
 
             _appLoggerProvider._logPipe.Writer.TryWrite(logEntry);
         }
