@@ -97,6 +97,7 @@
                 if (supportsDolbyVision != null) {
                     options.supportsDolbyVision = supportsDolbyVision;
                 }
+                options.supportsHdr10Plus = false;
                 if (xboxSeries) {
                     options.maxVideoWidth = 3840;
                 }

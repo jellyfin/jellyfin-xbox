@@ -82,6 +82,8 @@ public sealed class FullScreenManager : IFullScreenManager
             case "HDR":
             case "HDR10":
             case "HDR10Plus":
+                // Xbox does not support HDR10+ dynamic metadata; falls back to static HDR10 (SMPTE 2084)
+                return hdrOtherwiseSdr;
             case "HLG":
                 return hdrOtherwiseSdr;
             case "DOVIWithSDR":
