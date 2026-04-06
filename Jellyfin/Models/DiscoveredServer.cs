@@ -3,7 +3,7 @@ using System;
 namespace Jellyfin.Models;
 
 /// <summary>
-/// Reperesents the server metadata provided by JellyfinServer after autodiscover.
+/// Represents the server metadata provided by JellyfinServer after autodiscover.
 /// </summary>
 public class DiscoveredServer : IComparable<DiscoveredServer>, IEquatable<DiscoveredServer>
 {
@@ -30,12 +30,34 @@ public class DiscoveredServer : IComparable<DiscoveredServer>, IEquatable<Discov
     /// <inheritdoc/>
     public int CompareTo(DiscoveredServer other)
     {
-        return Id.CompareTo(other.Id);
+        if (other is null)
+        {
+            return 1;
+        }
+
+        return string.Compare(Id, other.Id, StringComparison.Ordinal);
     }
 
     /// <inheritdoc/>
     public bool Equals(DiscoveredServer other)
     {
-        return Id.Equals(other.Id);
+        if (other is null)
+        {
+            return false;
+        }
+
+        return string.Equals(Id, other.Id, StringComparison.Ordinal);
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as DiscoveredServer);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Id != null ? StringComparer.Ordinal.GetHashCode(Id) : 0;
     }
 }
