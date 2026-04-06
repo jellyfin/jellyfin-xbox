@@ -209,7 +209,7 @@
                             <TextBlock Text="{Binding ResolutionWidthInRawPixels}" />
                             <TextBlock Text="-" Margin="5,0,5,0" />
                             <TextBlock Text="{Binding RefreshRate}" />
-                            <TextBlock Text="Fps" Margin="5,0,5,0" />
+                            <TextBlock Text="{localize:Localize Key=Settings.Fps.Label}" Margin="5,0,5,0" />
                         </StackPanel>
                     </DataTemplate>
                 </Grid.Resources>
@@ -241,7 +241,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
-                    Text="Display: " />
+                    Text="{localize:Localize Key=Settings.Display.Label}" />
                 <StackPanel
                     Orientation="Horizontal"
                     Grid.Row="1"
@@ -253,7 +253,7 @@
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
-                    Text="Color Space: " />
+                    Text="{localize:Localize Key=Settings.ColorSpace.Label}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="1"
@@ -262,7 +262,7 @@
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
-                    Text="HDR 10: " />
+                    Text="{localize:Localize Key=Settings.Hdr10.Label}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="1"
@@ -271,7 +271,7 @@
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
-                    Text="DV Low Latency: " />
+                    Text="{localize:Localize Key=Settings.DolbyVisionLowLatency.Label}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="1"
@@ -280,7 +280,7 @@
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
-                    Text="SMTPE: " />
+                    Text="{localize:Localize Key=Settings.Smpte.Label}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="1"
@@ -289,7 +289,7 @@
                 <TextBlock
                     Grid.Row="6"
                     Grid.Column="0"
-                    Text="Available Display: " />
+                    Text="{localize:Localize Key=Settings.AvailableDisplay.Label}" />
                 <ItemsControl
                     Grid.Row="6"
                     Grid.Column="1"

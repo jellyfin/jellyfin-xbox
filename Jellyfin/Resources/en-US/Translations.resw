@@ -254,4 +254,34 @@ You might encounter bugs when running on a PC.</value>
     <data name="Settings.Logs.Title" xml:space="preserve">
     <value>Logfiles</value>
   </data>
+  <data name="Settings.Display.Label" xml:space="preserve">
+    <value>Display:</value>
+  </data>
+  <data name="Settings.ColorSpace.Label" xml:space="preserve">
+    <value>Color Space:</value>
+  </data>
+  <data name="Settings.Hdr10.Label" xml:space="preserve">
+    <value>HDR 10:</value>
+  </data>
+  <data name="Settings.DolbyVisionLowLatency.Label" xml:space="preserve">
+    <value>DV Low Latency:</value>
+  </data>
+  <data name="Settings.Smpte.Label" xml:space="preserve">
+    <value>SMPTE:</value>
+  </data>
+  <data name="Settings.AvailableDisplay.Label" xml:space="preserve">
+    <value>Available Display:</value>
+  </data>
+  <data name="Settings.Fps.Label" xml:space="preserve">
+    <value>Fps</value>
+  </data>
+  <data name="WebView.DeprecationNotice.Line1" xml:space="preserve">
+    <value>This version of Jellyfin-for-Xbox will soon be deprecated.</value>
+  </data>
+  <data name="WebView.DeprecationNotice.Line2" xml:space="preserve">
+    <value>Please update the Jellyfin Server to 10.11 when it's released.</value>
+  </data>
+  <data name="WebView.DeprecationNotice.Line3" xml:space="preserve">
+    <value>Shortly after the official 10.11 release the next version of this client will not be compatible.</value>
+  </data>
 </root>
