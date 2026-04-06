@@ -85,12 +85,19 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             _logger.LogInformation("Server is validated proceed to initialise webview.");
             _ = Task.Run(async () =>
             {
-                await Task.Delay(500).ConfigureAwait(true); // this delay is nessesary to have the UI rendered at least before allowing to focus it
-                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                try
                 {
-                    await Task.Yield();
-                    await InitialiseWebView().ConfigureAwait(true);
-                });
+                    await Task.Delay(500).ConfigureAwait(true);
+                    _ = _dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+                    {
+                        await Task.Yield();
+                        await InitialiseWebView().ConfigureAwait(true);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to initialize WebView2 from constructor.");
+                }
             });
         }
         else
@@ -244,13 +251,15 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
         WebView.Source = uri;
 
-        _ = Task.Delay(TimeSpan.FromSeconds(8)).ContinueWith((c) =>
-        {
-            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        _ = Task.Delay(TimeSpan.FromSeconds(8)).ContinueWith(
+            _ =>
             {
-                IsInProgress = false;
-            });
-        });
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    IsInProgress = false;
+                });
+            },
+            TaskScheduler.Default);
     }
 
     private async Task InjectNativeShellScript()

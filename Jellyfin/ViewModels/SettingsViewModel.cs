@@ -63,22 +63,29 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
 
         Task.Run(async () =>
         {
-            if (App.Current is App currentApp)
+            try
             {
-                var loggerProvider = (FileBackedLoggerProvider)currentApp.Services.GetRequiredService<ILoggerProvider>();
-                var logfiles = await loggerProvider.GetLogfiles().ConfigureAwait(false);
-                _ = _coreDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                if (App.Current is App currentApp)
                 {
-                    var orderedLogs = logfiles.OrderByDescending(e => e.DateCreated).ToArray();
-                    foreach (var log in orderedLogs)
+                    var loggerProvider = (FileBackedLoggerProvider)currentApp.Services.GetRequiredService<ILoggerProvider>();
+                    var logfiles = await loggerProvider.GetLogfiles().ConfigureAwait(false);
+                    _ = _coreDispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                     {
-                        Logs.Add(new LogfileViewModel(log)
+                        var orderedLogs = logfiles.OrderByDescending(e => e.DateCreated).ToArray();
+                        foreach (var log in orderedLogs)
                         {
-                            UploadCallback = UploadLogfileCommand.Execute,
-                            IsLatestLogfile = orderedLogs[0] == log
-                        });
-                    }
-                });
+                            Logs.Add(new LogfileViewModel(log)
+                            {
+                                UploadCallback = UploadLogfileCommand.Execute,
+                                IsLatestLogfile = orderedLogs[0] == log
+                            });
+                        }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e);
             }
         });
 
