@@ -189,4 +189,10 @@ Des bugs peuvent se produire sur PC.</value>
   <data name="Settings.Version.Text" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Journal actuel</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>Fichiers journaux</value>
+  </data>
 </root>
