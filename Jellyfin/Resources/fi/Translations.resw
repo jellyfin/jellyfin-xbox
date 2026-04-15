@@ -76,4 +76,123 @@
   <data name="Common.Yes" xml:space="preserve">
     <value>Kyllä</value>
   </data>
+  <data name="Dialog.Crash.Body" xml:space="preserve">
+    <value>Sovellus kohtasi odottamattoman virheen. Haluatko lähettää lokitiedoston palvelimelle?</value>
+  </data>
+  <data name="Dialog.Crash.Only.Body" xml:space="preserve">
+    <value>Sovellus kohtasi odottamattoman ongelman</value>
+  </data>
+  <data name="Dialog.Crash.Title" xml:space="preserve">
+    <value>Virhe</value>
+  </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Layout skaalausta ei voitu poistaa. Sovellis ei ole suunniteltu suorittettavaksi PC:llä vain pelkästään Xbox laitteilla
+
+Voit kohdata virheitä suorittaessasi sovellusta PC:llä.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>Yhdistä</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Yhdistä Jellyfin Palvelimelle.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>Paikallisia palvelimia ei löytynyt.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>Paikalliset palvelimet.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Yritetty yhdistää:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>Yritetty yhdistää:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>esim: 192.168.1.100:8096 tai demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>Tuntematon virhe palvelimen vastauksen vahvistamisessa.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Poikkeus palvelimen vastauksen käsittelyssä: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>Vaikuttaisi että antamassasi nettiosoitteessa ei ole Jellyfin palvelinta.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>TuoteNimi '{0}' ei vastaa odotettua '{1}'.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>Virheellinen palvelimen version formatointi: '{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>Palvelimen vanhin tuettu versio on {0}, mutta Palvelin on {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>Yhdistäminen palvelimeen "{0}". Tilanne koodi: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>Lataa lokitiedosto Palvelimelle</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>Virhe ladatessa nykyistä lokitiedostoa palvelimelle. Yritä uudelleen.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>Nykyinen lokitiedosto on ladattu Jellyfin palvelimellesi.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Aseta näytön virkistystaajuus median virkistystaajuuteen</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>Automaattinen naytön virkistystaajuuden asetus ei ole tuettu tällä laitteella.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>Aseta näytön resoluutio median resoluutioon</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>Näytön resoluutio ei ole tuettu tällä laitteella.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>Palvelimeen ei pystytty yhdistämään "{0}". Virhe:
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>Syötä palvelimen osoite.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>Pyyntö aikakatkaistu. Tarkista nettiyhteytesi ja yritä uudelleen.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>WebView ei suostu avautumaan.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Navigointi epäonnistui. Syy:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Jellyfin palvelin {0}  ei ole tällä hetkellä saatavilla: 
+
+ {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Kieli </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Jellyfin Xboxille Sovellus Versio:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Tervetuloa Jellyfin Sovellukseen</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Versio</value>
+  </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Nykyinen Loki</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>Loki tiedostot</value>
+  </data>
 </root>
