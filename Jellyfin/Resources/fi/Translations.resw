@@ -181,7 +181,7 @@ Voit kohdata virheitä suorittaessasi sovellusta PC:llä.</value>
     <value>Kieli </value>
   </data>
   <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
-    <value>Jellyfin Xboxille Sovellus Versio:</value>
+    <value>Jellyfin Xboxille sovellusversio:</value>
   </data>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
     <value>Tervetuloa Jellyfin Sovellukseen</value>
@@ -190,9 +190,9 @@ Voit kohdata virheitä suorittaessasi sovellusta PC:llä.</value>
     <value>Versio</value>
   </data>
   <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
-    <value>Nykyinen Loki</value>
+    <value>Nykyinen loki</value>
   </data>
   <data name="Settings.Logs.Title" xml:space="preserve">
-    <value>Loki tiedostot</value>
+    <value>Lokitiedostot</value>
   </data>
 </root>
