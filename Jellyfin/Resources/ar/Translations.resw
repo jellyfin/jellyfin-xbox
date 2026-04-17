@@ -91,7 +91,7 @@
 قد تواجه أخطاء برمجية عند التشغيل على الحاسوب.</value>
   </data>
   <data name="OnBoarding.Connect.Text" xml:space="preserve">
-    <value>توصيل</value>
+    <value>اتصال</value>
   </data>
   <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
     <value>توصيل لخادم Jellyfin.</value>
