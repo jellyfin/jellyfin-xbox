@@ -85,4 +85,114 @@
   <data name="Dialog.Crash.Title" xml:space="preserve">
     <value>错误</value>
   </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>无法禁用布局缩放。此应用程序并非设计用于在台式电脑上运行，而只能在 Xbox 设备上运行。 
+
+在电脑上运行此程序时，你可能会遇到错误。</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>连接到 Jellyfin 服务器。</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>未找到本地服务器。</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>本地服务器。</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>尝试连接到：</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>尝试连接到：</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>例如：192.168.1.100:8096 或 demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>验证服务器响应时发生未知错误。</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>解析服务器响应时发生异常：{0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>请求的 URL 似乎并未运行 Jellyfin 服务器。</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>产品名称“{0}”与预期的“{1}”不匹配。</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>无效的服务器版本格式：'{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>最低支持的服务器版本是 {0}，但当前服务器运行的是 {1}。</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>无法连接到“{0}”处的服务器。状态代码：{1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>上传日志文件</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>上传当前日志文件时出错。请重试。</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>当前日志文件已上传到您的 Jellyfin 服务器。</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>将显示刷新率设置为媒体刷新率</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>此设备不支持自动显示刷新率。</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>将显示分辨率设置为媒体分辨率</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>此设备不支持该显示分辨率。</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>无法连接到“{0}”处的服务器。错误：
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>请输入服务器地址。</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>请求超时。请检查您的网络连接并重试。</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>无法初始化 WebView。</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>页面加载失败。原因：
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Jellyfin 服务器 {0} 当前不可用： 
+
+ {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>语言： </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Jellyfin Xbox 应用版本：</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>欢迎使用 Jellyfin 应用程序</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>当前日志</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>日志文件</value>
+  </data>
 </root>
