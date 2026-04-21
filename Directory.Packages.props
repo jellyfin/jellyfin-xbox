@@ -13,7 +13,7 @@
     <PackageVersion Include="Microsoft.UI.Xaml" Version="2.8.7"/>
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3856.49"/>
     <PackageVersion Include="System.Text.Json" Version="10.0.5" />
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="CommunityToolkit.Uwp.Triggers" Version="8.2.251219" />
     <PackageVersion Include="CommunityToolkit.Uwp.Helpers" Version="8.2.251219" />
     <PackageVersion Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.251219" />
