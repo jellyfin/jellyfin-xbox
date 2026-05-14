@@ -85,4 +85,111 @@
   <data name="Dialog.Crash.Title" xml:space="preserve">
     <value>Errore</value>
   </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Non è stato possibile disabilitare lo scaling dell'interfaccia. Questa applicazione non è progettata per funzionare su PC ma solo su dispositivi XBOX. 
+
+Potresti incontrare problemi inaspettati se utilizzerai l'applicazione su PC.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>Connetti</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Connetti al Server Jellyfin</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>Nessun server locale trovato.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>Server locali.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Tentativo di connessione a:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>Provo a collegarmi a:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>Es: 192.168.1.100:8096 oppure demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>Errore sconosciuto durante la validazione della risposta ricevuta dal server.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Errore durante il parse della risposta ricevuta dal server: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>Sembra che l'Url richiesto non contenga un istanza di Jellyfin.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>Il prodotto '{0}' non corrisponde all'atteso '{1}'.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>Formato della versione server non valida: '{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>La minima versione del server supportata è {0}, ma il server ha la versione {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>Impossibile connettersi al server a "{0}". Status code: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>Carca file Log</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>Errore durante il caricamento del file di log. Per favore riprova.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>Il file di Log è stato caricato sul tuo server Jellyfin.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Imposta il refresh rate dello schermo alla stessa frequenza del contenuto</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>Il refresh rate automatico dello schermo non è supportato su questo dispositivo.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>Imposta la risoluzione dello schermo come la risoluzione del contenuto</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>La risoluzione dello schermo non è supportata su questo dispositivo.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>Impossibile raggiungere il server a "{0}". Errore:
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>Inserisci l'indirizzo del server.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>La richiesta è scaduta. Controlla la connessione alla rete e riprova.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>Impossibile inizializzare la WebView.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Navigazione fallita. Motivo:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Il server Jellyfin {0}  non è al momento disponibile:
+
+ {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Lingua: </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Jellyfin per Xbox Versione:</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Versione</value>
+  </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Log attuali</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>File di Log</value>
+  </data>
 </root>
