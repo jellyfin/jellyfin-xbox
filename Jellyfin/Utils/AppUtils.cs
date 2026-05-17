@@ -1,3 +1,4 @@
+using System;
 using Windows.System.Profile;
 
 namespace Jellyfin.Utils;
@@ -23,6 +24,18 @@ public class AppUtils
             }
 
             return _isXbox.Value;
+        }
+    }
+
+    /// <summary>
+    /// Gets the current applications version.
+    /// </summary>
+    public static Version AppVersion
+    {
+        get
+        {
+            var version = Windows.ApplicationModel.Package.Current.Id.Version;
+            return new Version(version.Major, version.Minor, version.Build, version.Revision);
         }
     }
 

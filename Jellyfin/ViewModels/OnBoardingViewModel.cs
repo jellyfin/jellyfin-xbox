@@ -58,7 +58,13 @@ public sealed class OnBoardingViewModel : ObservableObject, IDisposable
     /// <summary>
     /// Gets the version number of the currently executing application assembly.
     /// </summary>
-    public string AppVersion { get => Assembly.GetCallingAssembly().GetName().Version.ToString(); }
+    public string AppVersion
+    {
+        get
+        {
+            return AppUtils.AppVersion.ToString();
+        }
+    }
 
     /// <summary>
     /// Gets or Sets a value indicating whether the connection to the server is in progress.
