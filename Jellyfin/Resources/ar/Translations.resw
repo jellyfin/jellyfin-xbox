@@ -124,7 +124,7 @@
     <value>اصدار</value>
   </data>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
-    <value>مرحبا بكم في تطبيق Jellyfin</value>
+    <value>مرحبا بكم في Jellyfin</value>
   </data>
   <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
     <value>اصدار تطبيق Jellyfin لـXbox:</value>
