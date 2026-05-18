@@ -78,6 +78,7 @@ public class MessageHandler : IMessageHandler
                     Width = Window.Current.Bounds.Width,
                     Height = Window.Current.Bounds.Height,
                 };
+
                 settingsPopup.Child = new Settings()
                 {
                     ParentPopup = settingsPopup,

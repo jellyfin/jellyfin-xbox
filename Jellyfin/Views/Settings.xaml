@@ -12,6 +12,8 @@
     xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions" xmlns:local="using:Jellyfin.Views"
     Background="{StaticResource Color0}"
     mc:Ignorable="d"
+    MinHeight="700"
+    MinWidth="1000"
     x:Name="SettingsView"
     d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
 
@@ -31,7 +33,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{StaticResource Color0}">
-        <Grid VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid VerticalAlignment="Top" Height="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -90,7 +95,7 @@
                     </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="45"/>
-                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock
