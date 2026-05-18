@@ -254,4 +254,7 @@ You might encounter bugs when running on a PC.</value>
     <data name="Settings.Logs.Title" xml:space="preserve">
     <value>Logfiles</value>
   </data>
+    <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>Force TV Mode</value>
+  </data>
 </root>

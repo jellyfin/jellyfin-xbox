@@ -38,7 +38,7 @@
         </Grid.RowDefinitions>
         <Grid VerticalAlignment="Top" Height="Auto">
             <Grid.RowDefinitions>
-                <RowDefinition />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -81,8 +81,8 @@
                                             Margin="8,0,0,0">
                                         <TextBlock Text="{localize:Localize Key=Settings.UploadLogfile.Latest.Text}"
                                                      VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center" />  
-                                    </Border>                                    
+                                                     HorizontalAlignment="Center" />
+                                    </Border>
                                 </StackPanel>
                                 <Button Content="{localize:Localize Key=Settings.UploadLogfile.Text}"
                                         HorizontalAlignment="Right"
@@ -126,11 +126,12 @@
                     Grid.Row="0"                    
                     HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="35"/>
                         <RowDefinition />
+                        <RowDefinition MinHeight="35"/>
                         <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition MinHeight="45"/>
+                        <RowDefinition MinHeight="35"/>
+                        <RowDefinition MinHeight="55"/>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
@@ -151,7 +152,6 @@
                                Foreground="{StaticResource DangerColor}"
                                Text="{localize:Localize Key=Settings.Values.AutoRefresh.Unsupported.Text}"/>
 
-
                     <CheckBox
                         IsChecked="{Binding AutoResolution, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         IsEnabled="{Binding CurrentHdmiDisplayInformation, Converter={StaticResource NullToBooleanInverseConverter}}"
@@ -163,8 +163,15 @@
                                FontSize="{StaticResource FontM}"
                                Text="{localize:Localize Key=Settings.Values.AutoResolution.Unsupported.Text}"
                                Foreground="{StaticResource DangerColor}"/>
+
+                    <CheckBox
+                        IsChecked="{Binding ForceEnableTvMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Content="{localize:Localize Key=Settings.Values.ForceEnableTV.Text}"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="4" />
+                    
                     <Grid   Grid.Column="0"
-                            Grid.Row="4"
+                            Grid.Row="5"                            
                             Margin="0,5,0,0"
                             HorizontalAlignment="Stretch">
                         <local:CultureSelector 
@@ -175,7 +182,7 @@
                 </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
-                    Margin="0,35,0,0"
+                    Margin="0,0,0,0"
                     Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
