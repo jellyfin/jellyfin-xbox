@@ -11,6 +11,8 @@
     xmlns:winui="using:CommunityToolkit.WinUI"
     xmlns:behaviors="using:Jellyfin.Behaviors"
     xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions"
+    MinHeight="700"
+    MinWidth="1000"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModels:OnBoardingViewModel}">
 

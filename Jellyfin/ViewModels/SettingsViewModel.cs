@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
+using Jellyfin.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -90,7 +91,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     /// <summary>
     /// Gets the version number of the currently executing application assembly.
     /// </summary>
-    public string AppVersion { get => Assembly.GetCallingAssembly().GetName().Version.ToString(); }
+    public string AppVersion { get => AppUtils.AppVersion.ToString(); }
 
     /// <summary>
     /// Gets or sets a value indicating whether to force enable TV mode.

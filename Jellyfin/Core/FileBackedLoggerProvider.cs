@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using Jellyfin.Utils;
 using Microsoft.Extensions.Logging;
 using Windows.Storage;
 using Windows.System.Profile;
@@ -56,7 +57,7 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
         LogStream = await logs.OpenStreamForWriteAsync(_localLogFilePath, Windows.Storage.CreationCollisionOption.OpenIfExists).ConfigureAwait(true);
 
         var logBuilder = new StringBuilder();
-        logBuilder.AppendLine($"Jellyfin for Xbox Client version {Assembly.GetCallingAssembly().GetName().Version}");
+        logBuilder.AppendLine($"Jellyfin for Xbox Client version {AppUtils.AppVersion}");
         logBuilder.AppendLine($"UWP version: {AnalyticsInfo.VersionInfo.DeviceFamily} {AnalyticsInfo.VersionInfo.DeviceFamilyVersion}");
         logBuilder.AppendLine($"Device info: {AnalyticsInfo.DeviceForm}");
 
