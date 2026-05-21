@@ -176,4 +176,9 @@
 
 {1}</value>
   </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Kan de schaalverdeling niet uitschakelen. Deze applicatie is ontworpen voor een Xbox, geen desktop PC. 
+
+Je kan bugs tegenkomen bij het draaien op een desktop PC.</value>
+  </data>
 </root>
