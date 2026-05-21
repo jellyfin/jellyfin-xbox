@@ -189,4 +189,10 @@ Podczas uruchamiania na komputerze mogą wystąpić błędy.</value>
   <data name="Settings.Version.Text" xml:space="preserve">
     <value>Wersja</value>
   </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Bieżący dziennik</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>Pliki dziennika</value>
+  </data>
 </root>
