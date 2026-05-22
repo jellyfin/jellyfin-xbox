@@ -195,4 +195,7 @@
   <data name="Settings.Logs.Title" xml:space="preserve">
     <value>ملفات السجل</value>
   </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>فرض نمط التلفاز</value>
+  </data>
 </root>
