@@ -42,7 +42,7 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
-        _layoutScalingDisabled = true;
+        _layoutScalingDisabled = ApplicationViewScaling.TrySetDisableLayoutScaling(true);
 
         DisplayRequest = new();
 
