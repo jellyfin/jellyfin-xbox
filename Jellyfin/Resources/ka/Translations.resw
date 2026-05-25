@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"></xsd:import>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,4 +58,144 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="App.Name" xml:space="preserve">
+    <value>Jellyfin-Xbox-ისთვის</value>
+  </data>
+  <data name="Common.Abort" xml:space="preserve">
+    <value>შეწყვეტა</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>არა</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>დიახ</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>შენახვა</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>დიახ</value>
+  </data>
+  <data name="Dialog.Crash.Title" xml:space="preserve">
+    <value>შეცდომა</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>დაკავშირება</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>ენა: </value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>ვერსია</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>ჟურნალის ფაილები</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>ლოკალური სერვერები.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>ჟურნალის ფაილის ატვირთვა</value>
+  </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>მიმდინარე ჟურნალი</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>მოგესალმებათ Jellyfin</value>
+  </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>ნაძალადევი ტელევიზორის რეჟიმი</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Jellyfin-ის სერვერთან დაკავშირება.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>ლოკალური სერვერები აღმოჩენილი არაა.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>ვცადე, დავკავშირებოდი სერვერს:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>ვცადე, დავკავშირებოდი სერვერს:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>მაგ: 192.168.1.100:8096 ან demo.jellyfin.org</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>WebView-ის ინიციალიზაციის შეცდომა.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>ნავიგაციის შეცდომა. მიზეზი:
+
+{0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>უცნობი შეცდომა სერვერის პასუხის გადამოწმებისას.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>გამონაკლისი სერვერის პასუხის დამუშავებისას: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>არასწორი სერვერის ვერსიის ფორმატი: '{0}'</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>შეიყვანეთ სერვერის მისამართი.</value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>აპლიკაციის Jellyfin for Xbox ვერსია:</value>
+  </data>
+  <data name="Dialog.Crash.Only.Body" xml:space="preserve">
+    <value>აპლიკაციამ მოულოდნელი პრობლემა აღმოაჩინა</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>პროდუქტის სახელი '{0}' არ ემთხვევა მოსალოდნელს '{1}'.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>ეკრანის გაფართოების დაყენება მედიის გაფართოებაზე</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>ეკრანის გაფართოება ამ მოწყობილობაზე მხარდაჭერილი არაა.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>მიმდინარე ჟურნალის ფაილის ატვირთვის შეცდომა. კიდევ სცადეთ.</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Jellyfin-ის სერვერი {0}  ამჟამად ხელმისაწვდომი არაა: 
+
+ {1}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>მიმდინარე ჟურნალის ფაილი აიტვირთა თქვენს Jellyfin-ის სერვერზე.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>ეკრანის განახლების სიხშირის დაყენება მედიის განახლების სიხშირეზე</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>ავტომატური ეკრანის განახლების სიხშირე ამ მოწყობილობაზე მხარდაჭერილი არაა.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>ვერ დავუკავშირდი სერვერს მისამართზე "{0}". შეცდომა:
+
+{1}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>როგორც ჩანს, მოთხოვნილ Url-ზე Jellyfin გაშვებული არაა.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>მოთხოვნის მოლოდინის ვადა ამოიწურა. შეამოწმეთ თქვენი ქსელური კავშირი და კიდევ სცადეთ.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>სერვერის მინიმალური მხარდაჭერილი ვერსიაა {0}, მაგრამ სერვერზე გაშვებულია {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>ვერ დავუკავშირდი სერვერს მისამართზე "{0}". სტატუსის კოდი: {1} - {2}</value>
+  </data>
+  <data name="Dialog.Crash.Body" xml:space="preserve">
+    <value>აპლიკაციამ მოულოდნელი შეცდომა აღმოაჩინა. გნებავთ ჟურნალის ფაილის სერვერზე ატვირთვის ცდა?</value>
+  </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>განლაგების მასშტაბირების გამორთვა შეუძლებელია. ეს აპლიკაცია არააა განკუთვნილი კომპიუტერზე გასაშვებად. ის, მხოლოდ, Xbox-ზე უნდა გაუშვათ. 
+
+კომპიუტერზე გაშვებისას, შეიძლება, შეცდომები აღმოაჩინოთ.</value>
+  </data>
 </root>
