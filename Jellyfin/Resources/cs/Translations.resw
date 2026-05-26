@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"></xsd:import>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"></xsd:attribute>
+              <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"></xsd:attribute>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"></xsd:attribute>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"></xsd:attribute>
+              <xsd:attribute ref="xml:space"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"></xsd:element>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,4 +58,144 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="App.Name" xml:space="preserve">
+    <value>Jellyfin-pro-Xbox</value>
+  </data>
+  <data name="Common.Abort" xml:space="preserve">
+    <value>Přerušit</value>
+  </data>
+  <data name="Common.No" xml:space="preserve">
+    <value>Ne</value>
+  </data>
+  <data name="Common.Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Common.Save" xml:space="preserve">
+    <value>Uložit</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Ano</value>
+  </data>
+  <data name="Dialog.Crash.Body" xml:space="preserve">
+    <value>V aplikaci došlo k neočekávané chybě. Chcete se pokusit nahrát soubor protokolu na server?</value>
+  </data>
+  <data name="Dialog.Crash.Only.Body" xml:space="preserve">
+    <value>Aplikace narazila na neočekávaný problém</value>
+  </data>
+  <data name="Dialog.Crash.Title" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="Dialog.Warning.LayoutScaling" xml:space="preserve">
+    <value>Nelze zakázat změnu velikosti rozvržení. Tato aplikace není určena pro stolní počítač, ale pouze pro zařízení Xbox.
+
+Při spuštění na počítači se můžete setkat s chybami.</value>
+  </data>
+  <data name="OnBoarding.Connect.Text" xml:space="preserve">
+    <value>Připojit</value>
+  </data>
+  <data name="OnBoarding.ConnectTo.Text" xml:space="preserve">
+    <value>Připojit k Jellyfin Serveru.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Empty.Text" xml:space="preserve">
+    <value>Nebyly nalezeny žádné lokální servery.</value>
+  </data>
+  <data name="OnBoarding.ServerDiscovery.Header.Text" xml:space="preserve">
+    <value>Místní servery.</value>
+  </data>
+  <data name="OnBoarding.ServerList.Error.Text" xml:space="preserve">
+    <value>Pokus o připojení k:</value>
+  </data>
+  <data name="OnBoarding.ServerLookup.Header.Text" xml:space="preserve">
+    <value>Pokus o připojení k:</value>
+  </data>
+  <data name="OnBoarding.ServerUri.Placeholder" xml:space="preserve">
+    <value>Příklad: 192.168.1.100:8096 nebo demo.jellyfin.org</value>
+  </data>
+  <data name="ServerLookupValidation.Error.Fallback.Text" xml:space="preserve">
+    <value>Neznámá chyba při ověřování odpovědi serveru.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.General.Text" xml:space="preserve">
+    <value>Výjimka při analýze odpovědi serveru: {0}</value>
+  </data>
+  <data name="ServerLookupValidation.Error.NoServerDetected.Text" xml:space="preserve">
+    <value>Zdá se, že požadované adrese URL neběží server Jellyfin.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ProductName.Text" xml:space="preserve">
+    <value>Název produktu '{0}' neodpovídá očekávanému '{1}'.</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
+    <value>Neplatný formát verze serveru: '{0}'</value>
+  </data>
+  <data name="ServerLookupValidation.Error.ServerVersion.MinimumSupported.Text" xml:space="preserve">
+    <value>Minimální podporovaná verze serveru je {0}, ale na serveru běží {1}.</value>
+  </data>
+  <data name="ServerValidation.Error.Rejected.Text" xml:space="preserve">
+    <value>Nepodařilo se připojit k serveru "{0}". Stavový kód: {1} - {2}</value>
+  </data>
+  <data name="Settings.UploadLogfile.Text" xml:space="preserve">
+    <value>Nahrát soubor protokolu</value>
+  </data>
+  <data name="Settings.UploadLogfile.Failure.Text" xml:space="preserve">
+    <value>Chyba při nahrávání aktuálního souboru protokolu. Zkuste to prosím znovu.</value>
+  </data>
+  <data name="Settings.UploadLogfile.Success.Text" xml:space="preserve">
+    <value>Aktuální soubor protokolu byl nahrán na váš server Jellyfin.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Nastavit obnovovací frekvenci displeje na obnovovací frekvenci médií</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>Automatická obnovovací frekvence displeje není na tomto zařízení podporována.</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
+    <value>Nastavit rozlišení displeje na rozlišení média</value>
+  </data>
+  <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
+    <value>Rozlišení displeje není na tomto zařízení podporováno.</value>
+  </data>
+  <data name="UrlValidation.Error.General.Text" xml:space="preserve">
+    <value>Nepodařilo se připojit k serveru na adrese "{0}". Chyba:
+
+{1}</value>
+  </data>
+  <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
+    <value>Zadejte prosím adresu serveru.</value>
+  </data>
+  <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
+    <value>Platnost požadavku vypršela. Zkontrolujte prosím připojení k síti a zkuste to znovu.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>Nelze inicializovat WebView.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Navigace selhala. Důvod:
+
+{0}</value>
+  </data>
+  <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
+    <value>Server Jellyfin {0} momentálně není k dispozici: 
+
+ {1}</value>
+  </data>
+  <data name="CultureSelector.Selector.Header.Text" xml:space="preserve">
+    <value>Jazyk: </value>
+  </data>
+  <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
+    <value>Verze aplikace Jellyfin pro Xbox:</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Vítejte v Jellyfin</value>
+  </data>
+  <data name="Settings.Version.Text" xml:space="preserve">
+    <value>Verze</value>
+  </data>
+  <data name="Settings.UploadLogfile.Latest.Text" xml:space="preserve">
+    <value>Aktuální Protokol</value>
+  </data>
+  <data name="Settings.Logs.Title" xml:space="preserve">
+    <value>Soubory protokolu</value>
+  </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>Vynutit režim TV</value>
+  </data>
 </root>
