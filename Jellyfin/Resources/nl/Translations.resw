@@ -131,18 +131,18 @@
     <value>Het huidige logbestand is geüpload naar uw Jellyfin server.</value>
   </data>
   <data name="Settings.Values.AutoResolution.Text" xml:space="preserve">
-    <value>Zet de beeldschermresolutie op de resolutie van de media</value>
+    <value>Pas de beeldschermresolutie aan op de resolutie van de media</value>
   </data>
   <data name="Settings.Values.AutoResolution.Unsupported.Text" xml:space="preserve">
     <value>Beeldschermresolutie is niet ondersteund op dit apparaat.</value>
   </data>
   <data name="UrlValidation.Error.General.Text" xml:space="preserve">
-    <value>Kon niet verbinden met de server op "{0}". Foutmelding:
+    <value>Kon geen verbinding maken met de server op "{0}". Foutmelding:
 
 {1}</value>
   </data>
   <data name="UrlValidation.Error.NoInput.Text" xml:space="preserve">
-    <value>Voor het server adres in.</value>
+    <value>Voer het server adres in.</value>
   </data>
   <data name="UrlValidation.Error.Timeout.Text" xml:space="preserve">
     <value>De aanvraag duurde te lang. Controleer uw internetverbinding en probeer het opnieuw.</value>
@@ -180,5 +180,19 @@
     <value>Kan de schaalverdeling niet uitschakelen. Deze applicatie is ontworpen voor een Xbox, geen desktop PC. 
 
 Je kan bugs tegenkomen bij het draaien op een desktop PC.</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Text" xml:space="preserve">
+    <value>Pas de verversingssnelheid van het scherm aan op de media</value>
+  </data>
+  <data name="Settings.Values.AutoRefresh.Unsupported.Text" xml:space="preserve">
+    <value>Dit apparaat ondersteunt geen automatische schermverversing.</value>
+  </data>
+  <data name="WebView.Error.InitializationFailed.Text" xml:space="preserve">
+    <value>WebView kan niet worden geladen.</value>
+  </data>
+  <data name="WebView.Error.NavigationFailed.Text" xml:space="preserve">
+    <value>Laden van pagina mislukt. Reden:
+
+{0}</value>
   </data>
 </root>
