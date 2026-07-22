@@ -181,7 +181,7 @@ Potresti incontrare problemi inaspettati se utilizzerai l'applicazione su PC.</v
     <value>Lingua: </value>
   </data>
   <data name="OnBoarding.VersionHeader.Text" xml:space="preserve">
-    <value>Jellyfin per Xbox Versione:</value>
+    <value>Versione Jellyfin per Xbox:</value>
   </data>
   <data name="Settings.Version.Text" xml:space="preserve">
     <value>Versione</value>
@@ -191,5 +191,11 @@ Potresti incontrare problemi inaspettati se utilizzerai l'applicazione su PC.</v
   </data>
   <data name="Settings.Logs.Title" xml:space="preserve">
     <value>File di Log</value>
+  </data>
+  <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
+    <value>Benvenuto su Jellyfin</value>
+  </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>Forza modalità TV</value>
   </data>
 </root>
