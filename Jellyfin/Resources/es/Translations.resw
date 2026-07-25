@@ -195,4 +195,7 @@ Puedes encontrar bugs ejecutándolo en un PC.</value>
   <data name="Settings.Logs.Title" xml:space="preserve">
     <value>Logfiles (archivos de log)</value>
   </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>Forzar modo TV</value>
+  </data>
 </root>
