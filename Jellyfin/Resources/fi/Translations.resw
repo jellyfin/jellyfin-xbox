@@ -184,7 +184,7 @@ Voit kohdata virheitä suorittaessasi sovellusta PC:llä.</value>
     <value>Jellyfin Xboxille sovellusversio:</value>
   </data>
   <data name="OnBoarding.TitleHeader.Text" xml:space="preserve">
-    <value>Tervetuloa Jellyfin Sovellukseen</value>
+    <value>Tervetuloa Jellyfiniin</value>
   </data>
   <data name="Settings.Version.Text" xml:space="preserve">
     <value>Versio</value>
@@ -194,5 +194,8 @@ Voit kohdata virheitä suorittaessasi sovellusta PC:llä.</value>
   </data>
   <data name="Settings.Logs.Title" xml:space="preserve">
     <value>Lokitiedostot</value>
+  </data>
+  <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
+    <value>Pakota TV Tila</value>
   </data>
 </root>
