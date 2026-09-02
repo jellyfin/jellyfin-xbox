@@ -169,7 +169,7 @@
     <value>Fout tijdens het verwerken van het antwoord van de server: {0}</value>
   </data>
   <data name="ServerLookupValidation.Error.ServerVersion.Invalid.Text" xml:space="preserve">
-    <value>Invalide opbouw van de server versie: '{0}'</value>
+    <value>Foutief formaat van de server versie: '{0}'</value>
   </data>
   <data name="WebView.Error.ValidationFailed.Text" xml:space="preserve">
     <value>De Jellyfin server {0} is momenteel niet beschikbaar:
