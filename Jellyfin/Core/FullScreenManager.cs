@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
+using Microsoft.Extensions.Logging;
 using Windows.Data.Json;
 using Windows.Graphics.Display.Core;
 using Windows.System.Display;
@@ -21,6 +22,8 @@ public sealed class FullScreenManager : IFullScreenManager
     private readonly ApplicationView _applicationView;
     private readonly Frame _frame;
     private readonly DisplayRequest _displayRequest;
+    private readonly ILogger<FullScreenManager> _logger;
+    private bool _displayRequestActive;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
@@ -28,11 +31,13 @@ public sealed class FullScreenManager : IFullScreenManager
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
     /// <param name="frame">The root frame.</param>
     /// <param name="displayRequest">The display Request.</param>
-    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest)
+    /// <param name="logger">Logger instance.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest, ILogger<FullScreenManager> logger)
     {
         _applicationView = applicationView;
         _frame = frame;
         _displayRequest = displayRequest;
+        _logger = logger;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -157,6 +162,44 @@ public sealed class FullScreenManager : IFullScreenManager
         await HdmiDisplayInformation.GetForCurrentView()?.SetDefaultDisplayModeAsync();
     }
 
+    private void RequestDisplayActive()
+    {
+        if (_displayRequestActive)
+        {
+            return;
+        }
+
+        try
+        {
+            _displayRequest.RequestActive();
+            _displayRequestActive = true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "DisplayRequest.RequestActive failed");
+        }
+    }
+
+    private void RequestDisplayRelease()
+    {
+        if (!_displayRequestActive)
+        {
+            return;
+        }
+
+        try
+        {
+            _displayRequest.RequestRelease();
+            _displayRequestActive = false;
+        }
+        catch (Exception ex)
+        {
+            // Keep _displayRequestActive true so we retry release instead of
+            // attempting RequestActive while the lock may still be held.
+            _logger.LogWarning(ex, "DisplayRequest.RequestRelease failed");
+        }
+    }
+
     /// <summary>
     /// Enables Fullscreen.
     /// </summary>
@@ -178,7 +221,7 @@ public sealed class FullScreenManager : IFullScreenManager
                     var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
                     var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(hdmiDisplayInformation, videoRangeType);
                     await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(false);
-                    _displayRequest.RequestActive();
+                    RequestDisplayActive();
                 }
                 catch (Exception ex)
                 {
@@ -211,6 +254,6 @@ public sealed class FullScreenManager : IFullScreenManager
             _applicationView.ExitFullScreenMode();
         }
 
-        _displayRequest.RequestRelease();
+        RequestDisplayRelease();
     }
 }
