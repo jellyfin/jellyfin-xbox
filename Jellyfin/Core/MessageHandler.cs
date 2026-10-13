@@ -45,8 +45,17 @@ public class MessageHandler : IMessageHandler
     /// <returns>A task that completes when the notification action has been performed.</returns>
     public async Task HandleJsonNotification(JsonObject json)
     {
+        if (json == null || !json.ContainsKey("type") || json.GetNamedValue("type").ValueType != JsonValueType.String)
+        {
+            return;
+        }
+
         var eventType = json.GetNamedString("type");
-        var args = json.GetNamedObject("args");
+        JsonObject args = null;
+        if (json.ContainsKey("args") && json.GetNamedValue("args").ValueType == JsonValueType.Object)
+        {
+            args = json.GetNamedObject("args");
+        }
 
         if (eventType == "enableFullscreen")
         {
@@ -57,7 +66,10 @@ public class MessageHandler : IMessageHandler
         }
         else if (eventType == "disableFullscreen")
         {
-            await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
+            _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                await _fullScreenManager.DisableFullScreen().ConfigureAwait(true);
+            });
         }
         else if (eventType == "selectServer")
         {
