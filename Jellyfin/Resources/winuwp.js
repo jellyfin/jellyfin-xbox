@@ -3,9 +3,13 @@
 
     console.log('Windows UWP adapter');
 
-    const xbox = deviceName.toLowerCase().indexOf('xbox') !== -1;
-    const xboxSeries = deviceName.toLowerCase().indexOf('xbox series') !== -1;
-    const mobile = deviceName.toLowerCase().indexOf('mobile') !== -1;
+    const deviceNameLower = deviceName.toLowerCase();
+    const xbox = deviceNameLower.indexOf('xbox') !== -1;
+    const xboxSeries = deviceNameLower.indexOf('xbox series') !== -1;
+    // Xbox One S and One X also support 4K media playback; the original Xbox One does not.
+    const xboxOne4K = /xbox one [sx]\b/.test(deviceNameLower);
+    const xbox4K = xboxSeries || xboxOne4K;
+    const mobile = deviceNameLower.indexOf('mobile') !== -1;
 
     function postMessage(type, args = {}) {
         console.debug(`AppHost.${type}`, args);
@@ -100,7 +104,7 @@
                 if (xbox) {
                     // MSE cannot decode AC3 in HLS fMP4 despite WebView2 reporting support.
                     options.disableHlsVideoAudioCodecs = ['ac3', 'eac3'];
-                    if (xboxSeries) {
+                    if (xbox4K) {
                         options.maxVideoWidth = 3840;
                     }
                 }
