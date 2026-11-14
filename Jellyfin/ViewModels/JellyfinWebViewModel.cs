@@ -390,12 +390,13 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
                 var md = new MessageDialog(_stringLocalizer.GetString("WebView.Error.NavigationFailed.Text", args.WebErrorStatus));
                 await md.ShowAsync();
             }
-            else if (string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
+            else
             {
                 var accessToken = await WebView.CoreWebView2.ExecuteScriptWithResultAsync("""
                                                                   JSON.parse(localStorage.getItem("jellyfin_credentials")).Servers[0].AccessToken
                                                                   """);
-                if (!accessToken.Succeeded)
+                if (!accessToken.Succeeded
+                    || (accessToken.Succeeded && accessToken.ResultAsJson != null && string.Equals(accessToken.ResultAsJson, "null", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     _logger.LogError("Could not obtain access token for {Path}", args.NavigationId);
                 }

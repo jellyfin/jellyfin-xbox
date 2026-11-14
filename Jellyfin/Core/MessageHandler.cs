@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
@@ -96,6 +97,21 @@ public class MessageHandler : IMessageHandler
         else if (eventType == "loaded")
         {
             _messenger.Send(new WebMessage(eventType, args));
+        }
+        else if (eventType == "updateAccessToken")
+        {
+            var accessToken = args.GetNamedString("accessToken", string.Empty);
+
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                Central.Settings.JellyfinServerAccessToken = null;
+                _webviewLogger.LogInformation("Access token cleared.");
+            }
+            else if (!string.Equals(Central.Settings.JellyfinServerAccessToken, accessToken, StringComparison.Ordinal))
+            {
+                Central.Settings.JellyfinServerAccessToken = accessToken;
+                _webviewLogger.LogInformation("Access token updated.");
+            }
         }
         else if (eventType == "log")
         {
