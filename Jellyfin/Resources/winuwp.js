@@ -254,3 +254,37 @@ if (!window.consoleXboxOverride)
     logOverride("warn");
     logOverride("info");
 }
+
+(() => {
+  if (window.__uwpStorageHookInstalled) return;
+  window.__uwpStorageHookInstalled = true;
+
+  const post = (key, value) => {
+    window.chrome.webview.postMessage(JSON.stringify({
+      type: "updateAccessToken",
+      args: { accessToken: value ?? "" }
+    }));
+  };
+
+  const origSetItem = Storage.prototype.setItem;
+  const origRemoveItem = Storage.prototype.removeItem;
+  const origClear = Storage.prototype.clear;
+
+  Storage.prototype.setItem = function (key, value) {
+    origSetItem.apply(this, arguments);
+    if (key === "access_token") post(key, value);
+    if (key === "jellyfin_credentials") {
+      try { post(key, JSON.parse(value)?.Servers?.[0]?.AccessToken ?? ""); } catch { post(key, ""); }
+    }
+  };
+
+  Storage.prototype.removeItem = function (key) {
+    origRemoveItem.apply(this, arguments);
+    if (key === "access_token" || key === "jellyfin_credentials") post(key, "");
+  };
+
+  Storage.prototype.clear = function () {
+    origClear.apply(this, arguments);
+    post("access_token", "");
+  };
+})();

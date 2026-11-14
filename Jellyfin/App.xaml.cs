@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using CommunityToolkit.Mvvm.Messaging;
 using Jellyfin.Core;
 using Jellyfin.Core.Contract;
@@ -184,11 +185,10 @@ public sealed partial class App : Application
         {
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromSeconds(30);
-            httpClient.DefaultRequestHeaders.Add("X-Emby-Token", Central.Settings.JellyfinServerAccessToken);
             httpClient.BaseAddress = new Uri(Central.Settings.JellyfinServer);
             var loggerProvider = (FileBackedLoggerProvider)Services.GetRequiredService<ILoggerProvider>();
             using var logStream = await loggerProvider.ReadLogfile(logfileName).ConfigureAwait(false);
-            using var response = await httpClient.PostAsync("/ClientLog/Document", new StreamContent(logStream)).ConfigureAwait(false);
+            using var response = await httpClient.PostAsync($"/ClientLog/Document?ApiKey={HttpUtility.UrlEncode(Central.Settings.JellyfinServerAccessToken)}", new StreamContent(logStream)).ConfigureAwait(false);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
         catch
