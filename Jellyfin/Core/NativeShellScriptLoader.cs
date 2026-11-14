@@ -69,7 +69,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
     private static async Task<string> GetCodecSupportAsync()
     {
         // The system codec list does not change while the app runs, so probe only once.
-        return _codecSupportCache ??= await ProbeCodecSupportAsync();
+        return await ProbeCodecSupportAsync();
     }
 
     private static async Task<string> ProbeCodecSupportAsync()

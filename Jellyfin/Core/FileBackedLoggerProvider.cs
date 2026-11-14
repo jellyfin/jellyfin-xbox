@@ -59,9 +59,24 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             while (true)
             {
                 await debounce.WaitAsync().ConfigureAwait(false);
-                if (dirty != null && dirty.Value + TimeSpan.FromMilliseconds(500) < DateTime.Now)
+
+                // wait until no new entries arrived for 500ms, then flush.
+                while (true)
                 {
-                    _logPipe.Writer.TryWrite("\0");
+                    var lastWrite = dirty;
+                    if (lastWrite == null)
+                    {
+                        break;
+                    }
+
+                    var remaining = lastWrite.Value + TimeSpan.FromMilliseconds(500) - DateTime.Now;
+                    if (remaining <= TimeSpan.Zero)
+                    {
+                        _logPipe.Writer.TryWrite("\0");
+                        break;
+                    }
+
+                    await Task.Delay(remaining).ConfigureAwait(false);
                 }
             }
         });
