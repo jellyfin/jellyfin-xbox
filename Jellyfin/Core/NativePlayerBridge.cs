@@ -133,6 +133,7 @@ public sealed class NativePlayerBridge : INativePlayerBridge
 
         if (_player == null || _playerMode != mode)
         {
+            _logger.LogInformation("Creating native player for mode {Mode}", mode);
             DestroyPlayer();
             _playerMode = mode;
             _player = _factory.Create(mode);
@@ -140,6 +141,7 @@ public sealed class NativePlayerBridge : INativePlayerBridge
             SurfaceChanged?.Invoke(this, _player.Surface);
         }
 
+        _logger.LogInformation("Starting native playback ({Mode}) of {Url} at {Start}", mode, request.Url, request.StartPosition);
         await _player.PlayAsync(request).ConfigureAwait(true);
     }
 
@@ -152,6 +154,7 @@ public sealed class NativePlayerBridge : INativePlayerBridge
         }
 
         _player = null;
+        _logger.LogInformation("Destroying native player");
         player.EventRaised -= OnPlayerEvent;
         player.Stop();
         SurfaceChanged?.Invoke(this, null);
@@ -160,6 +163,11 @@ public sealed class NativePlayerBridge : INativePlayerBridge
 
     private void OnPlayerEvent(object sender, NativePlayerEventArgs e)
     {
+        if (e.Name != "timeupdate")
+        {
+            _logger.LogInformation("Native player event {Name} at {Position}ms: {Message}", e.Name, e.PositionMs, e.Message);
+        }
+
         Send(e.Name, e, e.Message);
     }
 

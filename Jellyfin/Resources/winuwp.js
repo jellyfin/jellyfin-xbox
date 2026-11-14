@@ -324,6 +324,7 @@ class UwpNativeVideoPlayer {
         this.PluginOptions = pluginOptions;
         this._events = pluginOptions.events;
         this._src = null;
+        this._blockedItems = new Set();
         this._positionMs = 0;
         this._durationMs = 0;
         this._paused = false;
@@ -358,6 +359,7 @@ class UwpNativeVideoPlayer {
         }
         switch (a.name) {
             case 'opened':
+                console.log('[' + uwpPlayerIdentity.name + '] opened duration=' + a.durationMs);
                 this._volume = a.volume;
                 this._muted = a.muted;
                 if (this._playResolve) {
@@ -397,20 +399,54 @@ class UwpNativeVideoPlayer {
                 this._trigger('volumechange');
                 break;
             case 'ended':
+                console.log('[' + uwpPlayerIdentity.name + '] ended');
                 this._finish();
                 break;
             case 'error':
-                console.error('Native player error', a.message);
-                if (this._playReject) {
-                    this._playReject(new Error(a.message));
-                    this._playResolve = null;
-                    this._playReject = null;
-                    this._src = null;
-                } else {
-                    this._trigger('error', [{ type: 'mediadecodeerror' }]);
-                }
+                console.error('Native player error, falling back to web player', a.message);
+                this._fallbackToWeb();
                 break;
         }
+    }
+
+    _fallbackToWeb() {
+        const playbackManager = this.PluginOptions.playbackManager;
+        const opts = this._lastPlayOptions;
+        const item = opts && opts.item;
+        console.warn('[' + uwpPlayerIdentity.name + '] fallback requested. item=' + (item && item.Id) + ' hasPlaybackManager=' + !!playbackManager + ' src=' + this._src);
+        if (!item || !playbackManager || !this._src) {
+            this._trigger('error', [{ type: 'mediadecodeerror' }]);
+            return;
+        }
+        const startTicks = this._positionMs > 0 ? this._positionMs * 10000 : (opts.playerStartPositionTicks || 0);
+        this._blockedItems.add(item.Id);
+        console.warn('[' + uwpPlayerIdentity.name + '] blocked item ' + item.Id + ', restarting with web player at ticks=' + startTicks);
+        this._src = null;
+        this._post('destroy');
+        if (this._playResolve) {
+            this._playResolve();
+            this._playResolve = null;
+            this._playReject = null;
+        }
+        const ms = opts.mediaSource || {};
+        setTimeout(() => {
+            Promise.resolve(playbackManager.play({
+                ids: [item.Id],
+                serverId: item.ServerId,
+                startPositionTicks: startTicks,
+                mediaSourceId: ms.Id,
+                audioStreamIndex: ms.DefaultAudioStreamIndex,
+                subtitleStreamIndex: ms.DefaultSubtitleStreamIndex
+            })).catch(err => console.error('Web fallback failed', err));
+        }, 200);
+    }
+
+    _isBlocked(item) {
+        const blocked = !!item && this._blockedItems.has(item.Id);
+        if (blocked) {
+            console.log('[' + uwpPlayerIdentity.name + '] item ' + item.Id + ' is blocked, declining playback');
+        }
+        return blocked;
     }
 
     _finish() {
@@ -424,20 +460,29 @@ class UwpNativeVideoPlayer {
 
     canPlayMediaType(mediaType) { return (mediaType || '').toLowerCase() === 'video'; }
 
-    canPlayItem() { return true; }
+    canPlayItem(item) { return !this._isBlocked(item); }
 
     canPlayUrl() { return true; }
 
     getDeviceProfile() {
+        const caps = NATIVE_CODEC_SUPPORT;
+        const enabled = (group, list) => list.filter((c) => (caps[group] || {})[c] === true);
+        const hasCaps = Object.keys(caps.video || {}).length > 0;
+        const videoCodecs = hasCaps ? enabled('video', ['h264', 'hevc', 'mpeg2video', 'vc1', 'vp8', 'vp9']) : ['h264'];
+        const audioCodecs = hasCaps ? enabled('audio', ['aac', 'ac3', 'eac3', 'mp3', 'flac', 'opus', 'vorbis', 'dts']) : ['aac', 'mp3'];
+        const containers = 'mp4,m4v,mkv,mov,ts,webm,avi';
         return Promise.resolve({
             Name: uwpPlayerIdentity.name,
             MaxStreamingBitrate: 120000000,
             MaxStaticBitrate: 400000000,
             MusicStreamingTranscodingBitrate: 384000,
-            DirectPlayProfiles: [{ Type: 'Video' }, { Type: 'Audio' }],
+            DirectPlayProfiles: [
+                { Type: 'Video', Container: containers, VideoCodec: videoCodecs.join(','), AudioCodec: audioCodecs.join(',') },
+                { Type: 'Audio', AudioCodec: audioCodecs.join(',') }
+            ],
             TranscodingProfiles: [{
-                Container: 'ts', Type: 'Video', AudioCodec: 'aac,mp3,ac3,eac3',
-                VideoCodec: 'h264,hevc', Context: 'Streaming', Protocol: 'hls',
+                Container: 'ts', Type: 'Video', AudioCodec: audioCodecs.filter((c) => ['aac', 'mp3', 'ac3', 'eac3'].includes(c)).join(',') || 'aac',
+                VideoCodec: videoCodecs.filter((c) => ['h264', 'hevc'].includes(c)).join(',') || 'h264', Context: 'Streaming', Protocol: 'hls',
                 MaxAudioChannels: '6', MinSegments: '1', BreakOnNonKeyFrames: true
             }],
             ContainerProfiles: [],
@@ -462,6 +507,8 @@ class UwpNativeVideoPlayer {
     supports() { return false; }
 
     play(options) {
+        console.log('[' + uwpPlayerIdentity.name + '] play item=' + (options.item && options.item.Id) + ' url=' + options.url + ' startTicks=' + (options.playerStartPositionTicks || 0));
+        this._lastPlayOptions = options;
         this._src = options.url;
         this._positionMs = 0;
         this._durationMs = 0;
