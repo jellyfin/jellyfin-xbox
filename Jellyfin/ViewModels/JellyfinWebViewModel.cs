@@ -209,15 +209,16 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
 
     private async Task InitializeWebViewAndNavigateTo(Uri uri)
     {
-        async Task ValidateWebView(Exception ex = null)
+        async Task<bool> ValidateWebView(Exception ex = null)
         {
-            if (WebView.CoreWebView2 == null || ex != null)
+            if (WebView?.CoreWebView2 == null || ex != null)
             {
                 _logger.LogError(ex, "WebView2 initialization failed.");
-
-                await new MessageDialog(_stringLocalizer.GetString("WebView.Error.InitializationFailed.Text")).ShowAsync();
-                Application.Current.Exit();
+                App.Current.FailWithLogPrompt();
+                return false;
             }
+
+            return true;
         }
 
         try
@@ -226,11 +227,16 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         }
         catch (Exception e)
         {
-            await ValidateWebView(e);
-            return;
+            if (!await ValidateWebView(e).ConfigureAwait(false))
+            {
+                return;
+            }
         }
 
-        await ValidateWebView().ConfigureAwait(true);
+        if (!await ValidateWebView().ConfigureAwait(false))
+        {
+            return;
+        }
 
         if (Central.ServerVersion != Central.Settings.JellyfinServerVersion)
         {
@@ -302,7 +308,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         if (args.Exception != null)
         {
             _logger.LogError(args.Exception, "WebView2 initialization failed.");
-            throw args.Exception;
+            App.Current.FailWithLogPrompt();
+            return;
         }
 
         // Must wait for CoreWebView2 to be initialized or the WebView2 would be unfocusable.
@@ -444,8 +451,8 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// <inheritdoc />
     public void Dispose()
     {
-        _navigationHandler.Dispose();
-        _weakPropertyChangedListener.Detach();
+        _navigationHandler?.Dispose();
+        _weakPropertyChangedListener?.Detach();
         UninitializeWebView();
     }
 
