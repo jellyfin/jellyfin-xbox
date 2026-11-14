@@ -257,4 +257,10 @@ You might encounter bugs when running on a PC.</value>
   <data name="Settings.Values.ForceEnableTV.Text" xml:space="preserve">
     <value>Force TV Mode</value>
   </data>
+  <data name="Settings.Values.ForceEnable4KSupport.Text" xml:space="preserve">
+    <value>Force enable 4K support</value>
+  </data>
+  <data name="Settings.Values.ForceEnableHevcSupport.Text" xml:space="preserve">
+    <value>Force enable HEVC support</value>
+  </data>
 </root>
