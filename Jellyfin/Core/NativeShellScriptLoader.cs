@@ -34,6 +34,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
         nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(assembly.GetName().Version.ToString(), '\''));
 
         nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(ResolveDeviceName(), '\''));
+        nativeShellScript = nativeShellScript.Replace("FORCE_HEVC_SUPPORT", Central.Settings.ForceEnableHevcSupport.ToString().ToLower());
 
         var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
         if (hdmiDisplayInformation != null)
@@ -44,13 +45,18 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
             var supportsDovi = supportedDisplayModes.Any(mode => mode.IsDolbyVisionLowLatencySupported);
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_DOVI", supportsDovi.ToString().ToLower());
             var supports4K = supportedDisplayModes.Any(mode => mode.ResolutionWidthInRawPixels >= 3840 && mode.ResolutionHeightInRawPixels >= 2160);
+            if (Central.Settings.ForceEnable4KSupport)
+            {
+                supports4K = true;
+            }
+
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_4K", supports4K.ToString().ToLower());
         }
         else
         {
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_HDR", "undefined");
             nativeShellScript = nativeShellScript.Replace("SUPPORTS_DOVI", "undefined");
-            nativeShellScript = nativeShellScript.Replace("SUPPORTS_4K", "undefined");
+            nativeShellScript = nativeShellScript.Replace("SUPPORTS_4K", Central.Settings.ForceEnable4KSupport ? "true" : "undefined");
         }
 
         return nativeShellScript;

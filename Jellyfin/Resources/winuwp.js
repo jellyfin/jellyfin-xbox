@@ -1,4 +1,4 @@
-(function (appName, appVersion, deviceName, supportsHdr10, supportsDolbyVision, supports4k) {
+(function (appName, appVersion, deviceName, supportsHdr10, supportsDolbyVision, supports4k, forceHevcSupport) {
     'use strict';
 
     console.log('Windows UWP adapter');
@@ -10,7 +10,8 @@
         deviceName,
         supportsHdr10,
         supportsDolbyVision,
-        supports4k
+        supports4k,
+        forceHevcSupport
     });
 
     function detectHevcSupport() {
@@ -111,7 +112,7 @@
             getDeviceProfile: function (profileBuilder) {
                 console.debug('AppHost.getDeviceProfile');
                 const options = {};
-                if (detectHevcSupport()) {
+                if (forceHevcSupport === true || detectHevcSupport()) {
                     options.supportsHevc = true;
                 }
                 if (supportsHdr10 != null) {
@@ -162,7 +163,7 @@
             postMessage('openClientSettings');
         }
     };
-})(APP_NAME, APP_VERSION, DEVICE_NAME, SUPPORTS_HDR, SUPPORTS_DOVI, SUPPORTS_4K);
+})(APP_NAME, APP_VERSION, DEVICE_NAME, SUPPORTS_HDR, SUPPORTS_DOVI, SUPPORTS_4K, FORCE_HEVC_SUPPORT);
 
 
 /**

@@ -131,9 +131,9 @@
                         <RowDefinition MinHeight="35"/>
                         <RowDefinition />
                         <RowDefinition MinHeight="35"/>
+                        <RowDefinition MinHeight="35"/>
+                        <RowDefinition MinHeight="35"/>
                         <RowDefinition MinHeight="55"/>
-                        <RowDefinition />
-                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <CheckBox                        
@@ -169,9 +169,21 @@
                         Content="{localize:Localize Key=Settings.Values.ForceEnableTV.Text}"
                         Foreground="White" FontSize="{StaticResource FontL}"
                         Grid.Row="4" />
+
+                    <CheckBox
+                        IsChecked="{Binding ForceEnable4KSupport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Content="{localize:Localize Key=Settings.Values.ForceEnable4KSupport.Text}"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="5" />
+
+                    <CheckBox
+                        IsChecked="{Binding ForceEnableHevcSupport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Content="{localize:Localize Key=Settings.Values.ForceEnableHevcSupport.Text}"
+                        Foreground="White" FontSize="{StaticResource FontL}"
+                        Grid.Row="6" />
                     
                     <Grid   Grid.Column="0"
-                            Grid.Row="5"                            
+                            Grid.Row="7"                            
                             Margin="0,5,0,0"
                             HorizontalAlignment="Stretch">
                         <local:CultureSelector 
