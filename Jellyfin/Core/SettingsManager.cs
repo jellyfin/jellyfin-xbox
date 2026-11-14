@@ -17,6 +17,7 @@ public class SettingsManager : ISettingsManager
     private string _forceEnableTvMode = "FORCE_TV_MODE";
     private string _forceEnable4KSupport = "FORCE_4K_SUPPORT";
     private string _forceEnableHevcSupport = "FORCE_HEVC_SUPPORT";
+    private string _playerMode = "PLAYER_MODE";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -118,6 +119,15 @@ public class SettingsManager : ISettingsManager
     {
         get => GetProperty<bool>(_forceEnableHevcSupport);
         set => SetProperty(_forceEnableHevcSupport, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the engine used to play video.
+    /// </summary>
+    public PlayerMode PlayerMode
+    {
+        get => (PlayerMode)GetProperty<int>(_playerMode);
+        set => SetProperty(_playerMode, (int)value);
     }
 
     private void SetProperty(string propertyName, object value)

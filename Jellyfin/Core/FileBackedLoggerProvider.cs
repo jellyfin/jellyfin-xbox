@@ -28,6 +28,8 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
                 SingleReader = false,
                 AllowSynchronousContinuations = true
             });
+
+        bool dirty = false;
         Task.Run(async () =>
         {
             await CleanupOldLogfiles();
@@ -35,8 +37,29 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
             await foreach (var item in _logPipe.Reader.ReadAllAsync())
             {
+                if (item == "\0" && dirty)
+                {
+                    await LogStream.FlushAsync().ConfigureAwait(false);
+                    dirty = false;
+                    continue;
+                }
+
                 var logEntry = Encoding.UTF8.GetBytes(item);
                 await LogStream.WriteAsync(logEntry, 0, logEntry.Length).ConfigureAwait(false);
+                dirty = true;
+            }
+        });
+
+        Task.Run(async () =>
+        {
+            // yea i know this sucks but there is no garanteed way in UWP to handle an app shutting down and if we dont logs get stuck in the buffer.
+            while (true)
+            {
+                await Task.Delay(500).ConfigureAwait(false);
+                if (dirty)
+                {
+                    _logPipe.Writer.TryWrite("\0");
+                }
             }
         });
     }
@@ -106,8 +129,9 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
-        LogStream.Flush();
-        LogStream.Dispose();
+        LogStream?.Flush();
+        LogStream?.Dispose();
+        LogStream = null;
     }
 
     internal class UwpAppLogger : ILogger

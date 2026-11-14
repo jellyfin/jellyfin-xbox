@@ -31,6 +31,11 @@ public interface ISettingsManager
     bool AutoRefreshRate { get; set; }
 
     /// <summary>
+    /// Gets or sets the video player used for playback.
+    /// </summary>
+    PlayerMode PlayerMode { get; set; }
+
+    /// <summary>
     /// Gets the value of a property from the settings container.
     /// </summary>
     /// <typeparam name="T">The type of the property value.</typeparam>

@@ -32,6 +32,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
             "APP_NAME",
             Wrap(assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title, '\''));
         nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(assembly.GetName().Version.ToString(), '\''));
+        nativeShellScript = nativeShellScript.Replace("PLAYER_MODE", Central.Settings.PlayerMode.ToString());
 
         nativeShellScript = nativeShellScript.Replace("DEVICE_NAME", Wrap(ResolveDeviceName(), '\''));
         nativeShellScript = nativeShellScript.Replace("FORCE_HEVC_SUPPORT", Central.Settings.ForceEnableHevcSupport.ToString().ToLower());

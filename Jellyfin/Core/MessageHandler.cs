@@ -23,6 +23,7 @@ public class MessageHandler : IMessageHandler
     private readonly IFullScreenManager _fullScreenManager;
     private readonly IMessenger _messenger;
     private readonly ILogger<WebView2> _webviewLogger;
+    private readonly INativePlayerBridge _nativePlayerBridge;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageHandler"/> class.
@@ -31,12 +32,14 @@ public class MessageHandler : IMessageHandler
     /// <param name="fullScreenManager">The service responsible for managing HDMI and fullscreen states.</param>
     /// <param name="messenger">The Messenger service.</param>
     /// <param name="webviewLogger">The webview logger.</param>
-    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager, IMessenger messenger, ILogger<WebView2> webviewLogger)
+    /// <param name="nativePlayerBridge">The native player bridge.</param>
+    public MessageHandler(Frame frame, IFullScreenManager fullScreenManager, IMessenger messenger, ILogger<WebView2> webviewLogger, INativePlayerBridge nativePlayerBridge)
     {
         _frame = frame;
         _fullScreenManager = fullScreenManager;
         _messenger = messenger;
         _webviewLogger = webviewLogger;
+        _nativePlayerBridge = nativePlayerBridge;
     }
 
     /// <summary>
@@ -133,6 +136,10 @@ public class MessageHandler : IMessageHandler
                 default:
                     break;
             }
+        }
+        else if (eventType.StartsWith("player.", StringComparison.Ordinal))
+        {
+            _nativePlayerBridge.HandleMessage(eventType, args);
         }
         else
         {
