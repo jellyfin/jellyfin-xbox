@@ -31,6 +31,8 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     private bool _autoRefreshRate;
     private bool _autoResolution;
     private bool _forceEnableTvMode;
+    private bool _forceEnable4KSupport;
+    private bool _forceEnableHevcSupport;
     private HdmiDisplayMode _currentDisplayMode;
 
     /// <summary>
@@ -47,6 +49,8 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         AutoRefreshRate = Central.Settings.AutoRefreshRate;
         AutoResolution = Central.Settings.AutoResolution;
         ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
+        ForceEnable4KSupport = Central.Settings.ForceEnable4KSupport;
+        ForceEnableHevcSupport = Central.Settings.ForceEnableHevcSupport;
 
         _navigationHandler = _gamepadManager.ObserveBackEvent(ModalPage_BackRequested, -10);
         try
@@ -100,6 +104,24 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     {
         get => _forceEnableTvMode;
         set => SetProperty(ref _forceEnableTvMode, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force-enable 4K capability in the web device profile.
+    /// </summary>
+    public bool ForceEnable4KSupport
+    {
+        get => _forceEnable4KSupport;
+        set => SetProperty(ref _forceEnable4KSupport, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force-enable HEVC capability in the web device profile.
+    /// </summary>
+    public bool ForceEnableHevcSupport
+    {
+        get => _forceEnableHevcSupport;
+        set => SetProperty(ref _forceEnableHevcSupport, value);
     }
 
     /// <summary>
@@ -219,6 +241,8 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         }
 
         Central.Settings.ForceEnableTvMode = ForceEnableTvMode;
+        Central.Settings.ForceEnable4KSupport = ForceEnable4KSupport;
+        Central.Settings.ForceEnableHevcSupport = ForceEnableHevcSupport;
     }
 
     /// <inheritdoc />

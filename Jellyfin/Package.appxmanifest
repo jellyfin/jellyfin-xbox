@@ -8,9 +8,9 @@
   IgnorableNamespaces="uap mp rescap">
 
   <Identity
-    Name="20468Jellyfin.Jellyfin"
+    Name="20468Jellyfin.Jellyfin"   
     Publisher="CN=DevelopmentJellyfinCert"
-    Version="0.9.6.0" />
+    Version="0.9.8.0" />
 
   <mp:PhoneIdentity PhoneProductId="937c0b5e-fd4f-4059-bb35-5f17a6af72ea" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

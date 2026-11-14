@@ -15,6 +15,8 @@ public class SettingsManager : ISettingsManager
     private string _autoResolution = "AUTO_RESOLUTION";
     private string _autoRefreshRate = "AUTO_REFRESH_RATE";
     private string _forceEnableTvMode = "FORCE_TV_MODE";
+    private string _forceEnable4KSupport = "FORCE_4K_SUPPORT";
+    private string _forceEnableHevcSupport = "FORCE_HEVC_SUPPORT";
 
     private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -98,6 +100,24 @@ public class SettingsManager : ISettingsManager
     {
         get => GetProperty<bool>(_forceEnableTvMode);
         set => SetProperty(_forceEnableTvMode, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force-enable 4K support in the injected device profile.
+    /// </summary>
+    public bool ForceEnable4KSupport
+    {
+        get => GetProperty<bool>(_forceEnable4KSupport);
+        set => SetProperty(_forceEnable4KSupport, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to force-enable HEVC support in the injected device profile.
+    /// </summary>
+    public bool ForceEnableHevcSupport
+    {
+        get => GetProperty<bool>(_forceEnableHevcSupport);
+        set => SetProperty(_forceEnableHevcSupport, value);
     }
 
     private void SetProperty(string propertyName, object value)

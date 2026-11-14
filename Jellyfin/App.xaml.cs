@@ -109,12 +109,31 @@ public sealed partial class App : Application
 #pragma warning restore IDISP005
     }
 
+    /// <summary>
+    /// Navigates to the onboarding view and prompts for log upload using localized resources.
+    /// </summary>
+    /// <remarks>Resolves an <c>IStringLocalizer&lt;Translations&gt;</c> from the service provider, navigates
+    /// the current root frame to the onboarding page, and then shows the log upload prompt.</remarks>
+    public void FailWithLogPrompt()
+    {
+        var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
+
+        var rootFrame = Window.Current.Content as Frame;
+        rootFrame.Navigate(typeof(Views.OnBoarding));
+        LogUploadPrompt(localizer, true);
+    }
+
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         var localizer = Services.GetRequiredService<IStringLocalizer<Translations>>();
         Services.GetRequiredService<ILogger<App>>().LogCritical(e.Exception, "Unhandled exception occurred");
         e.Handled = true;
 
+        LogUploadPrompt(localizer);
+    }
+
+    private void LogUploadPrompt(IStringLocalizer<Translations> localizer, bool recoverable = false)
+    {
         _ = App.Current.Services.GetRequiredService<CoreDispatcher>().RunAsync(CoreDispatcherPriority.High, async () =>
         {
             if (Central.Settings.HasJellyfinServer && Central.Settings.JellyfinServerValidated && !string.IsNullOrWhiteSpace(Central.Settings.JellyfinServerAccessToken))
@@ -125,19 +144,31 @@ public sealed partial class App : Application
                     Task.Run(async () =>
                     {
                         await UploadClientLog().ConfigureAwait(false);
-                        Exit();
+                        if (!recoverable)
+                        {
+                            Exit();
+                        }
                     });
                 }));
                 md.Commands.Add(new UICommand(localizer.GetString("Common.No"), command =>
                 {
-                    Exit();
+                    if (!recoverable)
+                    {
+                        Exit();
+                    }
                 }));
                 await md.ShowAsync();
             }
             else
             {
                 var md = new MessageDialog(localizer.GetString("Dialog.Crash.Only.Body"), localizer.GetString("Dialog.Crash.Title"));
-                md.Commands.Add(new UICommand(localizer.GetString("Common.Ok"), command => Exit()));
+                md.Commands.Add(new UICommand(localizer.GetString("Common.Ok"), command =>
+                {
+                    if (!recoverable)
+                    {
+                        Exit();
+                    }
+                }));
                 await md.ShowAsync();
             }
         });

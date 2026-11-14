@@ -1,11 +1,32 @@
-(function (appName, appVersion, deviceName, supportsHdr10, supportsDolbyVision) {
+(function (appName, appVersion, deviceName, supportsHdr10, supportsDolbyVision, supports4k, forceHevcSupport) {
     'use strict';
 
     console.log('Windows UWP adapter');
 
     const xbox = deviceName.toLowerCase().indexOf('xbox') !== -1;
-    const xboxSeries = deviceName.toLowerCase().indexOf('xbox series') !== -1;
     const mobile = deviceName.toLowerCase().indexOf('mobile') !== -1;
+
+    console.debug('NativeShell capability flags', {
+        deviceName,
+        supportsHdr10,
+        supportsDolbyVision,
+        supports4k,
+        forceHevcSupport
+    });
+
+    function detectHevcSupport() {
+        const videoElement = document.createElement('video');
+        if (!videoElement || !videoElement.canPlayType) {
+            return false;
+        }
+
+        return [
+            'video/mp4; codecs="hvc1.1.L120"',
+            'video/mp4; codecs="hev1.1.L120"',
+            'video/mp4; codecs="hvc1.1.0.L120"',
+            'video/mp4; codecs="hev1.1.0.L120"'
+        ].some(codec => videoElement.canPlayType(codec).replace(/no/, ''));
+    }
 
     function postMessage(type, args = {}) {
         console.debug(`AppHost.${type}`, args);
@@ -91,6 +112,9 @@
             getDeviceProfile: function (profileBuilder) {
                 console.debug('AppHost.getDeviceProfile');
                 const options = {};
+                if (forceHevcSupport === true || detectHevcSupport()) {
+                    options.supportsHevc = true;
+                }
                 if (supportsHdr10 != null) {
                     options.supportsHdr10 = supportsHdr10;
                 }
@@ -100,10 +124,11 @@
                 if (xbox) {
                     // MSE cannot decode AC3 in HLS fMP4 despite WebView2 reporting support.
                     options.disableHlsVideoAudioCodecs = ['ac3', 'eac3'];
-                    if (xboxSeries) {
+                    if (supports4k === true) {
                         options.maxVideoWidth = 3840;
                     }
                 }
+                console.debug('AppHost.getDeviceProfile.options', options);
                 return profileBuilder(options);
             },
 
@@ -138,7 +163,7 @@
             postMessage('openClientSettings');
         }
     };
-})(APP_NAME, APP_VERSION, DEVICE_NAME, SUPPORTS_HDR, SUPPORTS_DOVI);
+})(APP_NAME, APP_VERSION, DEVICE_NAME, SUPPORTS_HDR, SUPPORTS_DOVI, SUPPORTS_4K, FORCE_HEVC_SUPPORT);
 
 
 /**
@@ -159,51 +184,53 @@ class UwpXboxHdmiSetupPlugin {
         if (!item) {
             return;
         }
-        if ("mediaSourceId" in options) {
-            const mediaSourceid = options.mediaSourceId;
-            var mediaStreams = null;
-            var mediaSource = null;
+        const mediaSourceId = options.mediaSourceId || item.MediaSourceId;
+        let mediaStreams = null;
+        let mediaSource = null;
 
-            if (item.MediaSources == null) {
-                const apiClient = this.PluginOptions.ServerConnections.getApiClient(item.ServerId);
-                const isLiveTv = ["TvChannel", "LiveTvChannel"].includes(item.Type);
-                mediaStreams = isLiveTv ? null : await apiClient.getItem(apiClient.getCurrentUserId(), mediaSourceid || item.Id)
-                    .then(fullItem => {
-                        mediaSource = fullItem;
-                        return fullItem.MediaStreams;
-                    });
-            }
-            else {
-                mediaSource = item.MediaSources.find(e => e.Id == mediaSourceid);
-                if (mediaSource == null) {
-                    return;
+        if (item.MediaSources == null || item.MediaSources.length === 0) {
+            const apiClient = this.PluginOptions.ServerConnections.getApiClient(item.ServerId);
+            const isLiveTv = ["TvChannel", "LiveTvChannel"].includes(item.Type);
+            if (!isLiveTv) {
+                const fullItem = await apiClient.getItem(apiClient.getCurrentUserId(), item.Id);
+                if (fullItem?.MediaSources?.length > 0) {
+                    mediaSource = fullItem.MediaSources.find(e => e.Id === mediaSourceId) || fullItem.MediaSources[0];
+                    mediaStreams = mediaSource?.MediaStreams || null;
                 }
-                mediaStreams = mediaSource.MediaStreams;
-            }
-
-            if (mediaStreams == null || mediaStreams.length == 0) {
-                return;
-            }
-
-            const stream = mediaStreams.find(s => s.Type === 'Video');
-
-            if (stream == null) {
-                return;
-            }
-
-            const payload = {
-                'type': "enableFullscreen",
-                'args': {
-                    'videoWidth': stream.Width,
-                    'videoHeight': stream.Height,
-                    'videoFrameRate': (stream.AverageFrameRate || stream.RealFrameRate),
-                    'videoRangeType': stream.VideoRangeType
+                else {
+                    mediaSource = fullItem;
+                    mediaStreams = fullItem?.MediaStreams || null;
                 }
-            };
-
-            window.chrome.webview.postMessage(JSON.stringify(payload));
-            await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec before continuing with playback to setup display
+            }
         }
+        else {
+            mediaSource = item.MediaSources.find(e => e.Id === mediaSourceId) || item.MediaSources[0];
+            mediaStreams = mediaSource?.MediaStreams || null;
+        }
+
+        if (mediaStreams == null || mediaStreams.length == 0) {
+            return;
+        }
+
+        const stream = mediaStreams.find(s => s.Type === 'Video');
+
+        if (stream == null) {
+            return;
+        }
+
+        const payload = {
+            'type': "enableFullscreen",
+            'args': {
+                'videoWidth': stream.Width,
+                'videoHeight': stream.Height,
+                'videoFrameRate': (stream.AverageFrameRate || stream.RealFrameRate),
+                'videoRangeType': stream.VideoRangeType
+            }
+        };
+
+        console.debug('UwpXboxHdmiSetupPlugin.enableFullscreen', payload.args);
+        window.chrome.webview.postMessage(JSON.stringify(payload));
+        await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec before continuing with playback to setup display
     }
 }
 
