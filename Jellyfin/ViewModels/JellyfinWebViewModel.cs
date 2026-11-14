@@ -151,10 +151,15 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             NativeSurface = surface;
             if (WebView?.CoreWebView2 != null)
             {
-                var script = surface != null
-                    ? "(function(){var s=document.getElementById('uwpNativeTransparent');if(!s){s=document.createElement('style');s.id='uwpNativeTransparent';document.head.appendChild(s);}s.textContent='html,body,.skinBody,.backgroundContainer,.backdropContainer,.videoOsdPage,#videoOsdPage{background:transparent !important;background-color:transparent !important;}';})();"
-                    : "(function(){var s=document.getElementById('uwpNativeTransparent');if(s){s.remove();}})();";
-                _ = WebView.CoreWebView2.ExecuteScriptAsync(script);
+                var message = new JsonObject
+                {
+                    ["type"] = JsonValue.CreateStringValue("host.nativeSurfaceChanged"),
+                    ["args"] = new JsonObject
+                    {
+                        ["visible"] = JsonValue.CreateBooleanValue(surface != null),
+                    },
+                };
+                WebView.CoreWebView2.PostWebMessageAsJson(message.Stringify());
             }
         });
     }

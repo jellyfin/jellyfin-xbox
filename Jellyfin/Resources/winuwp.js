@@ -236,7 +236,78 @@ class UwpXboxHdmiSetupPlugin {
 
 window["UwpXboxHdmiSetupPlugin"] = async () => UwpXboxHdmiSetupPlugin;
 
+/**
+ * Makes the jellyfin-web page transparent while a native video surface is rendered behind the WebView2,
+ * so only the web OSD is drawn on top of the native video. Driven by 'host.nativeSurfaceChanged'
+ * messages that are posted by the UWP host (JellyfinWebViewModel).
+ */
+const UwpNativeSurfaceTransparency = (() => {
+    const styleElementId = 'uwp-native-surface-transparency';
+    const transparentSelectors = [
+        'html',
+        'body',
+        '.skinBody',
+        '.backgroundContainer',
+        '.backdropContainer',
+        '.videoOsdPage',
+        '#videoOsdPage'
+    ];
+
+    function enableTransparentPageBackground() {
+        let styleElement = document.getElementById(styleElementId);
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = styleElementId;
+            document.head.appendChild(styleElement);
+        }
+
+        styleElement.textContent = transparentSelectors.join(',')
+            + '{background:transparent !important;background-color:transparent !important;}';
+    }
+
+    function disableTransparentPageBackground() {
+        const styleElement = document.getElementById(styleElementId);
+        if (styleElement) {
+            styleElement.remove();
+        }
+    }
+
+    function onHostMessage(event) {
+        let message = event.data;
+        if (typeof message === 'string') {
+            try {
+                message = JSON.parse(message);
+            } catch {
+                return;
+            }
+        }
+
+        if (!message || message.type !== 'host.nativeSurfaceChanged') {
+            return;
+        }
+
+        if (message.args && message.args.visible) {
+            enableTransparentPageBackground();
+        } else {
+            disableTransparentPageBackground();
+        }
+    }
+
+    if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.addEventListener('message', onHostMessage);
+    }
+
+    return { enableTransparentPageBackground, disableTransparentPageBackground };
+})();
+
 const UWP_NATIVE_PLAYER_ENABLED = 'PLAYER_MODE' !== 'Web';
+
+// Identity of the player as it is shown in the jellyfin-web playback info and logs.
+// The configured mode is injected by the host (Native = Windows MediaPlayer, Vlc = LibVLC).
+const uwpConfiguredPlayerMode = 'PLAYER_MODE';
+const uwpPlayerIdentity = uwpConfiguredPlayerMode === 'Vlc'
+    ? { id: 'uwpvlcvideoplayer', name: 'VLC Player (UWP)' }
+    : { id: 'uwpmediaplayervideoplayer', name: 'Windows Media Player (UWP)' };
 
 /**
  * Media player plugin that delegates playback to the native UWP host (MediaPlayer or VLC).
@@ -244,8 +315,8 @@ const UWP_NATIVE_PLAYER_ENABLED = 'PLAYER_MODE' !== 'Web';
  */
 class UwpNativeVideoPlayer {
     constructor(pluginOptions) {
-        this.name = 'Native Player';
-        this.id = 'uwpnativevideoplayer';
+        this.name = uwpPlayerIdentity.name;
+        this.id = uwpPlayerIdentity.id;
         this.type = 'mediaplayer';
         this.mediaType = 'Video';
         this.priority = -1;
@@ -359,7 +430,7 @@ class UwpNativeVideoPlayer {
 
     getDeviceProfile() {
         return Promise.resolve({
-            Name: 'UWP Native Player',
+            Name: uwpPlayerIdentity.name,
             MaxStreamingBitrate: 120000000,
             MaxStaticBitrate: 400000000,
             MusicStreamingTranscodingBitrate: 384000,
