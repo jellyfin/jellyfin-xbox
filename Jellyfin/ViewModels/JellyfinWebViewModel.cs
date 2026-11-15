@@ -38,6 +38,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     private readonly ApplicationView _applicationView;
     private readonly ILogger<JellyfinWebViewModel> _logger;
     private readonly IStringLocalizer<Translations> _stringLocalizer;
+    private readonly INativePlayerBridge _nativePlayerBridge;
     private bool _isInProgress;
     private bool _displayDeprecationNotice;
     private WeakEventListener<JellyfinWebViewModel, object, CultureInfo> _weakPropertyChangedListener;
@@ -54,6 +55,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     /// <param name="logger">The logger instance.</param>
     /// <param name="messenger">The Messenger service.</param>
     /// <param name="stringLocalizer">The localizer service.</param>
+    /// <param name="nativePlayerBridge">The native player bridge.</param>
     public JellyfinWebViewModel(
         INativeShellScriptLoader nativeShellScriptLoader,
         IMessageHandler messageHandler,
@@ -63,8 +65,12 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         ApplicationView applicationView,
         ILogger<JellyfinWebViewModel> logger,
         IMessenger messenger,
-        IStringLocalizer<Translations> stringLocalizer) : base(messenger)
+        IStringLocalizer<Translations> stringLocalizer,
+        INativePlayerBridge nativePlayerBridge) : base(messenger)
     {
+        _nativePlayerBridge = nativePlayerBridge;
+        _nativePlayerBridge.SurfaceChanged += OnNativeSurfaceChanged;
+        _nativePlayerBridge.MessageToWeb += OnNativeMessageToWeb;
         _nativeShellScriptLoader = nativeShellScriptLoader;
         _messageHandler = messageHandler;
         _gamepadManager = gamepadManager;
@@ -129,6 +135,43 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
         set => SetProperty(ref field, value);
     }
 
+    /// <summary>
+    /// Gets the element a native player renders to, or null if the web player is used.
+    /// </summary>
+    public FrameworkElement NativeSurface
+    {
+        get => field;
+        private set => SetProperty(ref field, value);
+    }
+
+    private void OnNativeSurfaceChanged(object sender, FrameworkElement surface)
+    {
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            NativeSurface = surface;
+            if (WebView?.CoreWebView2 != null)
+            {
+                var message = new JsonObject
+                {
+                    ["type"] = JsonValue.CreateStringValue("host.nativeSurfaceChanged"),
+                    ["args"] = new JsonObject
+                    {
+                        ["visible"] = JsonValue.CreateBooleanValue(surface != null),
+                    },
+                };
+                WebView.CoreWebView2.PostWebMessageAsJson(message.Stringify());
+            }
+        });
+    }
+
+    private void OnNativeMessageToWeb(object sender, string json)
+    {
+        _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            WebView?.CoreWebView2?.PostWebMessageAsJson(json);
+        });
+    }
+
     private void BeginServerValidation()
     {
         _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -158,6 +201,7 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
             DisplayDeprecationNotice = true;
         }
 
+        Environment.SetEnvironmentVariable("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", "00000000");
         WebView = new WebView2();
         WebView.CoreWebView2Initialized += WView_CoreWebView2Initialized;
         WebView.NavigationCompleted += JellyfinWebView_NavigationCompleted;
@@ -453,6 +497,9 @@ public sealed class JellyfinWebViewModel : ObservableRecipient, IDisposable, IRe
     public void Dispose()
     {
         _navigationHandler?.Dispose();
+        _nativePlayerBridge.SurfaceChanged -= OnNativeSurfaceChanged;
+        _nativePlayerBridge.MessageToWeb -= OnNativeMessageToWeb;
+        _nativePlayerBridge.Reset();
         _weakPropertyChangedListener?.Detach();
         UninitializeWebView();
     }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Jellyfin.Utils;
@@ -28,6 +29,9 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
                 SingleReader = false,
                 AllowSynchronousContinuations = true
             });
+
+        DateTime? dirty = null;
+        AsyncAutoResetEventSlim debounce = new();
         Task.Run(async () =>
         {
             await CleanupOldLogfiles();
@@ -35,8 +39,45 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
             await foreach (var item in _logPipe.Reader.ReadAllAsync())
             {
+                if (item == "\0" && dirty != null)
+                {
+                    await LogStream.FlushAsync().ConfigureAwait(false);
+                    dirty = null;
+                    continue;
+                }
+
                 var logEntry = Encoding.UTF8.GetBytes(item);
                 await LogStream.WriteAsync(logEntry, 0, logEntry.Length).ConfigureAwait(false);
+                dirty = DateTime.Now;
+                debounce.Set();
+            }
+        });
+
+        Task.Run(async () =>
+        {
+            // yea i know this sucks but there is no garanteed way in UWP to handle an app shutting down and if we dont logs get stuck in the buffer.
+            while (true)
+            {
+                await debounce.WaitAsync().ConfigureAwait(false);
+
+                // wait until no new entries arrived for 500ms, then flush.
+                while (true)
+                {
+                    var lastWrite = dirty;
+                    if (lastWrite == null)
+                    {
+                        break;
+                    }
+
+                    var remaining = lastWrite.Value + TimeSpan.FromMilliseconds(500) - DateTime.Now;
+                    if (remaining <= TimeSpan.Zero)
+                    {
+                        _logPipe.Writer.TryWrite("\0");
+                        break;
+                    }
+
+                    await Task.Delay(remaining).ConfigureAwait(false);
+                }
             }
         });
     }
@@ -106,8 +147,9 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
-        LogStream.Flush();
-        LogStream.Dispose();
+        LogStream?.Flush();
+        LogStream?.Dispose();
+        LogStream = null;
     }
 
     internal class UwpAppLogger : ILogger

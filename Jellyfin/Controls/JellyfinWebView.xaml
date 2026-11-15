@@ -39,7 +39,11 @@
     </VisualStateManager.VisualStateGroups>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch">
+              VerticalAlignment="Stretch"
+              Background="#101010">
+            <ContentPresenter HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              Content="{Binding NativeSurface, Mode=OneWay}" />
             <ContentPresenter HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                               Content="{Binding WebView, UpdateSourceTrigger=PropertyChanged}" />

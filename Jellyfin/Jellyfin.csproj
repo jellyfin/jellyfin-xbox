@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -31,6 +31,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DpiAwarenessPerMonitor>true</DpiAwarenessPerMonitor>
+    <EnableTypeInfoReflection Condition=" '$(Configuration)' == 'Debug' ">false</EnableTypeInfoReflection>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -131,56 +132,25 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\**\*.cs" />
+    <Compile Include="Behaviors\**\*.cs" />
+    <Compile Include="Converter\**\*.cs" />
+    <Compile Include="Helpers\**\*.cs" />
+    <Compile Include="Utils\**\*.cs" />
+    <Compile Include="ViewModels\**\*.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Behaviors\AutoFocusBehavior.cs" />
-    <Compile Include="Behaviors\KeyEventTriggerBehavior.cs" />
     <Compile Include="Controls\DeviceFamilyStateTrigger.cs" />
     <Compile Include="Controls\JellyfinWebView.xaml.cs">
       <DependentUpon>JellyfinWebView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converter\BooleanInverseConverter.cs" />
-    <Compile Include="Converter\BooleanVisibilityConverter.cs" />
-    <Compile Include="Converter\BooleanVisibilityInverseConverter.cs" />
-    <Compile Include="Converter\ChainConverter.cs" />
-    <Compile Include="Converter\NullToBooleanConverter.cs" />
-    <Compile Include="Converter\NullToBooleanInverseConverter.cs" />
-    <Compile Include="Core\Central.cs" />
-    <Compile Include="Core\FullScreenManager.cs" />
-    <Compile Include="Core\Contract\IFullScreenManager.cs" />
-    <Compile Include="Core\Contract\IMessageHandler.cs" />
-    <Compile Include="Core\Contract\INativeShellScriptLoader.cs" />
-    <Compile Include="Core\Contract\ISettingsManager.cs" />
-    <Compile Include="Core\Contract\IServerDiscovery.cs" />
-    <Compile Include="Core\MessageHandler.cs" />
-    <Compile Include="Core\NativeShellScriptLoader.cs" />
-    <Compile Include="Core\FileBackedLoggerProvider.cs" />
-    <Compile Include="Core\SettingsManager.cs" />
-    <Compile Include="Core\WebMessage.cs" />
-    <Compile Include="Helpers\Localization\LocalizableString.cs" />
-    <Compile Include="Helpers\Localization\ResourceManagerStringLocalizerFactory.cs" />
-    <Compile Include="Helpers\Localization\UwpStringLocalizer.cs" />
-    <Compile Include="Helpers\MarkupExtensions\LocalizeExtension.cs" />
-    <Compile Include="Helpers\UrlValidator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DiscoveredServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translations.cs" />
-    <Compile Include="Utils\AppUtils.cs" />
-    <Compile Include="Utils\DeviceFormFactorType.cs" />
-    <Compile Include="Core\GamepadManager.cs" />
-    <Compile Include="Core\ServerDiscovery.cs" />
-    <Compile Include="Core\Contract\IGamepadManager.cs" />
-    <Compile Include="Utils\JellyfinServerValidationResult.cs" />
-    <Compile Include="Utils\ServerCheckUtil.cs" />
-    <Compile Include="ViewModels\CultureSelectorViewModel.cs" />
-    <Compile Include="ViewModels\JellyfinWebViewModel.cs" />
-    <Compile Include="ViewModels\LogfileViewModel.cs" />
-    <Compile Include="ViewModels\OnBoardingViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\CultureSelector.xaml.cs">
       <DependentUpon>CultureSelector.xaml</DependentUpon>
     </Compile>
@@ -321,6 +291,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.Extensions.Localization" />
     <PackageReference Include="System.Threading.Channels" />
+    <PackageReference Include="LibVLCSharp.UWP" />
+    <PackageReference Include="VideoLAN.LibVLC.UWP" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\Quicksand-Regular.ttf" />
@@ -360,4 +332,9 @@
   <ItemGroup>
     <Folder Include="Behaviors\Actions\" />
   </ItemGroup>
+  <Target Name="RemoveVlcVcLibs120" BeforeTargets="ResolveSDKReferences;ExpandSDKReferences">
+    <ItemGroup>
+      <SDKReference Remove="Microsoft.VCLibs.120, Version=14.0" />
+    </ItemGroup>
+  </Target>
 </Project>

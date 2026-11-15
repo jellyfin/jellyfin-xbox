@@ -9,7 +9,7 @@
     xmlns:behaviors="using:Jellyfin.Behaviors"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:core="using:Windows.Graphics.Display.Core"
-    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions" xmlns:local="using:Jellyfin.Views"
+    xmlns:localize="using:Jellyfin.Helpers.MarkupExtensions" xmlns:local="using:Jellyfin.Views" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     Background="{StaticResource Color0}"
     mc:Ignorable="d"
     MinHeight="700"
@@ -133,6 +133,7 @@
                         <RowDefinition MinHeight="35"/>
                         <RowDefinition MinHeight="35"/>
                         <RowDefinition MinHeight="35"/>
+                        <RowDefinition MinHeight="70"/>
                         <RowDefinition MinHeight="55"/>
                     </Grid.RowDefinitions>
 
@@ -180,21 +181,51 @@
                         IsChecked="{Binding ForceEnableHevcSupport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         Content="{localize:Localize Key=Settings.Values.ForceEnableHevcSupport.Text}"
                         Foreground="White" FontSize="{StaticResource FontL}"
+                        
                         Grid.Row="6" />
-                    
-                    <Grid   Grid.Column="0"
-                            Grid.Row="7"                            
-                            Margin="0,5,0,0"
-                            HorizontalAlignment="Stretch">
-                        <local:CultureSelector 
-                           Orientation="Left"                            
-                           HorizontalAlignment="Left"/>
-                    </Grid>
 
+                    <controls:DockPanel Grid.Column="0"
+                                Grid.Row="7"
+                                Margin="5,5,5,0"
+                                LastChildFill="True"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerModeHint.Text}"
+                                   VerticalAlignment="Top"
+                                   controls:DockPanel.Dock="Bottom"
+                                   FontSize="{StaticResource FontM}"
+                                   Foreground="{StaticResource DangerColor}"/>
+                        <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerMode.Text}"
+                                   VerticalAlignment="Center"
+                                   FontSize="{StaticResource FontM}" />
+                        <TextBlock Text=":"
+                                   VerticalAlignment="Center"
+                                   FontSize="{StaticResource FontM}" />
+
+                        <ComboBox SelectedIndex="{Binding PlayerModeIndex, Mode=TwoWay}"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Center"
+                               controls:DockPanel.Dock="Bottom"
+                               Style="{StaticResource ComboBox}"
+                               Margin="15,5,0,5"
+                           >
+                            <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Web.Text}" />
+                            <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Native.Text}" />
+                            <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Vlc.Text}" />
+                        </ComboBox>
+                    </controls:DockPanel>
+
+                    <Grid Grid.Column="0"
+                          Grid.Row="8"                            
+                          Margin="0,5,5,0"
+                          HorizontalAlignment="Stretch">
+                        <local:CultureSelector 
+                             Orientation="Left"                            
+                             HorizontalAlignment="Stretch"/>
+                    </Grid>
                 </Grid>
                 <Grid
                     HorizontalAlignment="Stretch"
-                    Margin="0,0,0,0"
+                    Margin="0,5,0,0"
                     Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

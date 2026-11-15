@@ -263,4 +263,19 @@ You might encounter bugs when running on a PC.</value>
   <data name="Settings.Values.ForceEnableHevcSupport.Text" xml:space="preserve">
     <value>Force enable HEVC support</value>
   </data>
+  <data name="Settings.Values.PlayerMode.Text" xml:space="preserve">
+    <value>Video player (EXPERIMENTAL)</value>
+  </data>
+  <data name="Settings.Values.PlayerMode.Web.Text" xml:space="preserve">
+    <value>Web player (default)</value>
+  </data>
+  <data name="Settings.Values.PlayerMode.Native.Text" xml:space="preserve">
+    <value>Native Windows player</value>
+  </data>
+  <data name="Settings.Values.PlayerMode.Vlc.Text" xml:space="preserve">
+    <value>VLC player</value>
+  </data>
+  <data name="Settings.Values.PlayerModeHint.Text" xml:space="preserve">
+    <value>EXPERIMENTAL SETTING. Needs app restart when changed, if you encounter issues please switch back to Web Player.</value>
+  </data>
 </root>

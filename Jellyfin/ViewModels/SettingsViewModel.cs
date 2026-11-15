@@ -33,6 +33,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     private bool _forceEnableTvMode;
     private bool _forceEnable4KSupport;
     private bool _forceEnableHevcSupport;
+    private int _playerModeIndex;
     private HdmiDisplayMode _currentDisplayMode;
 
     /// <summary>
@@ -51,6 +52,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         ForceEnableTvMode = Central.Settings.ForceEnableTvMode;
         ForceEnable4KSupport = Central.Settings.ForceEnable4KSupport;
         ForceEnableHevcSupport = Central.Settings.ForceEnableHevcSupport;
+        PlayerModeIndex = (int)Central.Settings.PlayerMode;
 
         _navigationHandler = _gamepadManager.ObserveBackEvent(ModalPage_BackRequested, -10);
         try
@@ -122,6 +124,15 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
     {
         get => _forceEnableHevcSupport;
         set => SetProperty(ref _forceEnableHevcSupport, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the selected index of the player mode (see <see cref="PlayerMode"/>).
+    /// </summary>
+    public int PlayerModeIndex
+    {
+        get => _playerModeIndex;
+        set => SetProperty(ref _playerModeIndex, value);
     }
 
     /// <summary>
@@ -243,6 +254,7 @@ public sealed class SettingsViewModel : ObservableObject, IDisposable
         Central.Settings.ForceEnableTvMode = ForceEnableTvMode;
         Central.Settings.ForceEnable4KSupport = ForceEnable4KSupport;
         Central.Settings.ForceEnableHevcSupport = ForceEnableHevcSupport;
+        Central.Settings.PlayerMode = (PlayerMode)PlayerModeIndex;
     }
 
     /// <inheritdoc />

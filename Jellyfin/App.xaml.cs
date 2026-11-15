@@ -19,6 +19,7 @@ using Windows.System.Display;
 using Windows.System.Profile;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Core.Preview;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -94,6 +95,8 @@ public sealed partial class App : Application
         // Services
         services.AddSingleton<IFullScreenManager, FullScreenManager>();
         services.AddSingleton<IMessageHandler, MessageHandler>();
+        services.AddSingleton<INativePlayerFactory, NativePlayerFactory>();
+        services.AddSingleton<INativePlayerBridge, NativePlayerBridge>();
         services.AddSingleton<INativeShellScriptLoader, NativeShellScriptLoader>();
         services.AddSingleton<ISettingsManager, SettingsManager>();
         services.AddSingleton<IGamepadManager, GamepadManager>();
@@ -214,7 +217,6 @@ public sealed partial class App : Application
             // Create a Frame to act as the navigation context and navigate to the first page
             rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
-
             if (AppUtils.IsXbox)
             {
                 ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
