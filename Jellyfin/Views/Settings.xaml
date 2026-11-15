@@ -133,7 +133,7 @@
                         <RowDefinition MinHeight="35"/>
                         <RowDefinition MinHeight="35"/>
                         <RowDefinition MinHeight="35"/>
-                        <RowDefinition MinHeight="55"/>
+                        <RowDefinition MinHeight="70"/>
                         <RowDefinition MinHeight="55"/>
                     </Grid.RowDefinitions>
 
@@ -181,6 +181,7 @@
                         IsChecked="{Binding ForceEnableHevcSupport, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         Content="{localize:Localize Key=Settings.Values.ForceEnableHevcSupport.Text}"
                         Foreground="White" FontSize="{StaticResource FontL}"
+                        
                         Grid.Row="6" />
 
                     <controls:DockPanel Grid.Column="0"
@@ -188,17 +189,25 @@
                                 Margin="5,5,5,0"
                                 LastChildFill="True"
                                 HorizontalAlignment="Stretch">
+                        <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerModeHint.Text}"
+                                   VerticalAlignment="Top"
+                                   controls:DockPanel.Dock="Bottom"
+                                   FontSize="{StaticResource FontM}"
+                                   Foreground="{StaticResource DangerColor}"/>
                         <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerMode.Text}"
                                    VerticalAlignment="Center"
                                    FontSize="{StaticResource FontM}" />
                         <TextBlock Text=":"
                                    VerticalAlignment="Center"
                                    FontSize="{StaticResource FontM}" />
+
                         <ComboBox SelectedIndex="{Binding PlayerModeIndex, Mode=TwoWay}"
-                                  HorizontalAlignment="Stretch"
-                                  Style="{StaticResource ComboBox}"
-                                  Margin="15,5,0,5"
-                                  >
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Center"
+                               controls:DockPanel.Dock="Bottom"
+                               Style="{StaticResource ComboBox}"
+                               Margin="15,5,0,5"
+                           >
                             <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Web.Text}" />
                             <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Native.Text}" />
                             <ComboBoxItem Content="{localize:Localize Key=Settings.Values.PlayerMode.Vlc.Text}" />
