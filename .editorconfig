@@ -409,6 +409,15 @@ dotnet_diagnostic.CA3003.severity = suggestion
 # error on CA3006: Review code for process command injection vulnerabilities
 dotnet_diagnostic.CA3006.severity = suggestion
 
+# CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+dotnet_diagnostic.CS8632.severity = suggestion
+
+# IDE0360: Simplify property accessor
+dotnet_diagnostic.IDE0360.severity = suggestion
+
+# SA1504: All accessors should be single-line or multi-line
+dotnet_diagnostic.SA1504.severity = suggestion
+
 ###############
 ### DISABLED  #
 ###############

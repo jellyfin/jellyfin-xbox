@@ -108,7 +108,7 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
                          "DeviceFamily",
                          "FlightRing",
                          "OSVersionFull",
-                     ]))
+        ]))
         {
             logBuilder.AppendLine($"{deviceInfo.Key}: {deviceInfo.Value}");
         }
