@@ -42,9 +42,9 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Grid Background="{StaticResource Color10}"
@@ -56,7 +56,8 @@
                     Height="80" />
             </Grid>
             <Grid Grid.Column="0" Grid.Row="1"
-                        Margin="0,0,10,0">
+                        Margin="0,0,10,0"
+                        Padding="15,0,0,0">
                 <Grid HorizontalAlignment="Right">
                     <Grid.Resources>
                         <DataTemplate x:DataType="viewModels:LogfileViewModel" x:Key="LogfileDisplay">
@@ -73,6 +74,7 @@
                                 <StackPanel>
                                     <TextBlock Text="{Binding Filename}"
                                            VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
                                            HorizontalAlignment="Center" />
                                     <Border Background="{StaticResource Color10}"
                                             Visibility="{Binding IsLatestLogfile, Converter={StaticResource BooleanVisibilityConverter}}"
@@ -123,18 +125,18 @@
                 </Grid.RowDefinitions>
 
                 <Grid
-                    Grid.Row="0"                    
+                    Grid.Row="0"
                     HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition MinHeight="35"/>
-                        <RowDefinition />
-                        <RowDefinition MinHeight="35"/>
-                        <RowDefinition />
-                        <RowDefinition MinHeight="35"/>
-                        <RowDefinition MinHeight="35"/>
-                        <RowDefinition MinHeight="35"/>
-                        <RowDefinition MinHeight="70"/>
-                        <RowDefinition MinHeight="55"/>
+                        <RowDefinition Height="Auto" MinHeight="35"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" MinHeight="35"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" MinHeight="35"/>
+                        <RowDefinition Height="Auto" MinHeight="35"/>
+                        <RowDefinition Height="Auto" MinHeight="35"/>
+                        <RowDefinition Height="Auto" MinHeight="120"/>
+                        <RowDefinition Height="Auto" MinHeight="70"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox                        
@@ -149,6 +151,7 @@
                     </CheckBox>
                     <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                                Grid.Row="1"
+                               TextWrapping="Wrap"
                                FontSize="{StaticResource FontM}"
                                Foreground="{StaticResource DangerColor}"
                                Text="{localize:Localize Key=Settings.Values.AutoRefresh.Unsupported.Text}"/>
@@ -161,6 +164,7 @@
                         Grid.Row="2" />
                     <TextBlock Visibility="{Binding ElementName=checkBoxAutoRefreshRate, Path=IsEnabled, Converter={StaticResource BooleanVisibilityInverseConverter}}"
                                Grid.Row="3"
+                               TextWrapping="Wrap"
                                FontSize="{StaticResource FontM}"
                                Text="{localize:Localize Key=Settings.Values.AutoResolution.Unsupported.Text}"
                                Foreground="{StaticResource DangerColor}"/>
@@ -192,6 +196,7 @@
                         <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerModeHint.Text}"
                                    VerticalAlignment="Top"
                                    controls:DockPanel.Dock="Bottom"
+                                   TextWrapping="Wrap"
                                    FontSize="{StaticResource FontM}"
                                    Foreground="{StaticResource DangerColor}"/>
                         <TextBlock Text="{localize:Localize Key=Settings.Values.PlayerMode.Text}"

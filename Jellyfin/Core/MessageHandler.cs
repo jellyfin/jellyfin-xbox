@@ -52,6 +52,8 @@ public class MessageHandler : IMessageHandler
         var eventType = json.GetNamedString("type");
         var args = json.GetNamedObject("args");
 
+        _webviewLogger.LogInformation("Got message {type} : {payload}", eventType, args.ToString());
+
         if (eventType == "enableFullscreen")
         {
             _ = _frame.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
