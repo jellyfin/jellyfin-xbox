@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
 using Jellyfin.Utils;
+using Microsoft.Extensions.Logging;
 using Windows.Data.Json;
 using Windows.Graphics.Display.Core;
 using Windows.System.Display;
@@ -21,6 +22,7 @@ public sealed class FullScreenManager : IFullScreenManager
     private readonly ApplicationView _applicationView;
     private readonly Frame _frame;
     private readonly DisplayRequest _displayRequest;
+    private readonly ILogger<FullScreenManager> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FullScreenManager"/> class.
@@ -28,11 +30,13 @@ public sealed class FullScreenManager : IFullScreenManager
     /// <param name="applicationView">The <see cref="ApplicationView"/> instance used to manage the application's view state.</param>
     /// <param name="frame">The root frame.</param>
     /// <param name="displayRequest">The display Request.</param>
-    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest)
+    /// <param name="logger">The logger instance.</param>
+    public FullScreenManager(ApplicationView applicationView, Frame frame, DisplayRequest displayRequest, ILogger<FullScreenManager> logger)
     {
         _applicationView = applicationView;
         _frame = frame;
         _displayRequest = displayRequest;
+        _logger = logger;
     }
 
     private async Task SwitchToBestDisplayMode(uint videoWidth, uint videoHeight, double videoFrameRate, HdmiDisplayHdrOption hdmiDisplayHdrOption)
@@ -43,8 +47,22 @@ public sealed class FullScreenManager : IFullScreenManager
             GetBestDisplayMode(hdmiDisplayInformation, videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption);
         if (bestDisplayMode != null && bestDisplayMode.Any())
         {
+            _logger.LogInformation(
+                    "Found best match display mode for requested {width}x{height} at {framerate} and {displayOption}",
+                    videoWidth,
+                    videoHeight,
+                    videoFrameRate,
+                    hdmiDisplayHdrOption);
+
             foreach (var item in bestDisplayMode)
             {
+                _logger.LogInformation(
+                    "Try to activate {width}x{height} at {framerate} and {colorspace}",
+                    item.ResolutionWidthInRawPixels,
+                    item.ResolutionHeightInRawPixels,
+                    item.RefreshRate,
+                    item.ColorSpace);
+
                 if (await hdmiDisplayInformation
                     ?.RequestSetCurrentDisplayModeAsync(item))
                 {
@@ -52,6 +70,7 @@ public sealed class FullScreenManager : IFullScreenManager
                 }
             }
 
+            _logger.LogInformation("No best match found, default display mode.");
             await SetDefaultDisplayModeAsync().ConfigureAwait(true);
         }
     }
@@ -178,20 +197,25 @@ public sealed class FullScreenManager : IFullScreenManager
                     var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
                     var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(hdmiDisplayInformation, videoRangeType);
                     await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to set display mode.");
+                }
+
+                try
+                {
                     _displayRequest.RequestActive();
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Error during SwitchToBestDisplayMode", ex);
+                    _logger.LogError(ex, "Failed to aquire display lock.");
                 }
-            }
-            else
-            {
-                Debug.WriteLine("enableFullscreenAsync called with no args");
             }
         }
         else
         {
+            _logger.LogInformation("Enter Fullscreen");
             _applicationView.TryEnterFullScreenMode();
         }
     }
@@ -202,6 +226,7 @@ public sealed class FullScreenManager : IFullScreenManager
     /// <returns>A task that completes when the fullscreen has been closed.</returns>
     public async Task DisableFullScreen()
     {
+        _logger.LogInformation("Exit Fullscreen");
         if (AppUtils.IsXbox)
         {
             await SetDefaultDisplayModeAsync().ConfigureAwait(true);
@@ -211,6 +236,7 @@ public sealed class FullScreenManager : IFullScreenManager
             _applicationView.ExitFullScreenMode();
         }
 
+        _logger.LogInformation("Release display lock");
         _displayRequest.RequestRelease();
     }
 }
