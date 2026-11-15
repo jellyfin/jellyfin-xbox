@@ -27,6 +27,6 @@
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.13"/>
         <PackageVersion Include="System.Threading.Channels" Version="10.0.13" />
         <PackageVersion Include="VideoLAN.LibVLC.UWP" Version="3.3.2" />
-        <PackageVersion Include="LibVLCSharp.UWP" Version="3.10.0" />        
+        <PackageVersion Include="LibVLCSharp.UWP" Version="3.10.2" />        
     </ItemGroup>
 </Project>
