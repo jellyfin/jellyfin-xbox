@@ -205,8 +205,8 @@ public sealed partial class App : Application
     /// Invoked when the application is launched normally by the end user.  Other entry points
     /// will be used such as when the application is launched to open a specific file.
     /// </summary>
-    /// <param name="e">Details about the launch request and process.</param>
-    protected override void OnLaunched(LaunchActivatedEventArgs e)
+    /// <param name="args">Details about the launch request and process.</param>
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         var rootFrame = Window.Current.Content as Frame;
 
@@ -230,7 +230,7 @@ public sealed partial class App : Application
                 formattableTitleBar.BackgroundColor = Color.FromArgb(255, 32, 32, 32);
             }
 
-            if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+            if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
                 // TODO: Load state from previously suspended application
             }
@@ -246,7 +246,7 @@ public sealed partial class App : Application
             }
         }
 
-        if (e.PrelaunchActivated == false)
+        if (args.PrelaunchActivated == false)
         {
             if (rootFrame.Content == null)
             {
@@ -255,11 +255,11 @@ public sealed partial class App : Application
                 // parameter
                 if (Core.Central.Settings.HasJellyfinServer)
                 {
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
                 }
                 else
                 {
-                    rootFrame.Navigate(typeof(Views.OnBoarding), e.Arguments);
+                    rootFrame.Navigate(typeof(Views.OnBoarding), args.Arguments);
                 }
             }
 
