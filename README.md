@@ -39,3 +39,10 @@ We welcome all contributions and pull requests! If you have a larger feature in 
 <a href="https://translate.jellyfin.org/engage/jellyfin-for-xbox/">
 <img src="https://translate.jellyfin.org/widget/jellyfin-for-xbox/multi-auto.svg" alt="Translation status" />
 </a>
+
+# AI Policy
+
+The usage of any AI tooling for human-to-human communications in PRs/BugReports is strictly forbidden. dontbeameatproxy!
+Using AI for coding is permitted as long as the creator is still capable of explaining and debugging the produced code and follows the coding style of the whole application. You are still 100% responsible for the code you submit and low quality PRs will get closed without explanation. If nobody can tell you used AI, you are doing it right.
+
+otherwise Jellyfin's AI policy applies.
