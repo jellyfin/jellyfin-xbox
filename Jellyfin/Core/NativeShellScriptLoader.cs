@@ -84,6 +84,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
             ("vc1", CodecSubtypes.VideoFormatWvc1),
             ("vp8", CodecSubtypes.VideoFormatVP80),
             ("vp9", CodecSubtypes.VideoFormatVP90),
+            ("av1", CodecSubtypes.VideoFormatAv1),
         };
         var audioCodecs = new (string Name, string Subtype)[]
         {
