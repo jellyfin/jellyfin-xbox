@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Core.Contract;
@@ -62,7 +63,7 @@ public sealed class NativeMediaPlayerEngine : INativeVideoPlayer
             {
                 if (args.Tracks.Count > 0)
                 {
-                    args.Tracks[0].Label = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    args.Tracks[0].Label = index.ToString(CultureInfo.InvariantCulture);
                 }
             };
             _source.ExternalTimedTextSources.Add(textSource);
@@ -178,14 +179,14 @@ public sealed class NativeMediaPlayerEngine : INativeVideoPlayer
         int target = -1;
         if (subtitle.Url != null)
         {
-            var label = jellyfinIndex.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var label = jellyfinIndex.ToString(CultureInfo.InvariantCulture);
             target = subtitleTracks.Where(i => tracks[i].Label == label).Select(i => (int?)i).FirstOrDefault() ?? -1;
         }
         else
         {
             var embedded = _request.Subtitles.Where(e => e.Url == null).ToList();
             var ordinal = embedded.IndexOf(subtitle);
-            var embeddedTracks = subtitleTracks.Where(i => !_request.Subtitles.Any(e => e.Url != null && tracks[i].Label == e.Index.ToString(System.Globalization.CultureInfo.InvariantCulture))).ToArray();
+            var embeddedTracks = subtitleTracks.Where(i => !_request.Subtitles.Any(e => e.Url != null && tracks[i].Label == e.Index.ToString(CultureInfo.InvariantCulture))).ToArray();
             if (ordinal >= 0 && ordinal < embeddedTracks.Length)
             {
                 target = embeddedTracks[ordinal];
@@ -232,7 +233,7 @@ public sealed class NativeMediaPlayerEngine : INativeVideoPlayer
 
     private void OnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
     {
-        Raise("error", args.Error + ": " + args.ErrorMessage + " (0x" + args.ExtendedErrorCode?.HResult.ToString("X8", System.Globalization.CultureInfo.InvariantCulture) + ")");
+        Raise("error", args.Error + ": " + args.ErrorMessage + " (0x" + args.ExtendedErrorCode?.HResult.ToString("X8", CultureInfo.InvariantCulture) + ")");
     }
 
     private void OnPlaybackStateChanged(MediaPlaybackSession sender, object args)
