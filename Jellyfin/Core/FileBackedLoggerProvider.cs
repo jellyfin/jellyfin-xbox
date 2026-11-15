@@ -169,6 +169,11 @@ internal sealed class FileBackedLoggerProvider : ILoggerProvider
             }
 
             var message = formatter(state, exception);
+            if (exception is not null)
+            {
+                message += $"\n{exception}";
+            }
+
             var logEntry = $"{DateTime.Now:s} [{logLevel}] {message}\n";
 
             _appLoggerProvider._logPipe.Writer.TryWrite(logEntry);

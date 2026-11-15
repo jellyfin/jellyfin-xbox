@@ -196,7 +196,7 @@ public sealed class FullScreenManager : IFullScreenManager
 
                     var hdmiDisplayInformation = HdmiDisplayInformation.GetForCurrentView();
                     var hdmiDisplayHdrOption = GetHdmiDisplayHdrOption(hdmiDisplayInformation, videoRangeType);
-                    await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(false);
+                    await SwitchToBestDisplayMode(videoWidth, videoHeight, videoFrameRate, hdmiDisplayHdrOption).ConfigureAwait(true);
                 }
                 catch (Exception ex)
                 {
