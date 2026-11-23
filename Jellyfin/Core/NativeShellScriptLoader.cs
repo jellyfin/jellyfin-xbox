@@ -33,7 +33,7 @@ public class NativeShellScriptLoader : INativeShellScriptLoader
         nativeShellScript = nativeShellScript.Replace(
             "APP_NAME",
             Wrap(assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title, '\''));
-        nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(assembly.GetName().Version.ToString(), '\''));
+        nativeShellScript = nativeShellScript.Replace("APP_VERSION", Wrap(AppUtils.AppVersion.ToString(), '\''));
         nativeShellScript = nativeShellScript.Replace("PLAYER_MODE", Central.Settings.PlayerMode.ToString());
         nativeShellScript = nativeShellScript.Replace("NATIVE_CODEC_SUPPORT", await ProbeCodecSupportAsync());
 
